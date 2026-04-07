@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Plan de Estudios - 207 ESTADÍSTICA v5</title>
+<style>
+  body { margin: 20px; background: #FAFAFA; font-family: Calibri, 'Segoe UI', sans-serif; }
+  h1 { text-align: center; font-size: 18px; color: #333; margin-bottom: 5px; }
+  .controls { text-align: center; margin: 8px 0; }
+  .controls button {
+    padding: 6px 18px; margin: 0 6px; border: 1px solid #999; border-radius: 4px;
+    background: white; font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .controls button:hover { background: #E8E8E8; }
+  .controls button.active { background: #333; color: white; border-color: #333; }
+  svg { display: block; margin: 0 auto; }
+  .course-box { transition: opacity 0.2s; }
+  .course-box.dimmed { opacity: 0.25; }
+  .course-box.highlighted rect.box-code-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.highlighted rect.box-name-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.selected rect.box-code-bg { stroke: #DC2626; stroke-width: 3; }
+  .course-box.selected rect.box-name-bg { stroke: #DC2626; stroke-width: 3; }
+  .arrow { transition: opacity 0.3s; }
+  @media print { body { margin: 0; background: white; } .controls { display: none; } }
+</style>
+</head><body>
+<h1>Plan de Estudios - 207 ESTADÍSTICA v5</h1>
+<div class="controls">
+  <button id="btn-clear" class="active" onclick="clearAll()">Sin flechas</button>
+  <button id="btn-all" onclick="showAll()">Mostrar todas</button>
+  <span style="color:#888; font-size:12px; margin-left:12px;">Clic en un curso para ver su cadena completa</span>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" width="1797" height="703" viewBox="0 0 1797 703">
+    <defs>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/></filter>
+<marker id="ap" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#333333"/></marker>
+<marker id="ac" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#2563EB"/></marker>
+</defs>
+<text x="114.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">1</text>
+<text x="307.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">2</text>
+<text x="500.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">3</text>
+<text x="693.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">4</text>
+<text x="886.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">5</text>
+<text x="1079.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">6</text>
+<text x="1272.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">7</text>
+<text x="1465.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">8</text>
+<text x="1658.0" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">9</text>
+<g class="course-box" data-code="0303001" style="cursor:pointer;">
+<rect x="40" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="40" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="160" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="100.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303001</text>
+<text x="174.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="40" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="114.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Álgebra y</text>
+<text x="114.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">Trigonometría</text>
+</g>
+<g class="course-box" data-code="0314028" style="cursor:pointer;">
+<rect x="40" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="40" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="160" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="100.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314028</text>
+<text x="174.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="40" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="114.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Matemáticas</text>
+<text x="114.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Discretas</text>
+</g>
+<g class="course-box" data-code="0303006" style="cursor:pointer;">
+<rect x="40" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="40" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="160" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="100.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303006</text>
+<text x="174.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="40" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="114.0" y="284.0" text-anchor="middle" font-size="10" fill="#333">Geometría</text>
+<text x="114.0" y="298.0" text-anchor="middle" font-size="10" fill="#333">Básica</text>
+</g>
+<g class="course-box" data-code="0305001" style="cursor:pointer;">
+<rect x="40" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="40" y="334" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="160" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="100.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0305001</text>
+<text x="174.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="40" y="356" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="114.0" y="372.0" text-anchor="middle" font-size="10" fill="#333">Fund. en</text>
+<text x="114.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">Ciencias</text>
+</g>
+<g class="course-box" data-code="0305190" style="cursor:pointer;">
+<rect x="40" y="422" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="40" y="422" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="160" y="422" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="100.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0305190</text>
+<text x="174.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="40" y="444" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="114.0" y="460.0" text-anchor="middle" font-size="10" fill="#333">Español</text>
+<text x="114.0" y="474.0" text-anchor="middle" font-size="10" fill="#333">Académico</text>
+</g>
+<g class="course-box" data-code="0303002" style="cursor:pointer;">
+<rect x="233" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="233" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="353" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="293.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303002</text>
+<text x="367.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="233" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="307.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Cálculo</text>
+<text x="307.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">Diferencial</text>
+</g>
+<g class="course-box" data-code="0314029" style="cursor:pointer;">
+<rect x="233" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="233" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="353" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="293.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314029</text>
+<text x="367.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="233" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="307.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Fund. de</text>
+<text x="307.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Programación</text>
+</g>
+<g class="course-box" data-code="0303010" style="cursor:pointer;">
+<rect x="233" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="233" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="353" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="293.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303010</text>
+<text x="367.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="233" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="307.0" y="284.0" text-anchor="middle" font-size="10" fill="#333">Álgebra</text>
+<text x="307.0" y="298.0" text-anchor="middle" font-size="10" fill="#333">Lineal</text>
+</g>
+<g class="course-box" data-code="0314067" style="cursor:pointer;">
+<rect x="233" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="233" y="334" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="353" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="293.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314067</text>
+<text x="367.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">4</text>
+<rect class="box-name-bg" x="233" y="356" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="307.0" y="372.0" text-anchor="middle" font-size="10" fill="#333">Fund. de</text>
+<text x="307.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">Estadística I</text>
+</g>
+<g class="course-box" data-code="9003101" style="cursor:pointer;">
+<rect x="233" y="510" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="233" y="510" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="353" y="510" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="293.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">9003101</text>
+<text x="367.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="white">2</text>
+<rect class="box-name-bg" x="233" y="532" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="307.0" y="548.0" text-anchor="middle" font-size="10" fill="#333">English 1</text>
+<text x="307.0" y="562.0" text-anchor="middle" font-size="10" fill="#333">10 créditos</text>
+</g>
+<g class="course-box" data-code="0303005" style="cursor:pointer;">
+<rect x="426" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="426" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303005</text>
+<text x="560.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="426" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="500.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Cálculo</text>
+<text x="500.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">Integral</text>
+</g>
+<g class="course-box" data-code="0314047" style="cursor:pointer;">
+<rect x="426" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="426" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314047</text>
+<text x="560.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="426" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="500.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Bases de</text>
+<text x="500.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Datos</text>
+</g>
+<g class="course-box" data-code="0314068" style="cursor:pointer;">
+<rect x="426" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="426" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314068</text>
+<text x="560.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">4</text>
+<rect class="box-name-bg" x="426" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="500.0" y="284.0" text-anchor="middle" font-size="10" fill="#333">Fund. de</text>
+<text x="500.0" y="298.0" text-anchor="middle" font-size="10" fill="#333">Estadística II</text>
+</g>
+<g class="course-box" data-code="0305450" style="cursor:pointer;">
+<rect x="426" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="426" y="334" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0305450</text>
+<text x="560.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">1</text>
+<rect class="box-name-bg" x="426" y="356" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="500.0" y="372.0" text-anchor="middle" font-size="10" fill="#333">Cátedra Form.</text>
+<text x="500.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">Ciud. y Const.</text>
+</g>
+<g class="course-box" data-code="0305002" style="cursor:pointer;">
+<rect x="426" y="422" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="426" y="422" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="422" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0305002</text>
+<text x="560.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="white">2</text>
+<rect class="box-name-bg" x="426" y="444" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="500.0" y="460.0" text-anchor="middle" font-size="10" fill="#333">Hist., Política</text>
+<text x="500.0" y="474.0" text-anchor="middle" font-size="10" fill="#333">y Estética</text>
+</g>
+<g class="course-box" data-code="9003102" style="cursor:pointer;">
+<rect x="426" y="510" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="426" y="510" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="510" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">9003102</text>
+<text x="560.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="white">2</text>
+<rect class="box-name-bg" x="426" y="532" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="500.0" y="548.0" text-anchor="middle" font-size="10" fill="#333">English 2</text>
+<text x="500.0" y="562.0" text-anchor="middle" font-size="10" fill="#333">20 créditos</text>
+</g>
+<g class="course-box" data-code="0303009" style="cursor:pointer;">
+<rect x="619" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="619" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303009</text>
+<text x="753.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="619" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="693.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Cálculo</text>
+<text x="693.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">Vectorial</text>
+</g>
+<g class="course-box" data-code="0303013" style="cursor:pointer;">
+<rect x="619" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="619" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303013</text>
+<text x="753.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="619" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="693.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Ec. Difer.</text>
+<text x="693.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Ordinarias</text>
+</g>
+<g class="course-box" data-code="0303313" style="cursor:pointer;">
+<rect x="619" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="619" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303313</text>
+<text x="753.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="619" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="693.0" y="291.0" text-anchor="middle" font-size="10" fill="#333">Probabilidad</text>
+</g>
+<g class="course-box" data-code="0314069" style="cursor:pointer;">
+<rect x="619" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="619" y="334" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314069</text>
+<text x="753.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="619" y="356" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="693.0" y="372.0" text-anchor="middle" font-size="10" fill="#333">Métodos</text>
+<text x="693.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">Numéricos I</text>
+</g>
+<g class="course-box" data-code="0305003" style="cursor:pointer;">
+<rect x="619" y="422" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="619" y="422" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="422" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0305003</text>
+<text x="753.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="white">2</text>
+<rect class="box-name-bg" x="619" y="444" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="693.0" y="460.0" text-anchor="middle" font-size="10" fill="#333">Cát. Ambiental</text>
+<text x="693.0" y="474.0" text-anchor="middle" font-size="10" fill="#333">UdeA</text>
+</g>
+<g class="course-box" data-code="9003103" style="cursor:pointer;">
+<rect x="619" y="510" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="619" y="510" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="510" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">9003103</text>
+<text x="753.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="white">2</text>
+<rect class="box-name-bg" x="619" y="532" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="693.0" y="548.0" text-anchor="middle" font-size="10" fill="#333">English 3</text>
+<text x="693.0" y="562.0" text-anchor="middle" font-size="10" fill="#333">30 créditos</text>
+</g>
+<g class="course-box" data-code="0314306" style="cursor:pointer;">
+<rect x="812" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="812" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314306</text>
+<text x="946.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="812" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="886.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Procesos</text>
+<text x="886.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">Estocásticos</text>
+</g>
+<g class="course-box" data-code="0314070" style="cursor:pointer;">
+<rect x="812" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="812" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314070</text>
+<text x="946.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">4</text>
+<rect class="box-name-bg" x="812" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="886.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Inferencia</text>
+<text x="886.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Estadística</text>
+</g>
+<g class="course-box" data-code="0314210" style="cursor:pointer;">
+<rect x="812" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="812" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314210</text>
+<text x="946.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="812" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="886.0" y="291.0" text-anchor="middle" font-size="10" fill="#333">Muestreo</text>
+</g>
+<g class="course-box" data-code="0305004" style="cursor:pointer;">
+<rect x="812" y="422" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="812" y="422" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="422" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0305004</text>
+<text x="946.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="white">1</text>
+<rect class="box-name-bg" x="812" y="444" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="886.0" y="460.0" text-anchor="middle" font-size="10" fill="#333">Desarrollo</text>
+<text x="886.0" y="474.0" text-anchor="middle" font-size="10" fill="#333">Humano</text>
+</g>
+<g class="course-box" data-code="9003104" style="cursor:pointer;">
+<rect x="812" y="510" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="812" y="510" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="510" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">9003104</text>
+<text x="946.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="white">2</text>
+<rect class="box-name-bg" x="812" y="532" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="886.0" y="548.0" text-anchor="middle" font-size="10" fill="#333">English 4</text>
+<text x="886.0" y="562.0" text-anchor="middle" font-size="10" fill="#333">40 créditos</text>
+</g>
+<g class="course-box" data-code="0314302" style="cursor:pointer;">
+<rect x="1005" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1005" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314302</text>
+<text x="1139.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1005" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1079.0" y="115.0" text-anchor="middle" font-size="10" fill="#333">Simulación</text>
+</g>
+<g class="course-box" data-code="0314405" style="cursor:pointer;">
+<rect x="1005" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1005" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314405</text>
+<text x="1139.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1005" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1079.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Análisis</text>
+<text x="1079.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Multivariado I</text>
+</g>
+<g class="course-box" data-code="0314313" style="cursor:pointer;">
+<rect x="1005" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1005" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314313</text>
+<text x="1139.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1005" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1079.0" y="284.0" text-anchor="middle" font-size="10" fill="#333">Estad. No</text>
+<text x="1079.0" y="298.0" text-anchor="middle" font-size="10" fill="#333">Paramétrica</text>
+</g>
+<g class="course-box" data-code="0314030" style="cursor:pointer;">
+<rect x="1005" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1005" y="334" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314030</text>
+<text x="1139.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1005" y="356" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1079.0" y="372.0" text-anchor="middle" font-size="10" fill="#333">Análisis de</text>
+<text x="1079.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">Regresión</text>
+</g>
+<g class="course-box" data-code="0305005" style="cursor:pointer;">
+<rect x="1005" y="422" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1005" y="422" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="422" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0305005</text>
+<text x="1139.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="white">1</text>
+<rect class="box-name-bg" x="1005" y="444" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1079.0" y="460.0" text-anchor="middle" font-size="10" fill="#333">Ética e Integ.</text>
+<text x="1079.0" y="474.0" text-anchor="middle" font-size="10" fill="#333">Científica</text>
+</g>
+<g class="course-box" data-code="9003105" style="cursor:pointer;">
+<rect x="1005" y="510" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1005" y="510" width="120" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="510" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">9003105</text>
+<text x="1139.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="white">2</text>
+<rect class="box-name-bg" x="1005" y="532" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1079.0" y="548.0" text-anchor="middle" font-size="10" fill="#333">English 5</text>
+<text x="1079.0" y="562.0" text-anchor="middle" font-size="10" fill="#333">50 créditos</text>
+</g>
+<g class="course-box" data-code="0303029" style="cursor:pointer;">
+<rect x="1198" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1198" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0303029</text>
+<text x="1332.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1198" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1272.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Intro. a la</text>
+<text x="1272.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">Investigación</text>
+</g>
+<g class="course-box" data-code="0314415" style="cursor:pointer;">
+<rect x="1198" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1198" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314415</text>
+<text x="1332.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1198" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1272.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Análisis</text>
+<text x="1272.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Multivariado II</text>
+</g>
+<g class="course-box" data-code="0314062" style="cursor:pointer;">
+<rect x="1198" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1198" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314062</text>
+<text x="1332.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1198" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1272.0" y="284.0" text-anchor="middle" font-size="10" fill="#333">Análisis</text>
+<text x="1272.0" y="298.0" text-anchor="middle" font-size="10" fill="#333">Bayesiano</text>
+</g>
+<g class="course-box" data-code="0314311" style="cursor:pointer;">
+<rect x="1198" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1198" y="334" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314311</text>
+<text x="1332.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1198" y="356" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1272.0" y="372.0" text-anchor="middle" font-size="10" fill="#333">Diseño de</text>
+<text x="1272.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">Experimentos</text>
+</g>
+<g class="course-box" data-code="0314044" style="cursor:pointer;">
+<rect x="1391" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1391" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1511" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1451.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314044</text>
+<text x="1525.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">6</text>
+<rect class="box-name-bg" x="1391" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1465.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Sem. Trabajo</text>
+<text x="1465.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">de Grado</text>
+</g>
+<g class="course-box" data-code="0314404" style="cursor:pointer;">
+<rect x="1391" y="158" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1391" y="158" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1511" y="158" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1451.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314404</text>
+<text x="1525.0" y="173" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1391" y="180" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1465.0" y="196.0" text-anchor="middle" font-size="10" fill="#333">Series de</text>
+<text x="1465.0" y="210.0" text-anchor="middle" font-size="10" fill="#333">Tiempo</text>
+</g>
+<g class="course-box" data-code="0314416" style="cursor:pointer;">
+<rect x="1391" y="246" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1391" y="246" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1511" y="246" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1451.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314416</text>
+<text x="1525.0" y="261" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1391" y="268" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1465.0" y="284.0" text-anchor="middle" font-size="10" fill="#333">Análisis de</text>
+<text x="1465.0" y="298.0" text-anchor="middle" font-size="10" fill="#333">Sobrevivencia</text>
+</g>
+<g class="course-box" data-code="0314045" style="cursor:pointer;">
+<rect x="1584" y="70" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1584" y="70" width="120" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1704" y="70" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1644.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">0314045</text>
+<text x="1718.0" y="85" text-anchor="middle" font-size="9" font-weight="bold" fill="white">10</text>
+<rect class="box-name-bg" x="1584" y="92" width="148" height="38" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1658.0" y="108.0" text-anchor="middle" font-size="10" fill="#333">Trabajo de</text>
+<text x="1658.0" y="122.0" text-anchor="middle" font-size="10" fill="#333">Grado</text>
+</g>
+<g class="course-box"  style="">
+<rect x="812" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="812" y="334" width="120" height="22" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Electiva 1</text>
+<text x="946.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="812" y="356" width="148" height="38" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="886.0" y="372.0" text-anchor="middle" font-size="10" fill="#333"></text>
+<text x="886.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">70 créditos</text>
+</g>
+<g class="course-box"  style="">
+<rect x="1198" y="422" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1198" y="422" width="120" height="22" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="422" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Electiva 2</text>
+<text x="1332.0" y="437" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1198" y="444" width="148" height="38" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1272.0" y="460.0" text-anchor="middle" font-size="10" fill="#333"></text>
+<text x="1272.0" y="474.0" text-anchor="middle" font-size="10" fill="#333">70 créditos</text>
+</g>
+<g class="course-box"  style="">
+<rect x="1198" y="510" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1198" y="510" width="120" height="22" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="510" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Electiva 3</text>
+<text x="1332.0" y="525" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1198" y="532" width="148" height="38" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1272.0" y="548.0" text-anchor="middle" font-size="10" fill="#333"></text>
+<text x="1272.0" y="562.0" text-anchor="middle" font-size="10" fill="#333">70 créditos</text>
+</g>
+<g class="course-box"  style="">
+<rect x="1391" y="334" width="148" height="60" fill="transparent" stroke="none"/>
+<rect class="box-code-bg" x="1391" y="334" width="120" height="22" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1511" y="334" width="28" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1451.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Electiva 4</text>
+<text x="1525.0" y="349" text-anchor="middle" font-size="9" font-weight="bold" fill="white">3</text>
+<rect class="box-name-bg" x="1391" y="356" width="148" height="38" fill="#F2F2F2" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1465.0" y="372.0" text-anchor="middle" font-size="10" fill="#333"></text>
+<text x="1465.0" y="386.0" text-anchor="middle" font-size="10" fill="#333">70 créditos</text>
+</g>
+<g class="arrow" data-from="0303001" data-to="0303002" style="display:none;">
+<path d="M191,100.0 Q210.5,85.0 230,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M191,100.0 Q210.5,85.0 230,100.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314028" data-to="0314029" style="display:none;">
+<path d="M191,188.0 Q210.5,173.0 230,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M191,188.0 Q210.5,173.0 230,188.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303001" data-to="0303010" style="display:none;">
+<path d="M191,100.0 Q210.5,48.95961353826466 230,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3197307569217642" transform="translate(1,2)"/>
+<path d="M191,100.0 Q210.5,48.95961353826466 230,276.0" fill="none" stroke="#333333" stroke-width="1.8197307569217644"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303006" data-to="0314067" style="display:none;">
+<path d="M191,276.0 Q210.5,249.56176949900023 230,364.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M191,276.0 Q210.5,249.56176949900023 230,364.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303002" data-to="0303005" style="display:none;">
+<path d="M384,100.0 Q403.5,85.0 423,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M384,100.0 Q403.5,85.0 423,100.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314029" data-to="0314047" style="display:none;">
+<path d="M384,188.0 Q403.5,173.0 423,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M384,188.0 Q403.5,173.0 423,188.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314067" data-to="0314068" style="display:none;">
+<path d="M384,364.0 Q403.5,249.56176949900023 423,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M384,364.0 Q403.5,249.56176949900023 423,276.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0305190" data-to="0305450" style="display:none;">
+<path d="M191,452.0 Q307.0,314.78065019375003 423,364.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2518710012916667" transform="translate(1,2)"/>
+<path d="M191,452.0 Q307.0,314.78065019375003 423,364.0" fill="none" stroke="#333333" stroke-width="1.7518710012916667"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0305190" data-to="0305002" style="display:none;">
+<path d="M191,452.0 Q307.0,417.2 423,452.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.268" transform="translate(1,2)"/>
+<path d="M191,452.0 Q307.0,417.2 423,452.0" fill="none" stroke="#333333" stroke-width="1.768"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="9003101" data-to="9003102" style="display:none;">
+<path d="M384,540.0 Q403.5,525.0 423,540.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M384,540.0 Q403.5,525.0 423,540.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303005" data-to="0303009" style="display:none;">
+<path d="M577,100.0 Q596.5,85.0 616,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M577,100.0 Q596.5,85.0 616,100.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303010" data-to="0303013" style="display:none;">
+<path d="M384,276.0 Q500.0,138.78065019375003 616,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2518710012916667" transform="translate(1,2)"/>
+<path d="M384,276.0 Q500.0,138.78065019375003 616,188.0" fill="none" stroke="#333333" stroke-width="1.7518710012916667"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303005" data-to="0303013" style="display:none;">
+<path d="M577,100.0 Q596.5,73.56176949900023 616,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M577,100.0 Q596.5,73.56176949900023 616,188.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303010" data-to="0303313" style="display:none;">
+<path d="M384,276.0 Q500.0,241.2 616,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.268" transform="translate(1,2)"/>
+<path d="M384,276.0 Q500.0,241.2 616,276.0" fill="none" stroke="#333333" stroke-width="1.768"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303005" data-to="0314069" style="display:none;">
+<path d="M577,100.0 Q596.5,23.97022982828905 616,364.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2331348655219267" transform="translate(1,2)"/>
+<path d="M577,100.0 Q596.5,23.97022982828905 616,364.0" fill="none" stroke="#333333" stroke-width="1.733134865521927"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314029" data-to="0314069" style="display:none;">
+<path d="M384,188.0 Q500.0,120.31934066431688 616,364.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2087956044287793" transform="translate(1,2)"/>
+<path d="M384,188.0 Q500.0,120.31934066431688 616,364.0" fill="none" stroke="#333333" stroke-width="1.7087956044287793"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0305002" data-to="0305003" style="display:none;">
+<path d="M577,452.0 Q596.5,437.0 616,452.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M577,452.0 Q596.5,437.0 616,452.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0305450" data-to="0305003" style="display:none;">
+<path d="M577,364.0 Q596.5,337.5617694990002 616,452.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M577,364.0 Q596.5,337.5617694990002 616,452.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="9003102" data-to="9003103" style="display:none;">
+<path d="M577,540.0 Q596.5,525.0 616,540.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M577,540.0 Q596.5,525.0 616,540.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303313" data-to="0314306" style="display:none;">
+<path d="M770,276.0 Q789.5,48.95961353826466 809,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3197307569217642" transform="translate(1,2)"/>
+<path d="M770,276.0 Q789.5,48.95961353826466 809,100.0" fill="none" stroke="#333333" stroke-width="1.8197307569217644"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303313" data-to="0314070" style="display:none;">
+<path d="M770,276.0 Q789.5,161.56176949900023 809,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M770,276.0 Q789.5,161.56176949900023 809,188.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314068" data-to="0314210" style="display:none;">
+<path d="M577,276.0 Q693.0,241.2 809,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.268" transform="translate(1,2)"/>
+<path d="M577,276.0 Q693.0,241.2 809,276.0" fill="none" stroke="#333333" stroke-width="1.768"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0305003" data-to="0305004" style="display:none;">
+<path d="M770,452.0 Q789.5,437.0 809,452.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M770,452.0 Q789.5,437.0 809,452.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="9003103" data-to="9003104" style="display:none;">
+<path d="M770,540.0 Q789.5,525.0 809,540.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M770,540.0 Q789.5,525.0 809,540.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314069" data-to="0314302" style="display:none;">
+<path d="M770,364.0 Q886.0,11.281881672426891 1002,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.1485458778161792" transform="translate(1,2)"/>
+<path d="M770,364.0 Q886.0,11.281881672426891 1002,100.0" fill="none" stroke="#333333" stroke-width="1.6485458778161792"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303013" data-to="0314302" style="display:none;">
+<path d="M770,188.0 Q886.0,50.78065019375003 1002,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2518710012916667" transform="translate(1,2)"/>
+<path d="M770,188.0 Q886.0,50.78065019375003 1002,100.0" fill="none" stroke="#333333" stroke-width="1.7518710012916667"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314306" data-to="0314405" style="display:none;">
+<path d="M963,100.0 Q982.5,73.56176949900023 1002,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M963,100.0 Q982.5,73.56176949900023 1002,188.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314070" data-to="0314405" style="display:none;">
+<path d="M963,188.0 Q982.5,173.0 1002,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M963,188.0 Q982.5,173.0 1002,188.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314070" data-to="0314313" style="display:none;">
+<path d="M963,188.0 Q982.5,161.56176949900023 1002,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M963,188.0 Q982.5,161.56176949900023 1002,276.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314070" data-to="0314030" style="display:none;">
+<path d="M963,188.0 Q982.5,136.95961353826465 1002,364.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3197307569217642" transform="translate(1,2)"/>
+<path d="M963,188.0 Q982.5,136.95961353826465 1002,364.0" fill="none" stroke="#333333" stroke-width="1.8197307569217644"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0305004" data-to="0305005" style="display:none;">
+<path d="M963,452.0 Q982.5,437.0 1002,452.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M963,452.0 Q982.5,437.0 1002,452.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="9003104" data-to="9003105" style="display:none;">
+<path d="M963,540.0 Q982.5,525.0 1002,540.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M963,540.0 Q982.5,525.0 1002,540.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314405" data-to="0314415" style="display:none;">
+<path d="M1156,188.0 Q1175.5,173.0 1195,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M1156,188.0 Q1175.5,173.0 1195,188.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314302" data-to="0314415" style="display:none;">
+<path d="M1156,100.0 Q1175.5,73.56176949900023 1195,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M1156,100.0 Q1175.5,73.56176949900023 1195,188.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314313" data-to="0314415" style="display:none;">
+<path d="M1156,276.0 Q1175.5,161.56176949900023 1195,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M1156,276.0 Q1175.5,161.56176949900023 1195,188.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314302" data-to="0314062" style="display:none;">
+<path d="M1156,100.0 Q1175.5,48.95961353826466 1195,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3197307569217642" transform="translate(1,2)"/>
+<path d="M1156,100.0 Q1175.5,48.95961353826466 1195,276.0" fill="none" stroke="#333333" stroke-width="1.8197307569217644"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314313" data-to="0314311" style="display:none;">
+<path d="M1156,276.0 Q1175.5,249.56176949900023 1195,364.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.403745129993335" transform="translate(1,2)"/>
+<path d="M1156,276.0 Q1175.5,249.56176949900023 1195,364.0" fill="none" stroke="#333333" stroke-width="1.9037451299933348"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0303029" data-to="0314044" style="display:none;">
+<path d="M1349,100.0 Q1368.5,85.0 1388,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M1349,100.0 Q1368.5,85.0 1388,100.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314030" data-to="0314404" style="display:none;">
+<path d="M1156,364.0 Q1272.0,120.31934066431688 1388,188.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2087956044287793" transform="translate(1,2)"/>
+<path d="M1156,364.0 Q1272.0,120.31934066431688 1388,188.0" fill="none" stroke="#333333" stroke-width="1.7087956044287793"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314030" data-to="0314416" style="display:none;">
+<path d="M1156,364.0 Q1272.0,226.78065019375003 1388,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2518710012916667" transform="translate(1,2)"/>
+<path d="M1156,364.0 Q1272.0,226.78065019375003 1388,276.0" fill="none" stroke="#333333" stroke-width="1.7518710012916667"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314044" data-to="0314045" style="display:none;">
+<path d="M1542,100.0 Q1561.5,85.0 1581,100.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+<path d="M1542,100.0 Q1561.5,85.0 1581,100.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+</g>
+<g class="arrow" data-from="0314070" data-to="0314210" style="display:none;">
+<path d="M963,188.0 Q886.0,149.3945494306148 809,276.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.322630329537432" transform="translate(1,2)"/>
+<path d="M963,188.0 Q886.0,149.3945494306148 809,276.0" fill="none" stroke="#2563EB" stroke-width="1.822630329537432" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+</g>
+<rect x="40" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="160" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="100.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="174.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">15</text>
+<rect x="40" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="160" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="100.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="174.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">15</text>
+<rect x="233" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="353" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="293.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="367.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">15</text>
+<rect x="233" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="353" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="293.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="367.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">30</text>
+<rect x="426" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="560.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">15</text>
+<rect x="426" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="546" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="486.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="560.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">45</text>
+<rect x="619" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="753.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">16</text>
+<rect x="619" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="739" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="679.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="753.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">61</text>
+<rect x="812" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="946.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">16</text>
+<rect x="812" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="932" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="872.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="946.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">77</text>
+<rect x="1005" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="1139.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">15</text>
+<rect x="1005" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1125" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1065.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="1139.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">92</text>
+<rect x="1198" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="1332.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">18</text>
+<rect x="1198" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1318" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1258.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="1332.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">110</text>
+<rect x="1391" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1511" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1451.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="1525.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">15</text>
+<rect x="1391" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1511" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1451.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="1525.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">125</text>
+<rect x="1584" y="608" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1704" y="608" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1644.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Créditos</text>
+<text x="1718.0" y="622" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">10</text>
+<rect x="1584" y="636" width="120" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<rect x="1704" y="636" width="28" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+<text x="1644.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">Suma</text>
+<text x="1718.0" y="650" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">135</text>
+<path d="M40,673 Q55,665 70,673" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#ap)"/>
+<text x="76" y="677" font-size="10" fill="#333">Prerrequisito</text>
+<path d="M200,673 Q215,665 230,673" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#ac)"/>
+<text x="236" y="677" font-size="10" fill="#2563EB">Correquisito</text>
+</svg>
+<script>
+const edges = [{"from": "0303001", "to": "0303002", "tipo": "PRE"}, {"from": "0314028", "to": "0314029", "tipo": "PRE"}, {"from": "0303001", "to": "0303010", "tipo": "PRE"}, {"from": "0303006", "to": "0314067", "tipo": "PRE"}, {"from": "0303002", "to": "0303005", "tipo": "PRE"}, {"from": "0314029", "to": "0314047", "tipo": "PRE"}, {"from": "0314067", "to": "0314068", "tipo": "PRE"}, {"from": "0305190", "to": "0305450", "tipo": "PRE"}, {"from": "0305190", "to": "0305002", "tipo": "PRE"}, {"from": "9003101", "to": "9003102", "tipo": "PRE"}, {"from": "0303005", "to": "0303009", "tipo": "PRE"}, {"from": "0303010", "to": "0303013", "tipo": "PRE"}, {"from": "0303005", "to": "0303013", "tipo": "PRE"}, {"from": "0303010", "to": "0303313", "tipo": "PRE"}, {"from": "0303005", "to": "0314069", "tipo": "PRE"}, {"from": "0314029", "to": "0314069", "tipo": "PRE"}, {"from": "0305002", "to": "0305003", "tipo": "PRE"}, {"from": "0305450", "to": "0305003", "tipo": "PRE"}, {"from": "9003102", "to": "9003103", "tipo": "PRE"}, {"from": "0303313", "to": "0314306", "tipo": "PRE"}, {"from": "0303313", "to": "0314070", "tipo": "PRE"}, {"from": "0314068", "to": "0314210", "tipo": "PRE"}, {"from": "0305003", "to": "0305004", "tipo": "PRE"}, {"from": "9003103", "to": "9003104", "tipo": "PRE"}, {"from": "0314069", "to": "0314302", "tipo": "PRE"}, {"from": "0303013", "to": "0314302", "tipo": "PRE"}, {"from": "0314306", "to": "0314405", "tipo": "PRE"}, {"from": "0314070", "to": "0314405", "tipo": "PRE"}, {"from": "0314070", "to": "0314313", "tipo": "PRE"}, {"from": "0314070", "to": "0314030", "tipo": "PRE"}, {"from": "0305004", "to": "0305005", "tipo": "PRE"}, {"from": "9003104", "to": "9003105", "tipo": "PRE"}, {"from": "0314405", "to": "0314415", "tipo": "PRE"}, {"from": "0314302", "to": "0314415", "tipo": "PRE"}, {"from": "0314313", "to": "0314415", "tipo": "PRE"}, {"from": "0314302", "to": "0314062", "tipo": "PRE"}, {"from": "0314313", "to": "0314311", "tipo": "PRE"}, {"from": "0303029", "to": "0314044", "tipo": "PRE"}, {"from": "0314030", "to": "0314404", "tipo": "PRE"}, {"from": "0314030", "to": "0314416", "tipo": "PRE"}, {"from": "0314044", "to": "0314045", "tipo": "PRE"}, {"from": "0314070", "to": "0314210", "tipo": "CO"}];
+
+// Build adjacency lists
+const preOf = {};   // preOf[code] = [codes that are prerequisites OF this code]
+const depOn = {};   // depOn[code] = [codes that DEPEND ON this code]
+edges.forEach(e => {
+  if (!preOf[e.to]) preOf[e.to] = [];
+  preOf[e.to].push(e.from);
+  if (!depOn[e.from]) depOn[e.from] = [];
+  depOn[e.from].push(e.to);
+});
+
+function getChain(code) {
+  // Get full chain: all ancestors (prerequisites) and all descendants (dependents)
+  const chain = new Set();
+  chain.add(code);
+  // Traverse up (prerequisites)
+  const upQueue = [code];
+  while (upQueue.length) {
+    const c = upQueue.shift();
+    (preOf[c] || []).forEach(p => { if (!chain.has(p)) { chain.add(p); upQueue.push(p); } });
+  }
+  // Traverse down (dependents)
+  const downQueue = [code];
+  while (downQueue.length) {
+    const c = downQueue.shift();
+    (depOn[c] || []).forEach(d => { if (!chain.has(d)) { chain.add(d); downQueue.push(d); } });
+  }
+  return chain;
+}
+
+function getChainEdges(chain) {
+  return edges.filter(e => chain.has(e.from) && chain.has(e.to));
+}
+
+let mode = 'clear'; // 'clear', 'all', 'chain'
+let selectedCode = null;
+
+function clearAll() {
+  mode = 'clear'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = 'none');
+  document.querySelectorAll('.course-box').forEach(b => {
+    b.classList.remove('dimmed','highlighted','selected');
+  });
+  updateButtons();
+}
+
+function showAll() {
+  mode = 'all'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = '');
+  document.querySelectorAll('.course-box').forEach(b => {
+    b.classList.remove('dimmed','highlighted','selected');
+  });
+  updateButtons();
+}
+
+function showChain(code) {
+  mode = 'chain'; selectedCode = code;
+  const chain = getChain(code);
+  const chainEdges = getChainEdges(chain);
+
+  // Hide all arrows, then show only chain arrows
+  document.querySelectorAll('.arrow').forEach(a => {
+    const from = a.getAttribute('data-from');
+    const to = a.getAttribute('data-to');
+    const inChain = chainEdges.some(e => e.from === from && e.to === to);
+    a.style.display = inChain ? '' : 'none';
+  });
+
+  // Dim non-chain boxes, highlight chain boxes
+  document.querySelectorAll('.course-box').forEach(b => {
+    const bCode = b.getAttribute('data-code');
+    if (!bCode) { b.classList.add('dimmed'); b.classList.remove('highlighted','selected'); return; }
+    if (bCode === code) {
+      b.classList.add('selected'); b.classList.remove('dimmed','highlighted');
+    } else if (chain.has(bCode)) {
+      b.classList.add('highlighted'); b.classList.remove('dimmed','selected');
+    } else {
+      b.classList.add('dimmed'); b.classList.remove('highlighted','selected');
+    }
+  });
+  updateButtons();
+}
+
+function updateButtons() {
+  document.getElementById('btn-clear').classList.toggle('active', mode === 'clear');
+  document.getElementById('btn-all').classList.toggle('active', mode === 'all');
+}
+
+// Click handlers on course boxes
+document.querySelectorAll('.course-box[data-code]').forEach(box => {
+  box.addEventListener('click', () => {
+    const code = box.getAttribute('data-code');
+    if (selectedCode === code) { clearAll(); }
+    else { showChain(code); }
+  });
+});
+</script>
+</body></html>
