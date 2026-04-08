@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Plan de Estudios — mat_malla_input</title>
+<style>
+  body { margin: 20px; background: #FAFAFA; font-family: Calibri, 'Segoe UI', sans-serif; }
+  h1 { text-align: center; font-size: 14px; color: #333; margin-bottom: 5px; }
+  .controls { text-align: center; margin: 8px 0; }
+  .controls button {
+    padding: 6px 18px; margin: 0 6px; border: 1px solid #999; border-radius: 4px;
+    background: white; font-size: 14px; cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .controls button:hover { background: #E8E8E8; }
+  .controls button.active { background: #333; color: white; border-color: #333; }
+  svg { display: block; margin: 0 auto; }
+  .course-box { transition: opacity 0.2s; }
+  .course-box.dimmed { opacity: 0.25; }
+  .course-box.highlighted rect.box-code-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.highlighted rect.box-name-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.selected rect.box-code-bg { stroke: #DC2626; stroke-width: 3; }
+  .course-box.selected rect.box-name-bg { stroke: #DC2626; stroke-width: 3; }
+  .arrow { transition: opacity 0.3s; }
+  @media print { body { margin: 0; background: white; } .controls { display: none; } }
+</style>
+</head><body>
+<h1>Plan de Estudios — mat_malla_input</h1>
+<div class="controls">
+  <button id="btn-clear" class="active" onclick="clearAll()">Sin flechas</button>
+  <button id="btn-all" onclick="showAll()">Mostrar todas</button>
+  <span style="color:#888; font-size:14px; margin-left:12px;">Clic en un curso para ver su cadena completa</span>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="787" viewBox="0 0 1700 787">
+    <defs>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/></filter>
+<marker id="ap" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#333333"/></marker>
+<marker id="ac" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#2563EB"/></marker>
+</defs>
+    <text x="99.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">1</text>
+    <text x="263.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">2</text>
+    <text x="427.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">3</text>
+    <text x="591.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">4</text>
+    <text x="755.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">5</text>
+    <text x="919.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">6</text>
+    <text x="1083.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">7</text>
+    <text x="1247.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">8</text>
+    <text x="1411.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9</text>
+    <text x="1575.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">10</text>
+    <g class="course-box" data-code="0303001" style="cursor:pointer;">
+    <rect x="40" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303001</text>
+    <text x="147.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA Y</text>
+    <text x="99.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRIGONOMETRÍA</text>
+    </g>
+    <g class="course-box" data-code="0303006" style="cursor:pointer;">
+    <rect x="40" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303006</text>
+    <text x="147.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GEOMETRÍA</text>
+    <text x="99.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">BÁSICA</text>
+    </g>
+    <g class="course-box" data-code="0303117" style="cursor:pointer;">
+    <rect x="40" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303117</text>
+    <text x="147.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNDAMENTOS DE</text>
+    <text x="99.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MATEMÁTICA</text>
+    </g>
+    <g class="course-box" data-code="0305001" style="cursor:pointer;">
+    <rect x="40" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305001</text>
+    <text x="147.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNDAMENTACIÓN</text>
+    <text x="99.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">EN CIENCIA</text>
+    </g>
+    <g class="course-box" data-code="0305190" style="cursor:pointer;">
+    <rect x="40" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305190</text>
+    <text x="147.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESPAÑOL</text>
+    <text x="99.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ACADÉMICO</text>
+    </g>
+    <g class="course-box" data-code="0303002" style="cursor:pointer;">
+    <rect x="204" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303002</text>
+    <text x="311.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="263.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DIFERENCIAL</text>
+    </g>
+    <g class="course-box" data-code="0303010" style="cursor:pointer;">
+    <rect x="204" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303010</text>
+    <text x="311.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="225.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA LINEAL</text>
+    </g>
+    <g class="course-box" data-code="0303008" style="cursor:pointer;">
+    <rect x="204" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303008</text>
+    <text x="311.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="327.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">LÓGICA</text>
+    </g>
+    <g class="course-box" data-code="0314029" style="cursor:pointer;">
+    <rect x="204" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314029</text>
+    <text x="311.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUND DE</text>
+    <text x="263.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PROGRAMACIÓN</text>
+    </g>
+    <g class="course-box" data-code="0305450" style="cursor:pointer;">
+    <rect x="204" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305450</text>
+    <text x="311.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="204" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁTEDRA DE</text>
+    <text x="263.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FORMACIÓN CIUD</text>
+    </g>
+    <g class="course-box" data-code="9003101" style="cursor:pointer;">
+    <rect x="204" y="580" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="580" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="580" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003101</text>
+    <text x="311.0" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="204" y="602" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="633.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 1</text>
+    </g>
+    <g class="course-box" data-code="0303005" style="cursor:pointer;">
+    <rect x="368" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303005</text>
+    <text x="475.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="427.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INTEGRAL</text>
+    </g>
+    <g class="course-box" data-code="0302270" style="cursor:pointer;">
+    <rect x="368" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0302270</text>
+    <text x="475.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="368" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FÍSICA BÁSICA</text>
+    <text x="427.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">I</text>
+    </g>
+    <g class="course-box" data-code="0303011" style="cursor:pointer;">
+    <rect x="368" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303011</text>
+    <text x="475.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TEORÍA DE</text>
+    <text x="427.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CONJUNTOS</text>
+    </g>
+    <g class="course-box" data-code="0303258" style="cursor:pointer;">
+    <rect x="368" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303258</text>
+    <text x="475.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="416.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">TEORÍA DE</text>
+    <text x="427.5" y="429.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">NÚMEROS Y</text>
+    <text x="427.5" y="442.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">COMB.</text>
+    </g>
+    <g class="course-box" data-code="9003102" style="cursor:pointer;">
+    <rect x="368" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003102</text>
+    <text x="475.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="368" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="531.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 2</text>
+    </g>
+    <g class="course-box" data-code="0303009" style="cursor:pointer;">
+    <rect x="532" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303009</text>
+    <text x="639.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="591.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">VECTORIAL</text>
+    </g>
+    <g class="course-box" data-code="0302391" style="cursor:pointer;">
+    <rect x="532" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0302391</text>
+    <text x="639.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="532" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FÍSICA BÁSICA</text>
+    <text x="591.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">II</text>
+    </g>
+    <g class="course-box" data-code="0303313" style="cursor:pointer;">
+    <rect x="532" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303313</text>
+    <text x="639.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="327.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PROBABILIDAD</text>
+    </g>
+    <g class="course-box" data-code="0303304" style="cursor:pointer;">
+    <rect x="532" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303304</text>
+    <text x="639.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="429.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA I</text>
+    </g>
+    <g class="course-box" data-code="0314069" style="cursor:pointer;">
+    <rect x="532" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="478" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314069</text>
+    <text x="639.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MÉTODOS</text>
+    <text x="591.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">NUMÉRICOS I</text>
+    </g>
+    <g class="course-box" data-code="0303065" style="cursor:pointer;">
+    <rect x="696" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303065</text>
+    <text x="803.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MÉTODOS</text>
+    <text x="755.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">NUMÉRICOS II</text>
+    </g>
+    <g class="course-box" data-code="0303013" style="cursor:pointer;">
+    <rect x="696" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303013</text>
+    <text x="803.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ECUA DIFERENCI</text>
+    <text x="755.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ORDINARIAS</text>
+    </g>
+    <g class="course-box" data-code="0314070" style="cursor:pointer;">
+    <rect x="696" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314070</text>
+    <text x="803.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="696" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INFERENCIA</text>
+    <text x="755.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESTADÍSTICA</text>
+    </g>
+    <g class="course-box" data-code="0303354" style="cursor:pointer;">
+    <rect x="696" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303354</text>
+    <text x="803.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="429.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA II</text>
+    </g>
+    <g class="course-box" data-code="0305002" style="cursor:pointer;">
+    <rect x="696" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305002</text>
+    <text x="803.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="696" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="518.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">HISTORIA,</text>
+    <text x="755.5" y="531.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">POLÍTICA Y</text>
+    <text x="755.5" y="544.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ESTÉ</text>
+    </g>
+    <g class="course-box" data-code="9003103" style="cursor:pointer;">
+    <rect x="696" y="580" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="580" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="580" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003103</text>
+    <text x="803.0" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="696" y="602" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="633.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 3</text>
+    </g>
+    <g class="course-box" data-code="0303252" style="cursor:pointer;">
+    <rect x="860" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303252</text>
+    <text x="967.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="123.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS I</text>
+    </g>
+    <g class="course-box" data-code="0303404" style="cursor:pointer;">
+    <rect x="860" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303404</text>
+    <text x="967.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA</text>
+    <text x="919.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MULTILINEAL</text>
+    </g>
+    <g class="course-box" data-code="0305003" style="cursor:pointer;">
+    <rect x="860" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="274" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305003</text>
+    <text x="967.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="860" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁTEDRA</text>
+    <text x="919.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">AMBIENTAL UDEA</text>
+    </g>
+    <g class="course-box" data-code="9003104" style="cursor:pointer;">
+    <rect x="860" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003104</text>
+    <text x="967.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="860" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="429.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 4</text>
+    </g>
+    <g class="course-box" data-code="0303412" style="cursor:pointer;">
+    <rect x="1024" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303412</text>
+    <text x="1131.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="123.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TOPOLOGÍA</text>
+    </g>
+    <g class="course-box" data-code="0303302" style="cursor:pointer;">
+    <rect x="1024" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303302</text>
+    <text x="1131.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="225.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS II</text>
+    </g>
+    <g class="course-box" data-code="0303015" style="cursor:pointer;">
+    <rect x="1024" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303015</text>
+    <text x="1131.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">HIST. DE LAS</text>
+    <text x="1083.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MATEMÁTICAS</text>
+    </g>
+    <g class="course-box" data-code="0305004" style="cursor:pointer;">
+    <rect x="1024" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305004</text>
+    <text x="1131.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="1024" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DESARROLLO</text>
+    <text x="1083.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">HUMANO</text>
+    </g>
+    <g class="course-box" data-code="9003105" style="cursor:pointer;">
+    <rect x="1024" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003105</text>
+    <text x="1131.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="1024" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="531.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 5</text>
+    </g>
+    <g class="course-box" data-code="0303029" style="cursor:pointer;">
+    <rect x="1188" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303029</text>
+    <text x="1295.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INTRO A LA</text>
+    <text x="1247.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INVESTIGACIÓN</text>
+    </g>
+    <g class="course-box" data-code="0303352" style="cursor:pointer;">
+    <rect x="1188" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303352</text>
+    <text x="1295.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="225.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS III</text>
+    </g>
+    <g class="course-box" data-code="0303402" style="cursor:pointer;">
+    <rect x="1188" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303402</text>
+    <text x="1295.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">VARIABLE</text>
+    <text x="1247.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">COMPLEJA</text>
+    </g>
+    <g class="course-box" data-code="0305005" style="cursor:pointer;">
+    <rect x="1188" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305005</text>
+    <text x="1295.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="1188" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="416.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ÉTICA E</text>
+    <text x="1247.5" y="429.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">INTEGRIDAD</text>
+    <text x="1247.5" y="442.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">CIENTÍ</text>
+    </g>
+    <g class="course-box" data-code="0314044" style="cursor:pointer;">
+    <rect x="1352" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314044</text>
+    <text x="1459.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">6</text>
+    <rect class="box-name-bg" x="1352" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">SEMINARIO DE</text>
+    <text x="1411.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRABAJO DE G</text>
+    </g>
+    <g class="course-box" data-code="0303459" style="cursor:pointer;">
+    <rect x="1352" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303459</text>
+    <text x="1459.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1352" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GEOMETRÍA</text>
+    <text x="1411.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DIFERENCIAL</text>
+    </g>
+    <g class="course-box" data-code="0303452" style="cursor:pointer;">
+    <rect x="1352" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303452</text>
+    <text x="1459.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1352" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TEORÍA DE LA</text>
+    <text x="1411.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MEDIDA</text>
+    </g>
+    <g class="course-box" data-code="0303527" style="cursor:pointer;">
+    <rect x="1352" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303527</text>
+    <text x="1459.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1352" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ECU. DIF.</text>
+    <text x="1411.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PARCIALES</text>
+    </g>
+    <g class="course-box" data-code="0314045" style="cursor:pointer;">
+    <rect x="1516" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1516" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314045</text>
+    <text x="1623.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">10</text>
+    <rect class="box-name-bg" x="1516" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1575.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRABAJO DE</text>
+    <text x="1575.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GRADO</text>
+    </g>
+    <g class="course-box" data-code="0303552" style="cursor:pointer;">
+    <rect x="1516" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1516" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303552</text>
+    <text x="1623.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1516" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1575.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS</text>
+    <text x="1575.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNCIONAL</text>
+    </g>
+    <g class="arrow" data-from="0303001" data-to="0303002" style="display:none;">
+    <path d="M162,107.0 Q181.5,92.0 201,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,107.0 Q181.5,92.0 201,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303001" data-to="0303010" style="display:none;">
+    <path d="M162,107.0 Q181.5,78.61975274911883 201,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M162,107.0 Q181.5,78.61975274911883 201,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303006" data-to="0303010" style="display:none;">
+    <path d="M162,209.0 Q181.5,194.0 201,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,209.0 Q181.5,194.0 201,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303117" data-to="0303008" style="display:none;">
+    <path d="M162,311.0 Q181.5,296.0 201,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,311.0 Q181.5,296.0 201,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303117" data-to="0314029" style="display:none;">
+    <path d="M162,311.0 Q181.5,282.61975274911885 201,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M162,311.0 Q181.5,282.61975274911885 201,413.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305190" data-to="0305450" style="display:none;">
+    <path d="M162,515.0 Q181.5,500.0 201,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,515.0 Q181.5,500.0 201,515.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303002" data-to="0303005" style="display:none;">
+    <path d="M326,107.0 Q345.5,92.0 365,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M326,107.0 Q345.5,92.0 365,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303006" data-to="0302270" style="display:none;">
+    <path d="M162,209.0 Q263.5,178.55 365,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M162,209.0 Q263.5,178.55 365,209.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303002" data-to="0302270" style="display:none;">
+    <path d="M326,107.0 Q345.5,78.61975274911883 365,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M326,107.0 Q345.5,78.61975274911883 365,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303008" data-to="0303011" style="display:none;">
+    <path d="M326,311.0 Q345.5,296.0 365,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M326,311.0 Q345.5,296.0 365,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303011" data-to="0303258" style="display:none;">
+    <path d="M490,311.0 Q427.5,274.7997417369153 365,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3386649449127686" transform="translate(1,2)"/>
+    <path d="M490,311.0 Q427.5,274.7997417369153 365,413.0" fill="none" stroke="#2563EB" stroke-width="1.8386649449127686" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003101" data-to="9003102" style="display:none;">
+    <path d="M326,617.0 Q345.5,486.61975274911885 365,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M326,617.0 Q345.5,486.61975274911885 365,515.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303009" style="display:none;">
+    <path d="M326,209.0 Q427.5,60.92225799733791 529,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q427.5,60.92225799733791 529,107.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0303009" style="display:none;">
+    <path d="M490,107.0 Q509.5,92.0 529,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q509.5,92.0 529,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0302270" data-to="0302391" style="display:none;">
+    <path d="M490,209.0 Q509.5,194.0 529,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,209.0 Q509.5,194.0 529,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303009" data-to="0303313" style="display:none;">
+    <path d="M654,107.0 Q591.5,47.11236285292664 529,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.260749085686178" transform="translate(1,2)"/>
+    <path d="M654,107.0 Q591.5,47.11236285292664 529,311.0" fill="none" stroke="#2563EB" stroke-width="1.7607490856861776" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303304" style="display:none;">
+    <path d="M326,209.0 Q427.5,141.83100070652551 529,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.212206671376837" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q427.5,141.83100070652551 529,413.0" fill="none" stroke="#333333" stroke-width="1.712206671376837"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303258" data-to="0303304" style="display:none;">
+    <path d="M490,413.0 Q509.5,398.0 529,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,413.0 Q509.5,398.0 529,413.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314029" data-to="0314069" style="display:none;">
+    <path d="M326,413.0 Q427.5,366.9222579973379 529,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M326,413.0 Q427.5,366.9222579973379 529,515.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0314069" style="display:none;">
+    <path d="M490,107.0 Q509.5,-2.478959815533642 529,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.0901402678964427" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q509.5,-2.478959815533642 529,515.0" fill="none" stroke="#333333" stroke-width="1.5901402678964425"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303013" data-to="0303065" style="display:none;">
+    <path d="M818,209.0 Q755.5,70.79974173691528 693,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3386649449127686" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q755.5,70.79974173691528 693,107.0" fill="none" stroke="#2563EB" stroke-width="1.8386649449127686" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314069" data-to="0303065" style="display:none;">
+    <path d="M654,515.0 Q673.5,-2.478959815533642 693,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.0901402678964427" transform="translate(1,2)"/>
+    <path d="M654,515.0 Q673.5,-2.478959815533642 693,107.0" fill="none" stroke="#333333" stroke-width="1.5901402678964425"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303013" style="display:none;">
+    <path d="M326,209.0 Q509.5,153.95 693,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.133" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q509.5,153.95 693,209.0" fill="none" stroke="#333333" stroke-width="1.633"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0303013" style="display:none;">
+    <path d="M490,107.0 Q591.5,60.92225799733791 693,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q591.5,60.92225799733791 693,209.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303313" data-to="0314070" style="display:none;">
+    <path d="M654,311.0 Q673.5,296.0 693,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M654,311.0 Q673.5,296.0 693,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303304" data-to="0303354" style="display:none;">
+    <path d="M654,413.0 Q673.5,398.0 693,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M654,413.0 Q673.5,398.0 693,413.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305450" data-to="0305002" style="display:none;">
+    <path d="M326,515.0 Q509.5,459.95 693,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.133" transform="translate(1,2)"/>
+    <path d="M326,515.0 Q509.5,459.95 693,515.0" fill="none" stroke="#333333" stroke-width="1.633"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003102" data-to="9003103" style="display:none;">
+    <path d="M490,515.0 Q591.5,468.9222579973379 693,617.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M490,515.0 Q591.5,468.9222579973379 693,617.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303011" data-to="0303252" style="display:none;">
+    <path d="M490,311.0 Q673.5,20.016966570353247 857,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.0801131104690214" transform="translate(1,2)"/>
+    <path d="M490,311.0 Q673.5,20.016966570353247 857,107.0" fill="none" stroke="#333333" stroke-width="1.5801131104690216"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303009" data-to="0303252" style="display:none;">
+    <path d="M654,107.0 Q755.5,76.55 857,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M654,107.0 Q755.5,76.55 857,107.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303354" data-to="0303404" style="display:none;">
+    <path d="M818,413.0 Q837.5,153.84582692479225 857,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M818,413.0 Q837.5,153.84582692479225 857,209.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305002" data-to="0305003" style="display:none;">
+    <path d="M818,515.0 Q837.5,255.84582692479225 857,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M818,515.0 Q837.5,255.84582692479225 857,311.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003103" data-to="9003104" style="display:none;">
+    <path d="M818,617.0 Q837.5,357.8458269247922 857,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M818,617.0 Q837.5,357.8458269247922 857,413.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303252" data-to="0303412" style="display:none;">
+    <path d="M982,107.0 Q1001.5,92.0 1021,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,92.0 1021,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303252" data-to="0303302" style="display:none;">
+    <path d="M982,107.0 Q1001.5,78.61975274911883 1021,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,78.61975274911883 1021,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303304" data-to="0303015" style="display:none;">
+    <path d="M654,413.0 Q837.5,241.8633873947711 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.119089249298474" transform="translate(1,2)"/>
+    <path d="M654,413.0 Q837.5,241.8633873947711 1021,311.0" fill="none" stroke="#333333" stroke-width="1.619089249298474"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314070" data-to="0303015" style="display:none;">
+    <path d="M818,311.0 Q919.5,280.55 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M818,311.0 Q919.5,280.55 1021,311.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303252" data-to="0303015" style="display:none;">
+    <path d="M982,107.0 Q1001.5,51.84582692479224 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,51.84582692479224 1021,311.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305003" data-to="0305004" style="display:none;">
+    <path d="M982,311.0 Q1001.5,282.61975274911885 1021,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M982,311.0 Q1001.5,282.61975274911885 1021,413.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003104" data-to="9003105" style="display:none;">
+    <path d="M982,413.0 Q1001.5,384.61975274911885 1021,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M982,413.0 Q1001.5,384.61975274911885 1021,515.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303015" data-to="0303029" style="display:none;">
+    <path d="M1146,311.0 Q1165.5,51.84582692479224 1185,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M1146,311.0 Q1165.5,51.84582692479224 1185,107.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303302" data-to="0303352" style="display:none;">
+    <path d="M1146,209.0 Q1165.5,194.0 1185,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1146,209.0 Q1165.5,194.0 1185,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303302" data-to="0303402" style="display:none;">
+    <path d="M1146,209.0 Q1165.5,180.61975274911885 1185,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M1146,209.0 Q1165.5,180.61975274911885 1185,311.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305004" data-to="0305005" style="display:none;">
+    <path d="M1146,413.0 Q1165.5,398.0 1185,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1146,413.0 Q1165.5,398.0 1185,413.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303029" data-to="0314044" style="display:none;">
+    <path d="M1310,107.0 Q1329.5,92.0 1349,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1310,107.0 Q1329.5,92.0 1349,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303352" data-to="0303459" style="display:none;">
+    <path d="M1310,209.0 Q1329.5,194.0 1349,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1310,209.0 Q1329.5,194.0 1349,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303302" data-to="0303452" style="display:none;">
+    <path d="M1146,209.0 Q1247.5,162.9222579973379 1349,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M1146,209.0 Q1247.5,162.9222579973379 1349,311.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0302391" data-to="0303527" style="display:none;">
+    <path d="M654,209.0 Q1001.5,76.35184078871839 1349,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="2.7756789385914558" transform="translate(1,2)"/>
+    <path d="M654,209.0 Q1001.5,76.35184078871839 1349,413.0" fill="none" stroke="#333333" stroke-width="1.2756789385914558"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303013" data-to="0303527" style="display:none;">
+    <path d="M818,209.0 Q1083.5,99.67425652243047 1349,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="2.9311617101495364" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q1083.5,99.67425652243047 1349,413.0" fill="none" stroke="#333333" stroke-width="1.4311617101495364"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303352" data-to="0303527" style="display:none;">
+    <path d="M1310,209.0 Q1329.5,153.84582692479225 1349,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M1310,209.0 Q1329.5,153.84582692479225 1349,413.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314044" data-to="0314045" style="display:none;">
+    <path d="M1474,107.0 Q1493.5,92.0 1513,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1474,107.0 Q1493.5,92.0 1513,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303412" data-to="0303552" style="display:none;">
+    <path d="M1146,107.0 Q1329.5,37.86338739477111 1513,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.119089249298474" transform="translate(1,2)"/>
+    <path d="M1146,107.0 Q1329.5,37.86338739477111 1513,209.0" fill="none" stroke="#333333" stroke-width="1.619089249298474"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303452" data-to="0303552" style="display:none;">
+    <path d="M1474,311.0 Q1493.5,180.61975274911885 1513,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M1474,311.0 Q1493.5,180.61975274911885 1513,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <rect x="40" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="147.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="40" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="147.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="204" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="311.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="204" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="311.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">30</text>
+    <rect x="368" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="475.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="368" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="475.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">45</text>
+    <rect x="532" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="639.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">16</text>
+    <rect x="532" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="639.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">61</text>
+    <rect x="696" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="803.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">17</text>
+    <rect x="696" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="803.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">78</text>
+    <rect x="860" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="967.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">10</text>
+    <rect x="860" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="967.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">88</text>
+    <rect x="1024" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1131.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">12</text>
+    <rect x="1024" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1131.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">100</text>
+    <rect x="1188" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1295.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">10</text>
+    <rect x="1188" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1295.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">110</text>
+    <rect x="1352" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1459.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="1352" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1459.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">125</text>
+    <rect x="1516" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1623.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">13</text>
+    <rect x="1516" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1623.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">138</text>
+    <path d="M40,757 Q55,749 70,757" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#ap)"/>
+    <text x="76" y="761" font-size="14" fill="#333">Prerrequisito</text>
+    <path d="M200,757 Q215,749 230,757" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#ac)"/>
+    <text x="236" y="761" font-size="14" fill="#2563EB">Correquisito</text>
+</svg>
+<script>
+const edges = [{"from": "0303001", "to": "0303002", "tipo": "PRE"}, {"from": "0303001", "to": "0303010", "tipo": "PRE"}, {"from": "0303006", "to": "0303010", "tipo": "PRE"}, {"from": "0303117", "to": "0303008", "tipo": "PRE"}, {"from": "0303117", "to": "0314029", "tipo": "PRE"}, {"from": "0305190", "to": "0305450", "tipo": "PRE"}, {"from": "0303002", "to": "0303005", "tipo": "PRE"}, {"from": "0303006", "to": "0302270", "tipo": "PRE"}, {"from": "0303002", "to": "0302270", "tipo": "PRE"}, {"from": "0303008", "to": "0303011", "tipo": "PRE"}, {"from": "0303011", "to": "0303258", "tipo": "CO"}, {"from": "9003101", "to": "9003102", "tipo": "PRE"}, {"from": "0303010", "to": "0303009", "tipo": "PRE"}, {"from": "0303005", "to": "0303009", "tipo": "PRE"}, {"from": "0302270", "to": "0302391", "tipo": "PRE"}, {"from": "0303009", "to": "0303313", "tipo": "CO"}, {"from": "0303010", "to": "0303304", "tipo": "PRE"}, {"from": "0303258", "to": "0303304", "tipo": "PRE"}, {"from": "0314029", "to": "0314069", "tipo": "PRE"}, {"from": "0303005", "to": "0314069", "tipo": "PRE"}, {"from": "0303013", "to": "0303065", "tipo": "CO"}, {"from": "0314069", "to": "0303065", "tipo": "PRE"}, {"from": "0303010", "to": "0303013", "tipo": "PRE"}, {"from": "0303005", "to": "0303013", "tipo": "PRE"}, {"from": "0303313", "to": "0314070", "tipo": "PRE"}, {"from": "0303304", "to": "0303354", "tipo": "PRE"}, {"from": "0305450", "to": "0305002", "tipo": "PRE"}, {"from": "9003102", "to": "9003103", "tipo": "PRE"}, {"from": "0303011", "to": "0303252", "tipo": "PRE"}, {"from": "0303009", "to": "0303252", "tipo": "PRE"}, {"from": "0303354", "to": "0303404", "tipo": "PRE"}, {"from": "0305002", "to": "0305003", "tipo": "PRE"}, {"from": "9003103", "to": "9003104", "tipo": "PRE"}, {"from": "0303252", "to": "0303412", "tipo": "PRE"}, {"from": "0303252", "to": "0303302", "tipo": "PRE"}, {"from": "0303304", "to": "0303015", "tipo": "PRE"}, {"from": "0314070", "to": "0303015", "tipo": "PRE"}, {"from": "0303252", "to": "0303015", "tipo": "PRE"}, {"from": "0305003", "to": "0305004", "tipo": "PRE"}, {"from": "9003104", "to": "9003105", "tipo": "PRE"}, {"from": "0303015", "to": "0303029", "tipo": "PRE"}, {"from": "0303302", "to": "0303352", "tipo": "PRE"}, {"from": "0303302", "to": "0303402", "tipo": "PRE"}, {"from": "0305004", "to": "0305005", "tipo": "PRE"}, {"from": "0303029", "to": "0314044", "tipo": "PRE"}, {"from": "0303352", "to": "0303459", "tipo": "PRE"}, {"from": "0303302", "to": "0303452", "tipo": "PRE"}, {"from": "0302391", "to": "0303527", "tipo": "PRE"}, {"from": "0303013", "to": "0303527", "tipo": "PRE"}, {"from": "0303352", "to": "0303527", "tipo": "PRE"}, {"from": "0314044", "to": "0314045", "tipo": "PRE"}, {"from": "0303412", "to": "0303552", "tipo": "PRE"}, {"from": "0303452", "to": "0303552", "tipo": "PRE"}];
+const preOf = {};
+const depOn = {};
+edges.forEach(e => {
+  if (!preOf[e.to]) preOf[e.to] = [];
+  preOf[e.to].push(e.from);
+  if (!depOn[e.from]) depOn[e.from] = [];
+  depOn[e.from].push(e.to);
+});
+function getChain(code) {
+  const chain = new Set([code]);
+  const q1 = [code];
+  while (q1.length) { const c = q1.shift(); (preOf[c]||[]).forEach(p => { if (!chain.has(p)) { chain.add(p); q1.push(p); } }); }
+  const q2 = [code];
+  while (q2.length) { const c = q2.shift(); (depOn[c]||[]).forEach(d => { if (!chain.has(d)) { chain.add(d); q2.push(d); } }); }
+  return chain;
+}
+let mode = 'clear', selectedCode = null;
+function clearAll() {
+  mode = 'clear'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = 'none');
+  document.querySelectorAll('.course-box').forEach(b => b.classList.remove('dimmed','highlighted','selected'));
+  updateButtons();
+}
+function showAll() {
+  mode = 'all'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = '');
+  document.querySelectorAll('.course-box').forEach(b => b.classList.remove('dimmed','highlighted','selected'));
+  updateButtons();
+}
+function showChain(code) {
+  mode = 'chain'; selectedCode = code;
+  const chain = getChain(code);
+  const chainEdges = edges.filter(e => chain.has(e.from) && chain.has(e.to));
+  document.querySelectorAll('.arrow').forEach(a => {
+    const f = a.getAttribute('data-from'), t = a.getAttribute('data-to');
+    a.style.display = chainEdges.some(e => e.from===f && e.to===t) ? '' : 'none';
+  });
+  document.querySelectorAll('.course-box').forEach(b => {
+    const bc = b.getAttribute('data-code');
+    if (!bc) { b.classList.add('dimmed'); b.classList.remove('highlighted','selected'); return; }
+    if (bc===code) { b.classList.add('selected'); b.classList.remove('dimmed','highlighted'); }
+    else if (chain.has(bc)) { b.classList.add('highlighted'); b.classList.remove('dimmed','selected'); }
+    else { b.classList.add('dimmed'); b.classList.remove('highlighted','selected'); }
+  });
+  updateButtons();
+}
+function updateButtons() {
+  document.getElementById('btn-clear').classList.toggle('active', mode==='clear');
+  document.getElementById('btn-all').classList.toggle('active', mode==='all');
+}
+document.querySelectorAll('.course-box[data-code]').forEach(box => {
+  box.addEventListener('click', () => {
+    const code = box.getAttribute('data-code');
+    if (selectedCode===code) clearAll(); else showChain(code);
+  });
+});
+</script>
+</body></html>
