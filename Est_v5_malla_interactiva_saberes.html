@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Plan de Estudios — malla_input</title>
+<style>
+  body { margin: 20px; background: #FAFAFA; font-family: Calibri, 'Segoe UI', sans-serif; }
+  h1 { text-align: center; font-size: 14px; color: #333; margin-bottom: 5px; }
+  .controls { text-align: center; margin: 8px 0; }
+  .controls button {
+    padding: 6px 18px; margin: 0 6px; border: 1px solid #999; border-radius: 4px;
+    background: white; font-size: 14px; cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .controls button:hover { background: #E8E8E8; }
+  .controls button.active { background: #333; color: white; border-color: #333; }
+  svg { display: block; margin: 0 auto; }
+  .course-box { transition: opacity 0.2s; }
+  .course-box.dimmed { opacity: 0.25; }
+  .course-box.highlighted rect.box-code-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.highlighted rect.box-name-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.selected rect.box-code-bg { stroke: #DC2626; stroke-width: 3; }
+  .course-box.selected rect.box-name-bg { stroke: #DC2626; stroke-width: 3; }
+  .arrow { transition: opacity 0.3s; }
+  @media print { body { margin: 0; background: white; } .controls { display: none; } }
+
+  /* ── Panel de saberes ─────────────────────────────────────────────── */
+  #saberes-panel {
+    position: fixed;
+    bottom: 0; right: 0;
+    width: 370px;
+    max-height: 52vh;
+    background: #fff;
+    border: 1px solid #bbb;
+    border-bottom: none;
+    border-radius: 8px 0 0 0;
+    box-shadow: -3px -3px 12px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.28s ease;
+    z-index: 999;
+    font-family: Calibri, 'Segoe UI', sans-serif;
+  }
+  #saberes-panel.visible { transform: translateY(0); }
+  #saberes-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 8px 12px 6px;
+    background: #1e3a5f;
+    border-radius: 8px 0 0 0;
+    flex-shrink: 0;
+  }
+  #saberes-header-text { flex: 1; }
+  #saberes-curso-nombre {
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1.3;
+  }
+  #saberes-curso-codigo {
+    font-size: 11px;
+    color: #a8c4e0;
+    margin-top: 1px;
+  }
+  #saberes-close {
+    background: none;
+    border: none;
+    color: #a8c4e0;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 0 0 8px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  #saberes-close:hover { color: #fff; }
+  #saberes-body {
+    overflow-y: auto;
+    padding: 8px 12px 12px;
+    flex: 1;
+    font-size: 12.5px;
+    color: #222;
+  }
+  #saberes-body::-webkit-scrollbar { width: 5px; }
+  #saberes-body::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  .saberes-unit-title {
+    font-weight: bold;
+    color: #1e3a5f;
+    margin: 10px 0 4px;
+    font-size: 12.5px;
+    border-bottom: 1px solid #e0e8f0;
+    padding-bottom: 3px;
+  }
+  .saberes-unit-title:first-child { margin-top: 2px; }
+  .saberes-topic {
+    display: flex;
+    gap: 5px;
+    margin: 2px 0;
+    line-height: 1.4;
+  }
+  .saberes-topic::before {
+    content: '•';
+    color: #1e3a5f;
+    flex-shrink: 0;
+  }
+  .saberes-no-info {
+    color: #888;
+    font-style: italic;
+    margin-top: 8px;
+  }
+  @media print { #saberes-panel { display: none; } }
+</style>
+</head><body>
+<h1>Plan de Estudios — malla_input</h1>
+<div class="controls">
+  <button id="btn-clear" class="active" onclick="clearAll()">Sin flechas</button>
+  <button id="btn-all" onclick="showAll()">Mostrar todas</button>
+  <span style="color:#888; font-size:14px; margin-left:12px;">Clic en un curso para ver su cadena completa</span>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="787" viewBox="0 0 1536 787">
+    <defs>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/></filter>
+<marker id="ap" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#333333"/></marker>
+<marker id="ac" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#2563EB"/></marker>
+</defs>
+    <text x="99.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">1</text>
+    <text x="263.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">2</text>
+    <text x="427.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">3</text>
+    <text x="591.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">4</text>
+    <text x="755.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">5</text>
+    <text x="919.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">6</text>
+    <text x="1083.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">7</text>
+    <text x="1247.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">8</text>
+    <text x="1411.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9</text>
+    <g class="course-box" data-code="0303001" style="cursor:pointer;">
+    <rect x="40" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303001</text>
+    <text x="147.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA Y</text>
+    <text x="99.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRIGONOMETRÍA</text>
+    </g>
+    <g class="course-box" data-code="0314028" style="cursor:pointer;">
+    <rect x="40" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314028</text>
+    <text x="147.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MATEMÁTICAS</text>
+    <text x="99.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DISCRETAS</text>
+    </g>
+    <g class="course-box" data-code="0303006" style="cursor:pointer;">
+    <rect x="40" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303006</text>
+    <text x="147.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GEOMETRÍA</text>
+    <text x="99.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">BÁSICA</text>
+    </g>
+    <g class="course-box" data-code="0305001" style="cursor:pointer;">
+    <rect x="40" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305001</text>
+    <text x="147.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNDAMENTACIÓN</text>
+    <text x="99.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">EN CIENCIA</text>
+    </g>
+    <g class="course-box" data-code="0305190" style="cursor:pointer;">
+    <rect x="40" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305190</text>
+    <text x="147.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESPAÑOL</text>
+    <text x="99.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ACADÉMICO</text>
+    </g>
+    <g class="course-box" data-code="0303002" style="cursor:pointer;">
+    <rect x="204" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303002</text>
+    <text x="311.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="263.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DIFERENCIAL</text>
+    </g>
+    <g class="course-box" data-code="0314029" style="cursor:pointer;">
+    <rect x="204" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314029</text>
+    <text x="311.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUND DE</text>
+    <text x="263.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PROGRAMACIÓN</text>
+    </g>
+    <g class="course-box" data-code="0303010" style="cursor:pointer;">
+    <rect x="204" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303010</text>
+    <text x="311.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="327.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA LINEAL</text>
+    </g>
+    <g class="course-box" data-code="0314067" style="cursor:pointer;">
+    <rect x="204" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314067</text>
+    <text x="311.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="204" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNDAMENTOS DE</text>
+    <text x="263.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESTADÍSTIC</text>
+    </g>
+    <g class="course-box" data-code="9003101" style="cursor:pointer;">
+    <rect x="204" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003101</text>
+    <text x="311.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="204" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="531.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 1</text>
+    </g>
+    <g class="course-box" data-code="0303005" style="cursor:pointer;">
+    <rect x="368" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303005</text>
+    <text x="475.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="427.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INTEGRAL</text>
+    </g>
+    <g class="course-box" data-code="0314047" style="cursor:pointer;">
+    <rect x="368" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314047</text>
+    <text x="475.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="225.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">BASES DE DATOS</text>
+    </g>
+    <g class="course-box" data-code="0314068" style="cursor:pointer;">
+    <rect x="368" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314068</text>
+    <text x="475.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="368" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNDAMENTOS DE</text>
+    <text x="427.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESTADÍSTIC</text>
+    </g>
+    <g class="course-box" data-code="0305450" style="cursor:pointer;">
+    <rect x="368" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305450</text>
+    <text x="475.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="368" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁTEDRA DE</text>
+    <text x="427.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FORMACIÓN CIUD</text>
+    </g>
+    <g class="course-box" data-code="0305002" style="cursor:pointer;">
+    <rect x="368" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305002</text>
+    <text x="475.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="368" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="518.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">HISTORIA,</text>
+    <text x="427.5" y="531.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">POLÍTICA Y</text>
+    <text x="427.5" y="544.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ESTÉ</text>
+    </g>
+    <g class="course-box" data-code="9003102" style="cursor:pointer;">
+    <rect x="368" y="580" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="580" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="580" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003102</text>
+    <text x="475.0" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="368" y="602" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="633.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 2</text>
+    </g>
+    <g class="course-box" data-code="0303009" style="cursor:pointer;">
+    <rect x="532" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303009</text>
+    <text x="639.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="591.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">VECTORIAL</text>
+    </g>
+    <g class="course-box" data-code="0303013" style="cursor:pointer;">
+    <rect x="532" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303013</text>
+    <text x="639.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ECUA DIFERENCI</text>
+    <text x="591.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ORDINARIAS</text>
+    </g>
+    <g class="course-box" data-code="0303313" style="cursor:pointer;">
+    <rect x="532" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303313</text>
+    <text x="639.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="327.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PROBABILIDAD</text>
+    </g>
+    <g class="course-box" data-code="0314069" style="cursor:pointer;">
+    <rect x="532" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314069</text>
+    <text x="639.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MÉTODOS</text>
+    <text x="591.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">NUMÉRICOS I</text>
+    </g>
+    <g class="course-box" data-code="0305003" style="cursor:pointer;">
+    <rect x="532" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305003</text>
+    <text x="639.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="532" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁTEDRA</text>
+    <text x="591.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">AMBIENTAL UDEA</text>
+    </g>
+    <g class="course-box" data-code="9003103" style="cursor:pointer;">
+    <rect x="532" y="580" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="580" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="580" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003103</text>
+    <text x="639.0" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="532" y="602" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="633.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 3</text>
+    </g>
+    <g class="course-box" data-code="0314306" style="cursor:pointer;">
+    <rect x="696" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314306</text>
+    <text x="803.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PROCESOS</text>
+    <text x="755.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESTOCÁSTICOS</text>
+    </g>
+    <g class="course-box" data-code="0314070" style="cursor:pointer;">
+    <rect x="696" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314070</text>
+    <text x="803.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="696" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INFERENCIA</text>
+    <text x="755.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESTADÍSTICA</text>
+    </g>
+    <g class="course-box" data-code="0314210" style="cursor:pointer;">
+    <rect x="696" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314210</text>
+    <text x="803.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="327.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MUESTREO</text>
+    </g>
+    <g class="course-box" data-code="0305004" style="cursor:pointer;">
+    <rect x="696" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305004</text>
+    <text x="803.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="696" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DESARROLLO</text>
+    <text x="755.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">HUMANO</text>
+    </g>
+    <g class="course-box" data-code="9003104" style="cursor:pointer;">
+    <rect x="696" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003104</text>
+    <text x="803.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="696" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="531.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 4</text>
+    </g>
+    <g class="course-box" data-code="0314302" style="cursor:pointer;">
+    <rect x="860" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314302</text>
+    <text x="967.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="123.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">SIMULACIÓN</text>
+    </g>
+    <g class="course-box" data-code="0314405" style="cursor:pointer;">
+    <rect x="860" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314405</text>
+    <text x="967.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS</text>
+    <text x="919.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MULTIVARIADO I</text>
+    </g>
+    <g class="course-box" data-code="0314313" style="cursor:pointer;">
+    <rect x="860" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314313</text>
+    <text x="967.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESTAD. NO</text>
+    <text x="919.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PARAMÉTRICA</text>
+    </g>
+    <g class="course-box" data-code="0314030" style="cursor:pointer;">
+    <rect x="860" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314030</text>
+    <text x="967.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS DE</text>
+    <text x="919.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">REGRESIÓN</text>
+    </g>
+    <g class="course-box" data-code="0305005" style="cursor:pointer;">
+    <rect x="860" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305005</text>
+    <text x="967.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="860" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="518.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ÉTICA E</text>
+    <text x="919.5" y="531.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">INTEGRIDAD</text>
+    <text x="919.5" y="544.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">CIENTÍ</text>
+    </g>
+    <g class="course-box" data-code="9003105" style="cursor:pointer;">
+    <rect x="860" y="580" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="580" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="580" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003105</text>
+    <text x="967.0" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="860" y="602" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="633.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 5</text>
+    </g>
+    <g class="course-box" data-code="0303029" style="cursor:pointer;">
+    <rect x="1024" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303029</text>
+    <text x="1131.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INTRO A LA</text>
+    <text x="1083.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INVESTIGACIÓN</text>
+    </g>
+    <g class="course-box" data-code="0314415" style="cursor:pointer;">
+    <rect x="1024" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314415</text>
+    <text x="1131.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="212.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ANÁLISIS</text>
+    <text x="1083.5" y="225.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">MULTIVARIADO</text>
+    <text x="1083.5" y="238.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">II</text>
+    </g>
+    <g class="course-box" data-code="0314062" style="cursor:pointer;">
+    <rect x="1024" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314062</text>
+    <text x="1131.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="314.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ANÁLIS</text>
+    <text x="1083.5" y="327.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">BAYESIANO DE</text>
+    <text x="1083.5" y="340.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">DATOS</text>
+    </g>
+    <g class="course-box" data-code="0314311" style="cursor:pointer;">
+    <rect x="1024" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314311</text>
+    <text x="1131.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DISEÑO DE</text>
+    <text x="1083.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">EXPERIMENTOS</text>
+    </g>
+    <g class="course-box" data-code="0314044" style="cursor:pointer;">
+    <rect x="1188" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314044</text>
+    <text x="1295.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">6</text>
+    <rect class="box-name-bg" x="1188" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">SEMINARIO DE</text>
+    <text x="1247.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRABAJO DE G</text>
+    </g>
+    <g class="course-box" data-code="0314404" style="cursor:pointer;">
+    <rect x="1188" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314404</text>
+    <text x="1295.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">SERIES DE</text>
+    <text x="1247.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TIEMPO</text>
+    </g>
+    <g class="course-box" data-code="0314416" style="cursor:pointer;">
+    <rect x="1188" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314416</text>
+    <text x="1295.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANALI. DE</text>
+    <text x="1247.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">SOBREVIVENCIA</text>
+    </g>
+    <g class="course-box" data-code="0314045" style="cursor:pointer;">
+    <rect x="1352" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314045</text>
+    <text x="1459.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">10</text>
+    <rect class="box-name-bg" x="1352" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRABAJO DE</text>
+    <text x="1411.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GRADO</text>
+    </g>
+    <g class="arrow" data-from="0303001" data-to="0303002" style="display:none;">
+    <path d="M162,107.0 Q181.5,92.0 201,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,107.0 Q181.5,92.0 201,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314028" data-to="0314029" style="display:none;">
+    <path d="M162,209.0 Q181.5,194.0 201,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,209.0 Q181.5,194.0 201,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303001" data-to="0303010" style="display:none;">
+    <path d="M162,107.0 Q181.5,51.84582692479224 201,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M162,107.0 Q181.5,51.84582692479224 201,311.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303006" data-to="0303010" style="display:none;">
+    <path d="M162,311.0 Q181.5,296.0 201,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,311.0 Q181.5,296.0 201,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303002" data-to="0303005" style="display:none;">
+    <path d="M326,107.0 Q345.5,92.0 365,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M326,107.0 Q345.5,92.0 365,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314068" data-to="0314047" style="display:none;">
+    <path d="M490,311.0 Q427.5,172.79974173691528 365,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3386649449127686" transform="translate(1,2)"/>
+    <path d="M490,311.0 Q427.5,172.79974173691528 365,209.0" fill="none" stroke="#2563EB" stroke-width="1.8386649449127686" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314029" data-to="0314047" style="display:none;">
+    <path d="M326,209.0 Q345.5,194.0 365,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q345.5,194.0 365,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314067" data-to="0314068" style="display:none;">
+    <path d="M326,413.0 Q345.5,282.61975274911885 365,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M326,413.0 Q345.5,282.61975274911885 365,311.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305190" data-to="0305450" style="display:none;">
+    <path d="M162,515.0 Q263.5,366.9222579973379 365,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M162,515.0 Q263.5,366.9222579973379 365,413.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305190" data-to="0305002" style="display:none;">
+    <path d="M162,515.0 Q263.5,484.55 365,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M162,515.0 Q263.5,484.55 365,515.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003101" data-to="9003102" style="display:none;">
+    <path d="M326,515.0 Q345.5,486.61975274911885 365,617.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M326,515.0 Q345.5,486.61975274911885 365,617.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303009" style="display:none;">
+    <path d="M326,311.0 Q427.5,39.831000706525515 529,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.212206671376837" transform="translate(1,2)"/>
+    <path d="M326,311.0 Q427.5,39.831000706525515 529,107.0" fill="none" stroke="#333333" stroke-width="1.712206671376837"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0303009" style="display:none;">
+    <path d="M490,107.0 Q509.5,92.0 529,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q509.5,92.0 529,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303013" style="display:none;">
+    <path d="M326,311.0 Q427.5,162.9222579973379 529,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M326,311.0 Q427.5,162.9222579973379 529,209.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0303013" style="display:none;">
+    <path d="M490,107.0 Q509.5,78.61975274911883 529,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q509.5,78.61975274911883 529,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303009" data-to="0303313" style="display:none;">
+    <path d="M654,107.0 Q591.5,47.11236285292664 529,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.260749085686178" transform="translate(1,2)"/>
+    <path d="M654,107.0 Q591.5,47.11236285292664 529,311.0" fill="none" stroke="#2563EB" stroke-width="1.7607490856861776" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314029" data-to="0314069" style="display:none;">
+    <path d="M326,209.0 Q427.5,141.83100070652551 529,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.212206671376837" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q427.5,141.83100070652551 529,413.0" fill="none" stroke="#333333" stroke-width="1.712206671376837"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0314069" style="display:none;">
+    <path d="M490,107.0 Q509.5,24.728707603958156 529,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.191524717359721" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q509.5,24.728707603958156 529,413.0" fill="none" stroke="#333333" stroke-width="1.691524717359721"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305450" data-to="0305003" style="display:none;">
+    <path d="M490,413.0 Q509.5,384.61975274911885 529,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M490,413.0 Q509.5,384.61975274911885 529,515.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305002" data-to="0305003" style="display:none;">
+    <path d="M490,515.0 Q509.5,500.0 529,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,515.0 Q509.5,500.0 529,515.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003102" data-to="9003103" style="display:none;">
+    <path d="M490,617.0 Q509.5,602.0 529,617.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,617.0 Q509.5,602.0 529,617.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303313" data-to="0314306" style="display:none;">
+    <path d="M654,311.0 Q673.5,51.84582692479224 693,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M654,311.0 Q673.5,51.84582692479224 693,107.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303313" data-to="0314070" style="display:none;">
+    <path d="M654,311.0 Q673.5,180.61975274911885 693,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M654,311.0 Q673.5,180.61975274911885 693,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314070" data-to="0314210" style="display:none;">
+    <path d="M818,209.0 Q755.5,172.79974173691528 693,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3386649449127686" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q755.5,172.79974173691528 693,311.0" fill="none" stroke="#2563EB" stroke-width="1.8386649449127686" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314068" data-to="0314210" style="display:none;">
+    <path d="M490,311.0 Q591.5,280.55 693,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M490,311.0 Q591.5,280.55 693,311.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305003" data-to="0305004" style="display:none;">
+    <path d="M654,515.0 Q673.5,384.61975274911885 693,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M654,515.0 Q673.5,384.61975274911885 693,413.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003103" data-to="9003104" style="display:none;">
+    <path d="M654,617.0 Q673.5,486.61975274911885 693,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M654,617.0 Q673.5,486.61975274911885 693,515.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303013" data-to="0314302" style="display:none;">
+    <path d="M654,209.0 Q755.5,60.92225799733791 857,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M654,209.0 Q755.5,60.92225799733791 857,107.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314069" data-to="0314302" style="display:none;">
+    <path d="M654,413.0 Q755.5,15.918129116741142 857,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.132787527444941" transform="translate(1,2)"/>
+    <path d="M654,413.0 Q755.5,15.918129116741142 857,107.0" fill="none" stroke="#333333" stroke-width="1.632787527444941"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314306" data-to="0314302" style="display:none;">
+    <path d="M818,107.0 Q837.5,92.0 857,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M818,107.0 Q837.5,92.0 857,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314070" data-to="0314405" style="display:none;">
+    <path d="M818,209.0 Q837.5,194.0 857,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q837.5,194.0 857,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314070" data-to="0314313" style="display:none;">
+    <path d="M818,209.0 Q837.5,180.61975274911885 857,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q837.5,180.61975274911885 857,311.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314070" data-to="0314030" style="display:none;">
+    <path d="M818,209.0 Q837.5,153.84582692479225 857,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q837.5,153.84582692479225 857,413.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305004" data-to="0305005" style="display:none;">
+    <path d="M818,413.0 Q837.5,384.61975274911885 857,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M818,413.0 Q837.5,384.61975274911885 857,515.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003104" data-to="9003105" style="display:none;">
+    <path d="M818,515.0 Q837.5,486.61975274911885 857,617.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M818,515.0 Q837.5,486.61975274911885 857,617.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314302" data-to="0303029" style="display:none;">
+    <path d="M982,107.0 Q1001.5,92.0 1021,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,92.0 1021,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314313" data-to="0303029" style="display:none;">
+    <path d="M982,311.0 Q1001.5,51.84582692479224 1021,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M982,311.0 Q1001.5,51.84582692479224 1021,107.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314405" data-to="0314415" style="display:none;">
+    <path d="M982,209.0 Q1001.5,194.0 1021,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M982,209.0 Q1001.5,194.0 1021,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314302" data-to="0314062" style="display:none;">
+    <path d="M982,107.0 Q1001.5,39.84582692479225 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,39.84582692479225 1021,311.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314313" data-to="0314062" style="display:none;">
+    <path d="M982,311.0 Q1001.5,296.0 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M982,311.0 Q1001.5,296.0 1021,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314313" data-to="0314311" style="display:none;">
+    <path d="M982,311.0 Q1001.5,282.61975274911885 1021,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M982,311.0 Q1001.5,282.61975274911885 1021,413.0" fill="none" stroke="#2563EB" stroke-width="1.8907983516607922" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314030" data-to="0314311" style="display:none;">
+    <path d="M982,413.0 Q1001.5,398.0 1021,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M982,413.0 Q1001.5,398.0 1021,413.0" fill="none" stroke="#2563EB" stroke-width="1.961" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303029" data-to="0314044" style="display:none;">
+    <path d="M1146,107.0 Q1165.5,92.0 1185,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1146,107.0 Q1165.5,92.0 1185,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314030" data-to="0314404" style="display:none;">
+    <path d="M982,413.0 Q1083.5,141.83100070652551 1185,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.212206671376837" transform="translate(1,2)"/>
+    <path d="M982,413.0 Q1083.5,141.83100070652551 1185,209.0" fill="none" stroke="#333333" stroke-width="1.712206671376837"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314030" data-to="0314416" style="display:none;">
+    <path d="M982,413.0 Q1083.5,264.9222579973379 1185,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M982,413.0 Q1083.5,264.9222579973379 1185,311.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314044" data-to="0314045" style="display:none;">
+    <path d="M1310,107.0 Q1329.5,92.0 1349,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1310,107.0 Q1329.5,92.0 1349,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <rect x="40" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="147.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="40" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="147.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="204" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="311.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="204" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="311.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">30</text>
+    <rect x="368" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="475.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="368" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="475.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">45</text>
+    <rect x="532" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="639.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">16</text>
+    <rect x="532" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="639.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">61</text>
+    <rect x="696" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="803.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">13</text>
+    <rect x="696" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="803.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">74</text>
+    <rect x="860" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="967.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="860" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="967.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">89</text>
+    <rect x="1024" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1131.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">12</text>
+    <rect x="1024" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1131.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">101</text>
+    <rect x="1188" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1295.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">12</text>
+    <rect x="1188" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1295.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">113</text>
+    <rect x="1352" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1459.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">10</text>
+    <rect x="1352" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1459.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">123</text>
+    <path d="M40,757 Q55,749 70,757" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#ap)"/>
+    <text x="76" y="761" font-size="14" fill="#333">Prerrequisito</text>
+    <path d="M200,757 Q215,749 230,757" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#ac)"/>
+    <text x="236" y="761" font-size="14" fill="#2563EB">Correquisito</text>
+</svg>
+<script>
+const edges = [{"from": "0303001", "to": "0303002", "tipo": "PRE"}, {"from": "0314028", "to": "0314029", "tipo": "PRE"}, {"from": "0303001", "to": "0303010", "tipo": "PRE"}, {"from": "0303006", "to": "0303010", "tipo": "PRE"}, {"from": "0303002", "to": "0303005", "tipo": "PRE"}, {"from": "0314068", "to": "0314047", "tipo": "CO"}, {"from": "0314029", "to": "0314047", "tipo": "PRE"}, {"from": "0314067", "to": "0314068", "tipo": "PRE"}, {"from": "0305190", "to": "0305450", "tipo": "PRE"}, {"from": "0305190", "to": "0305002", "tipo": "PRE"}, {"from": "9003101", "to": "9003102", "tipo": "PRE"}, {"from": "0303010", "to": "0303009", "tipo": "PRE"}, {"from": "0303005", "to": "0303009", "tipo": "PRE"}, {"from": "0303010", "to": "0303013", "tipo": "PRE"}, {"from": "0303005", "to": "0303013", "tipo": "PRE"}, {"from": "0303009", "to": "0303313", "tipo": "CO"}, {"from": "0314029", "to": "0314069", "tipo": "PRE"}, {"from": "0303005", "to": "0314069", "tipo": "PRE"}, {"from": "0305450", "to": "0305003", "tipo": "PRE"}, {"from": "0305002", "to": "0305003", "tipo": "PRE"}, {"from": "9003102", "to": "9003103", "tipo": "PRE"}, {"from": "0303313", "to": "0314306", "tipo": "PRE"}, {"from": "0303313", "to": "0314070", "tipo": "PRE"}, {"from": "0314070", "to": "0314210", "tipo": "CO"}, {"from": "0314068", "to": "0314210", "tipo": "PRE"}, {"from": "0305003", "to": "0305004", "tipo": "PRE"}, {"from": "9003103", "to": "9003104", "tipo": "PRE"}, {"from": "0303013", "to": "0314302", "tipo": "PRE"}, {"from": "0314069", "to": "0314302", "tipo": "PRE"}, {"from": "0314306", "to": "0314302", "tipo": "PRE"}, {"from": "0314070", "to": "0314405", "tipo": "PRE"}, {"from": "0314070", "to": "0314313", "tipo": "PRE"}, {"from": "0314070", "to": "0314030", "tipo": "PRE"}, {"from": "0305004", "to": "0305005", "tipo": "PRE"}, {"from": "9003104", "to": "9003105", "tipo": "PRE"}, {"from": "0314302", "to": "0303029", "tipo": "PRE"}, {"from": "0314313", "to": "0303029", "tipo": "PRE"}, {"from": "0314405", "to": "0314415", "tipo": "PRE"}, {"from": "0314302", "to": "0314062", "tipo": "PRE"}, {"from": "0314313", "to": "0314062", "tipo": "PRE"}, {"from": "0314313", "to": "0314311", "tipo": "CO"}, {"from": "0314030", "to": "0314311", "tipo": "CO"}, {"from": "0303029", "to": "0314044", "tipo": "PRE"}, {"from": "0314030", "to": "0314404", "tipo": "PRE"}, {"from": "0314030", "to": "0314416", "tipo": "PRE"}, {"from": "0314044", "to": "0314045", "tipo": "PRE"}];
+const preOf = {};
+const depOn = {};
+edges.forEach(e => {
+  if (!preOf[e.to]) preOf[e.to] = [];
+  preOf[e.to].push(e.from);
+  if (!depOn[e.from]) depOn[e.from] = [];
+  depOn[e.from].push(e.to);
+});
+function getChain(code) {
+  const chain = new Set([code]);
+  const q1 = [code];
+  while (q1.length) { const c = q1.shift(); (preOf[c]||[]).forEach(p => { if (!chain.has(p)) { chain.add(p); q1.push(p); } }); }
+  const q2 = [code];
+  while (q2.length) { const c = q2.shift(); (depOn[c]||[]).forEach(d => { if (!chain.has(d)) { chain.add(d); q2.push(d); } }); }
+  return chain;
+}
+let mode = 'clear', selectedCode = null;
+function clearAll() {
+  mode = 'clear'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = 'none');
+  document.querySelectorAll('.course-box').forEach(b => b.classList.remove('dimmed','highlighted','selected'));
+  updateButtons();
+}
+function showAll() {
+  mode = 'all'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = '');
+  document.querySelectorAll('.course-box').forEach(b => b.classList.remove('dimmed','highlighted','selected'));
+  updateButtons();
+}
+function showChain(code) {
+  mode = 'chain'; selectedCode = code;
+  const chain = getChain(code);
+  const chainEdges = edges.filter(e => chain.has(e.from) && chain.has(e.to));
+  document.querySelectorAll('.arrow').forEach(a => {
+    const f = a.getAttribute('data-from'), t = a.getAttribute('data-to');
+    a.style.display = chainEdges.some(e => e.from===f && e.to===t) ? '' : 'none';
+  });
+  document.querySelectorAll('.course-box').forEach(b => {
+    const bc = b.getAttribute('data-code');
+    if (!bc) { b.classList.add('dimmed'); b.classList.remove('highlighted','selected'); return; }
+    if (bc===code) { b.classList.add('selected'); b.classList.remove('dimmed','highlighted'); }
+    else if (chain.has(bc)) { b.classList.add('highlighted'); b.classList.remove('dimmed','selected'); }
+    else { b.classList.add('dimmed'); b.classList.remove('highlighted','selected'); }
+  });
+  updateButtons();
+}
+function updateButtons() {
+  document.getElementById('btn-clear').classList.toggle('active', mode==='clear');
+  document.getElementById('btn-all').classList.toggle('active', mode==='all');
+}
+document.querySelectorAll('.course-box[data-code]').forEach(box => {
+  box.addEventListener('click', () => {
+    const code = box.getAttribute('data-code');
+    if (selectedCode===code) clearAll(); else showChain(code);
+  });
+});
+</script>
+
+<div id="saberes-panel">
+  <div id="saberes-header">
+    <div id="saberes-header-text">
+      <div id="saberes-curso-nombre">—</div>
+      <div id="saberes-curso-codigo"></div>
+    </div>
+    <button id="saberes-close" onclick="hideSaberes()" title="Cerrar">✕</button>
+  </div>
+  <div id="saberes-body"></div>
+</div>
+
+<script>
+const SABERES = {"303404": {"name": "Algebra Multilineal", "units": [{"title": "Unidad 1: Álgebra Lineal", "topics": ["Espacios vectoriales y transformaciones lineales.", "Suma directa de espacios vectoriales.", "Cociente de espacios vectoriales.", "Teorema del rango y la nulidad.", "Funcionales lineales y dualidad.", "Transformación adjunta.", "Entendimiento del concepto de suma directa de espacios vectoriales.", "Interpretación del cociente entre espacios vectoriales y el cálculo de su dimensión.", "Uso del teorema del rango y la nulidad para determinar información sobre el espacio de soluciones de un sistema de ecuaciones lineales.", "Entendimiento de la definición de espacio dual y la funtorialidad."]}, {"title": "Unidad 2: Funciones Multilineal", "topics": ["Funciones y formas bilineales.", "Funciones y formas multilineales.", "Funciones y formas multilineales simétricas y antisimétricas.", "Determinantes.", "El grupo ortogonal.", "Determinación de una función como multilineal y clasificación de aquellas que son simétricas y antisimétricas.", "Entendimiento del determinante como única forma multilineal alternante unitaria y caracterización de las formas multilineales alternadas.", "Entendimiento del grupo ortogonal como aquel que preserva la forma bilineal asociada al producto interno usual."]}, {"title": "Unidad 3: Producto tensorial", "topics": ["Propiedad universal.", "Producto tensorial de funcionales lineales.", "Propiedad universal del producto tensorial de espacios vectoriales.", "Existencia y unicidad del producto tensorial.", "Relación del producto tensorial con cocientes, sumas directas y transformaciones lineales.", "Dimensión del producto tensorial.", "Entendimiento de la propiedad universal que define al producto tensorial.", "Construcción del producto tensorial.", "Cálculo de la dimensión del producto tensorial."]}, {"title": "Unidad 4: Álgebra Exterior y Álgebra Simétrica", "topics": ["Producto exterior.", "Álgebra exterior.", "Producto simétrico.", "Álgebra simétrica.", "Formas diferenciales.", "Reconocimiento de la propiedad universal del producto exterior.", "Definición del álgebra exterior.", "Relación entre álgebra exterior y dualidad.", "Relación entre álgebra exterior y transformaciones", "lineales.", "Reconocimiento de la propiedad universal del producto simétrico.", "Definición del álgebra simétrica.", "Relación entre álgebra simétrica y dualidad.", "Relación entre álgebra simétrica y transformaciones lineales.", "Aplicación del álgebra exterior en el estudio de formas diferenciales."]}]}, "303252": {"name": "Analisis I", "units": [{"title": "Unidad 1: Números Reales", "topics": ["Axiomas de Campo, orden y completitud.", "Consecuencias de los axiomas de campo y de los axiomas de orden.", "Consecuencias del Axioma de Completitud.", "Conjuntos de enteros, racionales e irracionales.", "Principio de Arquímedes."]}, {"title": "Unidad 2:  Topología en R", "topics": ["Intervalos y vecindades.", "Conjuntos cerrados y abiertos de números reales.", "Interior, exterior y frontera de un conjunto de números reales. Conjuntos acotados.", "Caracterización de conjuntos abiertos por intervalos y sucesiones de conjuntos.", "Cubrimiento de conjuntos de números reales. Lema de subcubrimiento finito o principio de Heine-Borel.", "Conjuntos compactos, Teorema de Bolzano-Weierstrass y puntos de acumulación.", "Topología en R*."]}, {"title": "Unidad 3:  Sucesiones", "topics": ["Convergencia de sucesiones.", "Operaciones aritméticas y desigualdades en el paso al límite de sucesiones.", "Criterio de Cauchy. Sucesiones monótonas.", "Subsucesiones.", "Límite inferior y límite superior de una sucesión.", "Convergencia en R*."]}, {"title": "Unidad 4:  Series Numéricas", "topics": ["Definición. Convergencia de series.", "Criterios de convergencia de series de términos no negativos.", "Series alternantes. Series de términos de signo arbitrario. Convergencia absoluta y condicional.", "Reordenamiento y producto de series"]}, {"title": "Unidad 5:  Límites y Continuidad de Funciones", "topics": ["Límite de funciones. Propiedades generales del límite de funciones.", "Operaciones aritméticas y desigualdades en el paso al límite de funciones.", "Continuidad. Definiciones y ejemplos.", "Puntos de discontinuidad. Tipos de discontinuidad", "Propiedades locales de las funciones continuas.", "Propiedades globales de las funciones continuas.", "Teorema del valor intermedio. Teorema del valor extremo.", "Funciones uniformemente continuas. Funciones monótonas."]}, {"title": "Unidad 6:  Diferenciación", "topics": ["Definiciones y ejemplos.", "Reglas de diferenciación. Derivadas de orden superior.", "Principales teoremas del Cálculo Diferencial.", "Teorema del Valor Medio.", "Fórmula de Taylor."]}]}, "303302": {"name": "Analisis II", "units": [{"title": "Unidad 1: Integral de Riemann y de Riemann-Stieltjes  (9 clases incluye evaluación)", "topics": ["La integral de Riemann. Definición y ejemplos.", "Propiedades de la integral de Riemann.", "Teorema fundamental del cálculo.", "Sumas integrales de Riemann.", "Caracterización de las funciones integrables.", "Integrales impropias", "Integral de Riemann - Stieltjes. Criterio de integrabilidad.", "Propiedades de la integral de Riemann - Stieltjes.", "Sumas integrales de Riemann - Stieltjes."]}, {"title": "Unidad 2: Sucesiones y series de funciones (9 clases incluye evaluación)", "topics": ["Convergencia puntual y uniforme de sucesiones de funciones.", "Integración y derivación término a término de sucesiones de funciones.", "Convergencia puntual y uniforme de series funcionales.", "Integración y diferenciación término a término de series funcionales.", "Series de potencias", "Intervalo de convergencia y radio de convergencia.", "Funciones analíticas reales.", "Series de Taylor"]}, {"title": "Unidad 3: Series de Fourier (7 clases incluye evaluación)", "topics": ["Sistemas Ortogonales.", "Series de Fourier con respecto a un sistema ortogonal.", "Convergencia en media cuadrática.", "Serie Trigonométrica de Fourier.", "Lema Riemann Lebesgue.", "Convergencia puntual de la serie trigonométrica de Fourier.", "Series trigonométricas de Fourier de funciones pares e impares.", "Forma compleja de la serie trigonométrica de Fourier", "Integración de la serie trigonométrica de Fourier.", "Convergencia uniforme de la serie trigonométrica de Fourier"]}, {"title": "Unidad 4: Integrales Paramétricas (7 clases incluye evaluación)", "topics": ["Funciones continuas en . Compacidad en .", "Funciones uniformemente continuas.", "Integrales de Riemann dependientes de un parámetro.", "Diferenciación bajo el signo de la integral.", "Cambio del orden de integración.", "Integrales impropias dependientes de un parámetro.", "Convergencia puntual y uniforme.", "Continuidad, integración y diferenciación de integrales impropias dependientes de un parámetro.", "Función Gamma.", "Función Beta.", "Núcleos de Dirac.", "Transformada de Fourier"]}]}, "303352": {"name": "Analisis III", "units": [{"title": "Unidad 1: Diferenciabilidad en", "topics": ["El espacio  , topología, normas (equivalencia de normas), sucesiones y completitud.", "Límites y continuidad en , continuidad uniforme, funciones definidas en compactos y conexos", "Homeomorfismos en .", "Diferenciabilidad de funciones de  en .", "Teorema sobre diferenciabilidad.", "Derivada direccional, gradiente y teorema de valor medio para funciones de  en R.", "Teorema de la función inversa, Teorema de la función implícita.", "Fórmula de Taylor hasta orden 2, Teorema de Schwarz.", "Extremos de funciones de varias variables."]}, {"title": "Unidad 2: Integrabilidad en", "topics": ["Integral de Riemann sobre un rectángulo.", "Existencia de la integral, medida cero y contenido cero.", "Teorema de Fubini.", "Conjuntos rectificables.", "Integración sobre subconjuntos acotados de .", "Partición de la unidad.", "Teorema del cambio de variables.", "Integrales impropias.", "Aplicaciones."]}, {"title": "Unidad 3: Variedades diferenciables en", "topics": ["Definición de variedades (sin frontera), propiedades y ejemplos.", "Funciones definidas entre variedades.", "Espacios tangentes, definición por curvas y por cartas coordenadas.", "Diferencial de una función entre variedades. Regla de la cadena y otros teoremas.", "Teorema de la función inversa, inmersiones y submersiones y difeomorfismos.", "Teorema del valor regular.", "Definición de variedades con frontera."]}]}, "303018": {"name": "Analítica de Datos", "units": [{"title": "Unidad 1. Fundamentos computacionales y manejo de datos", "topics": []}, {"title": "Unidad 2. Análisis exploratorio y preparación de datos", "topics": []}, {"title": "Unidad 3. Modelos de aprendizaje supervisado", "topics": []}, {"title": "Unidad 4. Modelos de aprendizaje no supervisado y aplicaciones avanzadas", "topics": []}]}, "314062": {"name": "Análisis Bayesiano de Datos", "units": [{"title": "Unidad 1: Probabilidad e inferencia posterior", "topics": ["Definición de conceptos básicos", "Probabilidad condicional", "Regla de bayes", "Verosimilitud", "Densidad a priori y posterior", "Predicción", "Probabilidad como una medida de incertidumbre."]}, {"title": "Unidad 2: Modelos de un solo parámetro", "topics": ["Modelo binomial", "Distribuciones prior-informativas y no informativas", "Modelo para los parámetros de la distribución normal", "Modelo Poisson", "Modelo Exponencial."]}, {"title": "Unidad 3: Introducción a modelos de múltiples parámetros", "topics": ["Modelo normal", "Modelo multinomial para datos categóricos", "Optimización bayesiana y estocástica."]}, {"title": "Unidad 4: Introducción a la computación bayesiana", "topics": ["Simulación Monte Carlo vía Cadenas de Markov (MCMC)", "Algoritmo Metropolis-Hastings", "Muestreo de Gibss."]}]}, "303552": {"name": "Análisis Funcional", "units": [{"title": "Unidad 1: Espacios normales y espacios de banach.", "topics": ["Definición de los conceptos de espacio normado y espacio de Banach. Ejemplos.", "Los espacios de sucesiones como espacios normados: Lp, l∞, C, Co. Completitud de estos espacios.", "Los espacios de funciones Lebesgue-Integrables Lp como espacios de Banach. Los espacios de funciones continuas, completa según la norma escogida.", "Funciones lineales y acotadas en espacios normados. La norma de un funcional. Ejemplos.", "Dual topológico y dual algebraico de un espacio normado. Caracterización del dual topológico como espacio de Banach.", "Segundo dual topológico y algebraico. Reflexividad. Bases duales en espacios finitos dimensionales.", "Los duales topológicos de Lp, Lp, 1<p<∞.", "Teorema de Hahn-Banach. Aplicaciones."]}, {"title": "Unidad 2: Operadores lineales en espacios normados", "topics": ["Definiciones y teoremas generales.", "Ejemplos de operadores acotados y no acotados.", "Propiedades generales de los operadores lineales acotados.", "Teorema de la aplicación abierta. Aplicaciones.", "Operadores cerrados. Teorema del gráfico cerrado.", "Principio de acotamiento uniforme. Noción de convergencia débil."]}, {"title": "Unidad 3: Espacios de Hilbert", "topics": ["Definiciones y ejemplos. Desigualdad de Cauchy-Schwarz.", "Ortogonalidad y teorema de Riesz sobre el vector minimizante. Descomposición de un espacio de Hilbert como suma directa de un espacio cerrado y su complemento ortogonal.", "Teorema de Riesz. Conjuntos ortogonales. Proceso de Gram-Schimdt y desigualdad de Bessel.", "Propiedad variacional de los coeficientes de Fourier. El sistema ortogonal completo de funciones trigonométricas L2, [-,].", "Identidad de Parseval y aplicaciones al cálculo de series.", "Definición del operador adjunto. Propiedades de la operación de adjunción"]}, {"title": "Unidad 4: Introducción a la teoría espectral de operadores compactos y autoadjuntos en espacios de Hilbert.", "topics": ["Nociones de valor y vector propio de un operador. Ejemplos.", "Espectro y resolvente de un operador.", "Definición, ejemplos y propiedades de operadores compactos.", "Operadores compactos y autoadjuntos en espacios de Hilbert. Ejemplos.", "Teorema espectral para operadores compactos y autoadjuntos.", "Aplicación del teorema espectral a la ecuación integral de Fredholm de segunda clase.", "Problemas físicos que dan lugar a ecuaciones de Fredholm de segunda clase.", "Solubilidad de la ecuación de Fredholm, vía al teorema espectral."]}]}, "314405": {"name": "Análisis Multivariado I", "units": [{"title": "Unidad 1: Conceptos preliminares", "topics": ["Organización de datos multivariados", "Técnicas gráficas,", "Interpretaciones geométricas,", "Distancia estadística,", "Vectores y matrices aleatorias."]}, {"title": "Unidad 2: Distribución normal multivariada", "topics": ["Definición y propiedades de la distribución normal multivariada", "Distribución de formas cuadráticas", "Estimación por máxima verosimilitud", "Distribuciones muestrales,", "Evaluación de normalidad multivariada,", "Detección de datos atípicos."]}, {"title": "Unidad 3:  Inferencia y pruebas de hipótesis sobre vectores de medias", "topics": ["Regiones de confianza", "Prueba de razón de verosimilitudes", "Intervalos de confianza simultáneos", "Inferencia basada en muestras grandes", "Comparación de varios vectores de medias."]}, {"title": "Unidad 4:  Temas especiales", "topics": ["Distribuciones elípticas", "Regresión con respuesta multivariada", "Datos faltantes", "Algoritmo EM."]}]}, "314415": {"name": "Análisis Multivariado II", "units": [{"title": "Unidad 1:  Análisis de componentes principales y análisis factorial", "topics": ["Componentes principales poblacionales", "Variabilidad muestral explicada", "Análisis gráfico de las componentes principales", "Biplot", "Resultados asintóticos", "Modelo factorial ortogonal", "Métodos de estimación en el análisis factorial", "Rotación de factores", "Puntuaciones factoriales"]}, {"title": "Unidad 2:  Análisis de correlación canónica, análisis de clasificación y discriminación", "topics": ["Variables canónicas y correlaciones", "Interpretaciones de variables canónicas", "Medidas descriptivas e inferencia asintótica asociadas al análisis factorial", "Clasificación de poblaciones", "Funciones de clasificación", "Funciones discriminantes"]}, {"title": "Unidad 3: Análisis de Conglomerados, medidas de similaridad y ordenamiento", "topics": ["Medidas de similaridad", "Agrupamiento jerárquico y no-jerárquico", "Escalamiento multidimensional", "Análisis de correspondencias", "Biplot", "Análisis de Procrustes"]}, {"title": "Unidad 4:  Tópicos especiales", "topics": ["Clasificación logística", "Árboles de clasificación y regresión", "Redes neuronales", "Métodos no-paramétricos."]}]}, "314030": {"name": "Análisis de Regresión", "units": [{"title": "Unidad 1:  Modelos de Regresión Lineal MRL", "topics": ["Presentación del curso, aplicaciones, introducción a R o Python.", "Elementos de álgebra matricial.", "Modelos de Regresión Lineal, definición, notación, interpretación de parámetros.", "MRL, representación estocástica, método de mínimos cuadrados MMC, interpretación geométrica del MMC.", "MRL, valores ajustados, residuales, matriz sombrero, propiedades, ejemplos.", "Clase práctica en R o Python."]}, {"title": "Unidad 2:  Modelos de Regresión Lineal Normal MRLN", "topics": ["MRLN", "MRLN Inferencia, sumas cuadráticas, coeficientes de determinación y de correlación.", "Intervalos de confianza y pruebas de hipótesis asociadas al MRLN.", "Pruebas de Hipótesis asociadas al MRLN.", "Pruebas de Hipótesis asociadas al MRLN, ANOVA", "Clase práctica en R o Python.", "Extrapolación oculta y clase práctica.", "Clase práctica en R o Python."]}, {"title": "Unidad 3:  Diagnóstico en el MRLN", "topics": ["Diagnóstico de multicolinealidad y medidas remediales.", "Análisis de residuales, pruebas de hipótesis sobre los residuales.", "Análisis de gráficos en el diagnóstico de los residuales. Transformaciones", "Identificación de observaciones influenciales.", "Criterios de selección.", "Clase práctica en R o Python. Implementación con datos."]}, {"title": "Unidad 4: Modelos de regresión no lineal", "topics": ["Modelos con una o más variables cualitativas.", "Modelos polinómicos y con efecto de interacción.", "Medidas remediales para varianza de error no homogénea (Mínimos cuadrados ponderados).", "Medidas remediales para casos de puntos influenciales (regresión robusta). Validación de modelos.", "Modelos de regresión no lineal.", "Modelos de regresión logística"]}]}, "314416": {"name": "Análisis de sobrevivencia", "units": [{"title": "Unidad 1:  Conceptos básicos", "topics": []}, {"title": "Unidad 2:  Técnicas no paramétricas", "topics": []}, {"title": "Unidad 3:   Modelos probabilísticos", "topics": []}, {"title": "Unidad 4:  Modelos de regresión paramétricos", "topics": []}, {"title": "Unidad 5:   Modelo de regresión de Cox", "topics": []}, {"title": "Unidad 6:   Modelo de Aalen", "topics": []}, {"title": "Unidad 7:   Modelo de Regresión de Cox Penalizado", "topics": []}, {"title": "Unidad 8:   Técnica Random Forest para predicción en análisis de Sobrevivencia", "topics": []}]}, "314047": {"name": "Bases de Datos", "units": [{"title": "Unidad 1:  La planeación de una Encuesta", "topics": ["Definiciones básicas de Encuesta: objetivos y necesidades, antecedentes, periodo de referencia y de", "observación, universo y población de estudio, unidades de análisis e informantes.", "Traducción de objetivos en indicadores estadísticos y plan de tabulación (desagregación de", "resultados), cuadros de salida."]}, {"title": "Unidad 2:  El diseño temático, estadístico, informático y operativo de una Encuesta", "topics": ["El diseño temático", "El formulario o cuestionario, diseño, estructura, contenido, tipos de pregunta/respuesta y flujogramas.", "El diseño estadístico", "El plan muestral para una encuesta por muestreo probabilístico, definiciones básicas, variables,", "parámetros para estimar, unidades estadísticas y marco de muestreo.", "Diseño y selección de muestra, estimadores relacionados (Estrategias muestrales).  Diseños no", "proporcionales y proporcionales de elementos, de conglomerados y estratificados.", "Metodologías de estimación, indicadores de precisión, confiabilidad e intervalos de confianza. Tamaños", "de muestra.", "El diseño operativo", "Organigrama, distribución de cargas de trabajo y prueba piloto."]}, {"title": "Unidad 3:  La ejecución del operativo de campo y el procesamiento de datos", "topics": ["Pre-operativo de campo, preparación de cartografía, manuales y formatos de recolección.", "El Operativo de campo. Ejecución, recolección de datos de la investigación. Control y supervisión,", "seguimiento de reportes de cobertura.", "Procesamiento, ingreso de datos, depuración, validación, consistencia, imputación y consolidación de", "información.", "Estudio de datos a nivel muestra y comparación con otras fuentes. Ajustes al factor básico de", "expansión y ajustes de cobertura.", "Obtención de cuadros de salida, intervalos de confianza y estimaciones con sus correspondientes", "indicadores precisión (errores de muestreo)"]}, {"title": "Unidad 4:  El análisis de la información y preparación para entrega de resultados", "topics": ["Análisis de los cuadros de salida, estimaciones y errores de muestreo.", "Análisis de contexto, de cobertura, indicadores temáticos y de calidad", "Ajustes finales, ficha técnica e informe de resultados.", "Productos para entregar, documentación, metodología estadística, ficha técnica, cuadros de salida e", "informe de resultados."]}]}, "303157": {"name": "Cálculo I", "units": []}, "303207": {"name": "Cálculo II", "units": []}, "303009": {"name": "Cálculo Vectorial", "units": [{"title": "Unidad 1: Ecuaciones paramétricas y coordenadas polares, cilíndricas y esféricas", "topics": []}, {"title": "Unidad 2: Nombre: Límites, Diferenciabilidad y aplicaciones", "topics": []}, {"title": "Unidad 3: Nombre: Integrales múltiples", "topics": []}, {"title": "Unidad 4: Nombre: Campos vectoriales e integración sobre campos vectoriales", "topics": []}]}, "303002": {"name": "Cálculo diferencial", "units": [{"title": "Unidad 1: Pre-Cálculo", "topics": []}, {"title": "Unidad 2: Límites de funciones y Continuidad.", "topics": []}, {"title": "Unidad 3: La derivada.", "topics": []}, {"title": "Unidad 4: Aplicaciones de derivada", "topics": []}]}, "303005": {"name": "Cálculo integral", "units": [{"title": "Unidad 1: Nombre: Antiderivada y Técnicas de Integración.", "topics": ["Función Primitiva o Antiderivada. La integral indefinida definición y notación.", "Fórmulas de la integración. Propiedades de la integral indefinida.", "Métodos de integración: Regla de sustitución (cambio de variables), Integración por partes. Integración de potencias de funciones trigonométricas, Sustituciones trigonométricas, descomposición en fracciones parciales, Sustituciones para racionalizar."]}, {"title": "Unidad 2: Nombre: Integral Definida", "topics": ["La integral definida. La notación sumatoria (notación sigma).", "Sumas de Riemann. Definición de la integral definida según Riemann. Teorema: continuidad implica integrabilidad. Análisis del recíproco.", "Propiedades de la integral definida y sus generalizaciones. Propiedades que ayudan a simplificar la integral. Funciones pares e impares.", "Los teoremas fundamentales del cálculo. Teorema del valor medio para integrales.", "Integrales impropias"]}, {"title": "Unidad 3: Nombre: Aplicaciones de la Integral", "topics": ["Áreas entre curvas.", "Volúmenes de sólidos: Método de secciones planas. Volúmenes de sólidos de revolución: método de los discos, método de las arandelas, método de la corteza cilíndrica. Longitud de arco de una curva plana y área de superficie de revolución.", "Momentos y centros de masa de una barra, centroide de una región plana. Los teoremas de Pappus"]}, {"title": "Unidad 4: Nombre: Sucesiones y Series", "topics": ["Sucesiones y series. Sucesiones, definición y límite de una sucesión, clasificación y teoremas sobre límites de sucesiones.", "Series numéricas.  Propiedades. Serie geométrica. Serie telescópica. Criterios de convergencia y divergencia de series. Criterio del término n-ésimo para divergencia. Criterio de la integral. Criterios de comparación. Comparación en el límite. Criterio del cociente y de la raíz, criterio de Raabe.", "Series alternantes, convergencia absoluta y condicional. Criterio del cociente y de la raíz para convergencia absoluta.", "Series de potencia. Representación de funciones por series de potencias. Formula de Euler. Cálculo con series de potencias. La serie binomial."]}]}, "314311": {"name": "Diseño de Experimentos", "units": [{"title": "Unidad 1:  Introducción", "topics": ["Estudios observacionales y experimentales.", "Definición del diseño estadístico de experimentos.", "Conceptos básicos.", "Breve historia del diseño estadístico.", "Fases del diseño experimental.", "Principios del diseño experimental."]}, {"title": "Unidad 2:  Experimentos con un solo factor", "topics": ["Diseño completamente aleatorizado.", "Principios del Análisis de Varianza (ANOVA).", "Modelo de efectos fijos.", "Validación de supuestos.", "Comparaciones múltiples.", "Comparaciones por contrastes.", "Modelo de efectos aleatorios.", "Potencia y tamaño de muestra en ANOVA."]}, {"title": "Unidad 3:  Diseños de bloques y otros", "topics": ["Diseño de bloques completos aleatorizados.", "Análisis estadístico del diseño de bloques.", "Verificación de supuestos.", "Eficiencia de un diseño de bloques.", "Diseño de cuadrado latino.", "Diseño de cuadrado grecolatino.", "Diseño de bloques incompletos balanceados."]}, {"title": "Unidad 4:  Experimentos factoriales", "topics": ["Conceptos básicos.  Ventajas de los diseños factoriales.", "Diseño factorial de dos factores.", "Diseño factorial de tres factores.", "Diseño factorial general.", "Formación de bloques en un diseño factorial.", "Modelos de efectos aleatorios.", "Modelos de efectos mixtos."]}, {"title": "Unidad 5:   Diseños factoriales 2^k y fraccionados", "topics": ["Diseño 2^2, diseño 2^3", "Diseño 2^k", "Diseños con una sola réplica.", "Diseños con puntos centrales.", "Diseño Factorial Fracción 2^k-1. Resolución y construcción de fracciones 2^k-1.", "Diseño Factorial Fracción 2^k-2. Resolución y construcción de fracciones 2^k-2"]}, {"title": "Unidad 6:   Métodos de superficies de respuesta", "topics": ["Introducción a la metodología de superficies de respuesta", "Método del ascenso más pronunciado.", "Análisis de una superficie de respuesta de segundo orden.", "Diseños experimentales para superficies de respuesta."]}]}, "303013": {"name": "Ecuaciones Diferenciales Ordinarias", "units": [{"title": "Unidad 1: Ecuaciones diferenciales de primer orden", "topics": ["Definición de ecuación diferencial y orden de una ecuación diferencial. Clasificación de las ecuaciones diferenciales: \ttipo, orden y linealidad.", "Definición de solución, definición de solución general y solución particular, problema de valor inicial.", "Teorema de Existencia y unicidad.", "Ecuaciones diferenciales de primer orden: Ecuaciones lineales, Ecuaciones separables, Ecuaciones homogéneas, Ecuaciones exactas, teoremas sobre exactas y factores integrantes, Ecuación de Bernoulli. Sustituciones varias."]}, {"title": "Unidad 2: Aplicaciones de las Ecuaciones diferenciales de primer orden", "topics": ["Aplicaciones geométricas (trayectorias isogonales y ortogonales, problemas de persecución y problemas de geometría analítica).", "Problemas de crecimiento y decrecimiento exponencial.", "Problemas de mezclas químicas. Problemas de vaciado de tanques.", "Circuitos. Problemas de aplicación a la física.", "Construir la ecuación diferencial que modele cada problema planteado y resolverla por los métodos de la unidad anterior."]}, {"title": "Unidad 3: Teoría de las Ecuaciones lineales de primer orden", "topics": ["Conceptos básicos, espacio C(I), C'(I), C''(I), etc., funciones linealmente dependientes e independientes, Wronskiano y teoremas sobre la dimensión del espacio solución de una Ecuaciones diferenciales  homogénea, Método de reducción de orden.", "Soluciones fundamentales de las ecuaciones lineales homogéneas.", "Ecuaciones homogéneas con coeficientes constantes. Ecuación característica.", "Ecuación no homogénea: Método de los coeficientes indeterminados.  Método de variación de parámetros.", "Método de los operadores inversos.", "Aplicaciones de las ecuaciones diferenciales de segundo orden: Vibraciones mecánicas y eléctricas, vibraciones forzadas."]}, {"title": "Unidad 4: Solución por Series", "topics": ["Refrescar el concepto de serie y las propiedades de las series.", "Definición de punto ordinario y solución de una ecuación diferencial alrededor de un punto ordinario.", "Definición de punto singular y solución alrededor de un punto singular, teorema de Frobenius, ecuación de índices y los tres casos que surgen con las raíces indiciales.", "Función gamma y teoremas relativos.", "Ecuación diferencial de Bessell y propiedades de la función de Bessell"]}, {"title": "Unidad 5: Transformada de Laplace", "topics": ["Definición de Trasformada de Laplace y trasformada inversa de Laplace y la tabla de las principales fórmulas de trasformada y trasformada inversa de Laplace, ejemplos.", "Teoremas de trasformada de Laplace: teorema de existencia de la trasformada de Laplace, primer teorema de traslación, segundo teorema de traslación, teorema de la derivada de una trasformada, teorema de la trasformada de una derivada, teorema del producto convolutivo y trasformada de la integral, teorema de la generalización de la trasformada de una potencia con exponente real, teorema de la trasformada de una función periódica.", "Aplicaciones de la trasformada a Ecuaciones diferenciales lineales de coeficientes constantes o variables y a ecuaciones Integrales y ecuaciones integro-diferenciales.", "Función Impulso Unitario o Delta de Dirac, sus propiedades y su trasformada de Laplace, aplicación a Ecuaciones diferenciales que contengan la función Delta-Dirac"]}]}, "303527": {"name": "Ecuaciones Diferenciales Parciales", "units": [{"title": "Unidad 1: Introducción", "topics": ["Preliminares", "Clasificación", "Operadores diferenciales y principio de superposición"]}, {"title": "Unidad 2: Ecuaciones de Primer Orden", "topics": ["Introducción", "Ecuaciones cuasilineales", "El método de las características", "Teorema de existencia y unicidad", "El método de Lagrange, leyes de conservación y ondas de choque", "La ecuación general", "Ecuaciones no lineales generales"]}, {"title": "Unidad 3: Ecuaciones lineales de segundo orden en dos variables independientes", "topics": ["Introducción", "Clasificación", "Formas Canónicas de las ecuaciones hiperbólicas, parabólicas y elípticas"]}, {"title": "Unidad 4: La ecuación de onda unidimensional", "topics": ["Introducción", "Solución general", "Problema de Cauchy y fórmula de d’Alembert", "Dominio de dependencia y región de influencia", "Problema de Cauchy para ecuación de onda no homogéneo"]}, {"title": "Unidad 5: El método de separación de variables.  Ecuación del calor", "topics": ["Introducción", "Ecuación del calor: condiciones de frontera homogéneos", "Separación de variables para ecuación no homogéneas", "Método de energía y unicidad", "Aplicaciones de la ecuación del calor"]}, {"title": "Unidad 6: Problemas de Sturm-Liouville", "topics": ["Introducción", "Espacios con producto interior y sistemas ortonormales", "Propiedades básicas de las funciones propias y valores propios de Strum-Liouville", "Ecuaciones no homogéneas", "Condiciones de frontera no homogénea"]}, {"title": "Unidad 7: Ecuaciones elípticas", "topics": ["Introducción", "Propiedades Básicas de problemas elípticos", "El principio del máximo y su aplicación", "Identidades de Green", "Principio del máximo para la ecuación del calor", "Separación de variable para problemas elípticos", "Fórmula de Poisson"]}]}, "314313": {"name": "Estadística no paramétrica", "units": [{"title": "Unidad 1:  Introducción a la estadística no paramétrica", "topics": ["Conceptos fundamentales: Notación y antecedentes, Conjuntos de confianza, Desigualdades útiles."]}, {"title": "Unidad 2: Pruebas de aleatoriedad", "topics": ["Pruebas basadas en el número de ejecuciones y pruebas basadas en la longitud de la ejecución más larga", "Prueba basada en rangos", "Extensión de la prueba de la media control", "Test ANOVA de una vía: Kruskal-Wallis y comparaciones múltiples", "Otras pruebas estadísticas de rango", "Comparación con un control", "Prueba Chi-Cuadrado para k proporciones."]}, {"title": "Unidad 3:  Pruebas de bondad de ajuste", "topics": ["Prueba Chi-cuadrado de bondad de ajuste", "Kolmogorov-Smirnov una muestra", "Prueba Lillietors para normalidad", "Extensión de la prueba de la media control", "Test ANOVA de una vía: Kruskal", "Wallis y comparaciones múltiples", "Otras pruebas estadísticas de rango", "Comparación con un control", "Prueba Chi-Cuadrado para k proporciones.", "Intervalos de confianza y pruebas de hipótesis para un cuantíl poblacional", "Prueba Signo e intervalo de confianza para la media", "Estadísticos de orden y rango, Tratamiento de empates en pruebas de rango", "Extensión de la prueba de la media control", "Test ANOVA de una vía: Kruskal-Wallis y comparaciones múltiples.", "Otras pruebas estadísticas de rango.", "Comparación con un control", "Prueba Chi-Cuadrado para k proporciones"]}, {"title": "Unidad 4:  El problema general de dos muestras", "topics": ["Prueba de Wald-Wolfowitz", "Prueba para dos muestras de Kolmogorov-Smirnov", "Prueba de la mediana y de la mediana con una muestra de control,", "Prueba U de Mann- Witney"]}, {"title": "Unidad 5:  Pruebas de igualdad de k muestras independientes", "topics": ["Extensión de la prueba de la media", "Extensión de la prueba de la media control", "Test ANOVA de una vía: Kruskal-Wallis y comparaciones múltiples.", "Otras pruebas estadísticas de rango", "Comparación con un control"]}]}, "314067": {"name": "Fundamentos de Estadística I", "units": [{"title": "Unidad 1: Introducción", "topics": ["Definiciones básicas", "Historia", "Tipos de datos"]}, {"title": "Unidad 2: Estadística Descriptiva Univariada", "topics": ["Distribuciones de frecuencias", "Medidas descriptivas"]}, {"title": "Unidad 3: Curvas De Densidad Y Distribución Normal", "topics": ["Distribución normal", "Cálculo de proporciones", "Cálculo de percentiles"]}, {"title": "Unidad 4: Estadística Descriptiva Bivariada", "topics": ["Distribuciones conjuntas y marginales", "Dependencia estadística"]}, {"title": "Unidad 5: Regresión", "topics": ["Ecuación de regresión ajustada", "Interpretación de los coeficientes de la ecuación de regresión", "Error o residual", "Valores predichos", "Coeficiente de determinación", "Coeficiente de correlación"]}]}, "314068": {"name": "Fundamentos de Estadística II", "units": [{"title": "Unidad 1: Muestreo", "topics": ["Conceptos básicos: Población, muestra.", "Algunos métodos de muestreo: muestreo a conveniencia, subjetivo, muestreo aleatorio simple.", "Métodos para seleccionar una muestra aleatoria simple.  Error muestral.", "Definición parámetro, estadístico.", "Breve introducción al concepto de estimación puntual, distribución muestral, margen de error e intervalos de confianza y su conexión con el muestreo."]}, {"title": "Unidad 2: Diseño de Experimentos", "topics": ["Estudios observacionales y experimentales.", "Conceptos básicos del diseño: variable, variable de respuesta, factor, nivel, unidad experimental, tratamientos.", "Diseño completamente aleatorizado (DCA), esquema de un DCA, principios del diseño.", "Diseño de bloques aleatorizado.  Diseños por pares."]}, {"title": "Unidad 3:  Introducción a la Probabilidad", "topics": ["La idea de probabilidad.", "Conceptos básicos: espacio muestral, evento.", "Probabilidad de un evento.", "Reglas de la probabilidad.", "Modelos de probabilidad (discreto y continuo)."]}, {"title": "Unidad 4:  Distribuciones Muestrales", "topics": ["Introducción a las distribuciones muestrales.", "Distribución muestral la media muestral.", "Distribución muestral de la proporción muestral.", "Propiedades de los estimadores.", "Cálculo de probabilidades.", "Teorema del límite central."]}, {"title": "Unidad 5:  Introducción a la inferencia estadística", "topics": ["La idea de la inferencia estadística.", "Margen de error y estimación por intervalos.", "Definición de un intervalo de confianza.", "Interpretación de un intervalo de confianza.", "Construcción de un intervalo de confianza.", "Intervalos de confianza para la media poblacional (bajo normalidad y varianza conocida)."]}, {"title": "Unidad 6:  Pruebas de Hipótesis", "topics": ["Introducción, la idea de una prueba de hipótesis.", "Términos básicos: hipótesis nula, hipótesis alternativa.", "Clases de hipótesis.", "Procedimiento para realizar una prueba de hipótesis (definir: estadístico de prueba o contraste, valor-p,", "nivel de significancia).", "Prueba de hipótesis para la media con varianza conocida."]}]}, "303117": {"name": "~$ndamentos de Matemáticas", "units": []}, "314029": {"name": "Fundamentos de Programación", "units": [{"title": "Unidad 1: Elementos de programación", "topics": ["Introducción al curso", "Lenguajes de programación", "Introducción a Python", "Tipos de datos, operadores, estructuras de datos en Python, estructuras dinámicas y estáticas"]}, {"title": "Unidad 2: Estructuras de control", "topics": ["Estructuras condicionales simple y compuesta", "Estructuras condicionales múltiples, anidadas", "Estructuras de iteración definida e indefinida"]}, {"title": "Unidad 3: Funciones", "topics": ["Funciones incorporadas", "Módulos, submódulos.", "Definición de funciones, ámbito de las variables, problemas de aplicación"]}, {"title": "Unidad 4: Bases de datos con SQL y visualización de datos", "topics": ["Fundamentos de SQL, creación y particionamiento, filtros, funciones, subconsultas, unions, joins."]}]}, "303006": {"name": "Geometría Básica", "units": []}, "303459": {"name": "Geometría diferencial", "units": [{"title": "Unidad 1: Curvas en", "topics": ["Curvas parametrizadas, regularidad y reparametrizaciones.", "El referencial de Frenet-Serret, curvatura y torsión.", "Teorema fundamental para curvas."]}, {"title": "Unidad 2: Superficies regulares", "topics": ["Superficies regulares, el plano tangente y la diferencial de una función", "Formas fundamentales, operador de forma y curvatura de Gauss", "El teorema Egregio, aplicaciones entre superficies y el transporte paralelo", "El teorema de Gauss Bonnet"]}]}, "304070": {"name": "Inferencia Estadística", "units": [{"title": "Unidad 1:   Distribuciones límite y distribuciones muestrales", "topics": ["Sucesiones de variables aleatorias", "Teorema del límite central", "Aproximaciones para la distribución binomial", "Distribuciones asintóticas", "Propiedades de convergencia estocástica", "Teoremas límite adicionales", "Distribuciones muestrales", "Distribuciones t, F y beta, aproximaciones para grandes muestras."]}, {"title": "Unidad 2:  Teoría de los estimadores", "topics": ["Algunos métodos de estimación", "Criterios para la evaluación de estimadores,", "Propiedades asintóticas", "Estadísticos suficientes y sus propiedades", "Completez", "Familia exponencial de distribuciones."]}, {"title": "Unidad 3:   Intervalos de confianza y pruebas de hipótesis", "topics": ["Definición de intervalo de confianza", "Método de la cantidad pivotal", "Método general", "Procedimientos sobre dos poblaciones", "Conceptos básicos sobre pruebas de hipótesis", "Procedimientos con hipótesis compuestas", "Pruebas para los parámetros de la distribución normal", "Pruebas más potentes", "Pruebas uniformemente más potentes", "Pruebas basadas en la verosimilitud."]}, {"title": "Unidad 6:  Pruebas de Hipótesis", "topics": ["Introducción, la idea de una prueba de hipótesis.", "Términos básicos: hipótesis nula, hipótesis alternativa.", "Clases de hipótesis.", "Procedimiento para realizar una prueba de hipótesis (definir: estadístico de prueba o contraste, valor-p,", "nivel de significancia).", "Prueba de hipótesis para la media con varianza conocida."]}]}, "303029": {"name": "Introduccion a la Investigacion", "units": [{"title": "Unidad 1: Exploración de la actividad investigativa en la Universidad", "topics": []}, {"title": "Unidad 2: Búsqueda de la Información", "topics": []}, {"title": "Unidad 3: Escritura de documentos en LATEX", "topics": []}, {"title": "Unidad 4: Elaboración del proyecto de trabajo de grado", "topics": []}]}, "0302015": {"name": "Introducción a las Matemáticas", "units": []}, "303008": {"name": "Lógica", "units": [{"title": "Unidad 1: Lógica proposicional clásica.", "topics": ["Lenguaje de la lógica proposicional", "Semántica de la lógica proposicional", "Axiomas y reglas de inferencia del cálculo proposicional", "Demostración de algunas leyes lógicas", "Métodos de demostración", "Teoremas de validez y completitud"]}, {"title": "Unidad 2: Lógica de predicados de primer orden.", "topics": ["Lenguajes de primer orden", "Interpretación de lenguajes de primer orden", "Axiomas y reglas de inferencia del cálculo de predicados", "Métodos de demostración del cálculo de predicados", "Axiomas para la igualdad", "Teoremas de validez y completitud"]}, {"title": "Unidad 3: Elementos iniciales de la teoría de conjuntos de Zermelo-Fraenkel (ZF).", "topics": ["Primeros Axiomas de ZF (extensionalidad, vacío, comprensión, pares, unión y partes)", "Álgebra de conjuntos", "Pares ordenados y producto Cartesiano", "Uniones e intersecciones generalizadas"]}, {"title": "Unidad 4: Formalización de relaciones y funciones en ZF.", "topics": ["Relaciones inversas y compuestas", "Funciones y composición de funciones", "Imágenes directa e inversa de relaciones y funciones", "Familias de conjuntos y producto Cartesiano generalizado"]}]}, "0303118": {"name": "Matemáticas Básicas", "units": []}, "314028": {"name": "Matemáticas Discretas", "units": [{"title": "Unidad 1:  Lógica y conjuntos", "topics": []}, {"title": "Unidad 2:  Relaciones y funciones", "topics": []}, {"title": "Unidad 3:  Recursión y combinatoria", "topics": []}, {"title": "Unidad 4:  Grafos y redes", "topics": []}]}, "0303204": {"name": "Matemáticas I", "units": [{"title": "Unidad 1: Límites de funciones y Continuidad.", "topics": ["Un acercamiento a la noción de límite de una función de una variable. Definición intuitiva de límite.", "Límites indeterminados.", "Limites trigonométricos.", "El teorema del emparedado.", "Límites en el infinito.", "Límites al infinito.", "Asíntotas de una función.", "Continuidad puntual.", "Continuidad global.", "Operaciones entre funciones continuas.", "El teorema del valor intermedio."]}, {"title": "Unidad 2: La derivada.", "topics": ["Motivación de la derivada. El problema de la recta tangente a una curva en un punto y la velocidad instantánea.", "Definición de la derivada de una función. Notación de la derivada.", "Reglas de derivación (diferenciabilidad): suma, resta, multiplicación y división.", "Derivadas de las funciones elementales: funciones constantes, funciones potencias, funciones trigonométricas, funciones exponenciales y funciones hiperbólicas.", "Derivada de funciones inversas: funciones logarítmicas y funciones trigonométricas inversas.", "Regla de la cadena.", "Derivadas de orden superior.", "Derivada implícita", "Ley de L’ Hôpital."]}, {"title": "Unidad 3: Teoremas clásicos del Cálculo Diferencial y aplicaciones de la derivada.", "topics": ["Diferenciabilidad implica continuidad.", "Extremos locales y globales.", "Puntos críticos.", "El teorema del extremo global.", "Funciones crecientes y decrecientes.", "Funciones cóncavas y convexas.", "Criterios de la primera derivada y la segunda para derivada máximos y mínimos.", "Criterio de la segunda derivada para la concavidad y la convexidad.", "Puntos de inflexión.", "Aplicaciones de la derivada:", "Optimización en problemas de la Biología y la Química.", "Razones de cambio. Razones de cambio en modelos de crecimiento poblacional."]}, {"title": "Unidad 4: Integrales indefinidas.", "topics": ["Antiderivadas de una función. Integrales indefinidas.", "Integrales indefinidas elementales.", "Métodos de integración:", "Método de integración por sustitución simple.", "Método de integración por partes.", "Método de integración de funciones racionales.", "Método de integración por sustitución trigonométrica.", "Método de integración para potencias de funciones trigonométricas.", "Método de integración por sustituciones diversas."]}, {"title": "Unidad 5: Integrales definidas y aplicaciones de la integral.", "topics": ["Un acercamiento a la integral definida. El problema del área bajo la curva.", "Sumas de Riemann.", "Definición de la integral definida.", "Propiedades básicas de integral definida.", "Teorema fundamental del Cálculo.", "Integrales impropias en intervalos no acotados.", "Longitud de una curva.", "Área entre curvas.", "Volumen de un sólido y de un sólido de revolución."]}, {"title": "Unidad 6: Series y Sucesiones.", "topics": ["Definición de una sucesión. Tipos de sucesiones.", "Límite de una sucesión. Convergencia de una sucesión.", "Algunos teoremas para la convergencia sucesiones: teorema del emparedado y el criterio secuencial de límites.", "Definición de una serie.", "La serie geométrica, la serie p y las series telescópicas.", "Convergencia y divergencia de una serie.", "Criterio del término n-ésimo para la divergencia de una serie.", "Criterio de la integral para la convergencia o divergencia de una serie."]}]}, "303314": {"name": "Matemáticas II", "units": [{"title": "Unidad 1: Límites de funciones y Continuidad.", "topics": ["Superficies cuádricas", "Coordenadas cartesianas, polares, cilíndricas y esféricas.", "Funciones de varias variables.", "Límites funciones de dos y tres variables.", "Propiedades de límites.", "Cálculo de límites usando coordenadas polares, esféricas y cilíndricas.", "Continuidad y sus propiedades.", "Derivadas parciales y direccionales de funciones de varias variables", "Definición de diferenciabilidad de funciones de varias variables", "Derivadas de orden superior y derivadas mixtas", "La diferencial en varias variables", "Aplicaciones: la diferencial como aproximación de incremento total"]}, {"title": "Unidad 2: Aplicaciones de la teoría de diferenciabilidad", "topics": ["La regla de la cadena para varias variables", "Derivación implícita", "Vector gradiente y sus propiedades", "Máximos y mínimos de funciones de dos variables", "Criterios para extremos", "Extremos con condiciones y los multiplicadores de Lagrange", "Aplicaciones"]}, {"title": "Unidad 3: Integración en varias variables", "topics": ["Integrales dobles", "Integrales dobles iteradas", "Integrales dobles en coordenadas polares", "Aplicaciones de las integrales dobles: Centro de masa", "Integrales triples", "Integrales triples sobre regiones.", "Integrales triples en coordenadas cilíndricas y esféricas.", "Teorema de cambio de variable"]}, {"title": "Unidad 4: Introducción al álgebra lineal y a las ecuaciones diferenciales ordinarias", "topics": ["Puntos y vectores en el plano y el espacio", "Producto punto y vectorial de vectores", "Soluciones de sistemas de ecuaciones lineales", "Matrices y operaciones básicas", "Valores y vectores propios.", "Diagonalización", "Aplicación: Crecimiento poblacional a través de la matriz de Leslie", "Crecimiento y desintegración exponencial.", "Sistemas predador-presa.", "Reacción química de segundo orden", "Ecuaciones diferenciales ordinarias de primer orden.", "Soluciones de ecuaciones diferenciales (Ecuaciones separables)"]}]}, "0303251": {"name": "Matemáticas III", "units": [{"title": "Unidad 1: Nombre: Estadística descriptiva", "topics": ["Definición de Estadística", "Tipos de datos", "Descripción de los conjuntos de datos", "Métodos gráficos y numéricos para describir datos", "Medidas de tendencia central", "Medidas de dispersión", "Datos agrupados por intervalos de clase."]}, {"title": "Unidad 2: Nombre: Probabilidad", "topics": ["Definición de espacio muestral y eventos", "Definición de probabilidad y propiedades", "Técnicas de conteo", "Probabilidad condicional e independencia de eventos", "Teorema de la probabilidad total.", "Regla de Bayes."]}, {"title": "Unidad 3: Nombre: Variables aleatorias unidimensionales y bidimensionales", "topics": ["Definición de variable aleatoria discreta.", "Función de probabilidad de variables aleatorias discretas", "Esperanza y varianza de unas variables aleatorias discretas", "Distribuciones de probabilidad (Distribución uniforme discreta, Bernoulli, Distribución Binomial, Distribución Binomial negativa, Distribución Geométrica, Distribución Hipergeométrica, Distribución de Poisson)", "Definición de variables aleatorias continuas.", "Función de densidad de variables aleatorias continuas", "Esperanza y varianza de variables aleatorias continuas", "Distribución de densidad de variables aleatorias continuas (Distribución uniforme continua, Distribución Normal, Distribución Exponencial)", "Relación entre las distribuciones de Poisson y exponencial.", "Distribuciones de probabilidad conjunta."]}, {"title": "Unidad 4: Nombre: Distribuciones de probabilidad y estimaciones", "topics": ["Conceptos básicos. (Población, muestra, parámetro, estadístico, estimador, inferencia estadística, muestreo aleatorio, distribución de muestreo)", "Distribuciones asociadas a la distribución Normal (Chi cuadrado, t-Student, Fisher)", "Distribución de muestreo de la media (Varianza poblacional conocida)", "Teorema del límite central.", "Ley de los grandes números.", "Distribución de muestreos (S2, media, proporción, diferencia de medias, diferencia de proporciones, del cociente de varianzas)", "Estimación puntual (propiedad de los estimadores)", "Método de máxima verosimilitud", "Estimación por Intervalo", "Intervalos de confianza (media (varianza conocida), media (Varianza desconocida), varianza, proporción binomial, diferencia en medias, cociente de dos varianzas, diferencia de proporciones)", "Intervalos de predicción y de tolerancia"]}, {"title": "Unidad 5: Nombre: Ecuaciones diferenciales de orden superior", "topics": ["Operadores diferenciales lineales. EDOs lineales. Espacio solución de una ecuación diferencial lineal homogénea. Base para el espacio solución de una ecuación diferencial lineal homogénea (Conjunto fundamentales de soluciones)."]}, {"title": "Unidad 6: Nombre: El método de series de potencias", "topics": []}]}, "303014": {"name": "Metodología de las Matemáticas", "units": [{"title": "Unidad 1:  Estrategias para la resolución de problemas matemáticos", "topics": []}, {"title": "Unidad 2:  La demostración en matemáticas", "topics": []}, {"title": "Unidad 3:  Métodos de solución de problemas clásicos en la historia de las matemáticas", "topics": []}]}, "314210": {"name": "Muestreo", "units": [{"title": "Unidad 1: Muestreo aleatorio simple", "topics": ["Introducción al muestreo.  Ideas básicas de muestreo y estimación.  Tipos de error.  Muestreo probabilístico.  Tipos de variable.  Parámetros.  Estimadores.", "Muestreo aleatorio simple (M.A.S.).  Estimación de medias, totales.", "Muestreo aleatorio simple con reemplazamiento.", "Intervalos de confianza.  Estimación de errores de muestreo.  Tamaño de la muestra para estimar la media y el total.  Aspectos del problema del tamaño muestral.  Estimación preliminar de varianzas poblacionales.  Precisión relativa.", "Estimación de proporciones.  Tamaño muestral para proporciones y varias proporciones simultáneamente.", "Muestreo con probabilidades desiguales.  Estimador de Horvitz y Thompson."]}, {"title": "Unidad 2:  Muestreo estratificado", "topics": ["Muestreo aleatorio estratificado (M.A.E.).  Ventajas con respecto al muestreo aleatorio simple.  Estimación de medias totales y proporciones.", "Afijación de la muestra.", "Tamaño de muestra para medias, totales y proporciones.", "Postestratificación.", "El problema de la formación de estratos.  Elección del número de estratos."]}, {"title": "Unidad 3:  Muestreo sistemático", "topics": ["Muestreo sistemático (M.S.).  Ventajas, desventajas.", "Estimación de medias, totales y proporciones.", "Efectos de la correlación intraclase.", "Estimación de varianzas.", "Tamaño de muestra."]}, {"title": "Unidad 4:    Estimadores de razón y de regresión", "topics": ["Estimadores de razón.  Varianza de los estimadores.", "Sesgo en los estimadores de razón.", "Estimadores de razón en muestreo estratificado.  Estimadores de regresión lineal.", "Comparación de los estimadores de regresión y de razón."]}, {"title": "Unidad 5:    Muestreo por conglomerados", "topics": ["Muestreo por conglomerados.  Conglomerados iguales.  Estimación de la media y totales poblacionales.  Estimación de proporciones.  Tamaño muestral.", "Conglomerados de tamaños diferentes. Selección con probabilidades proporcionales al tamaño.  Estimadores de la media y la varianza."]}, {"title": "Unidad 6:    Muestreo polietápico", "topics": ["Introducción.  Muestreo aleatorio simple en cada etapa.  Estimadores insesgados para el total y la razón.", "Unidades primarias de selección con probabilidad proporcional al tamaño.  Unidades primarias seleccionadas con probabilidades desiguales.", "Costos y tamaños maestrales.  Cálculo general de varianzas y errores de estimación.", "Muestreo Doble: Introducción.  Estimación de la razón.  Asignación muestral para la estimación de la razón.", "Muestreo Doble por Estratificación.  Ajuste para no-respuesta en encuestas.  Deducción de algunos resultados."]}, {"title": "Unidad 7:    Otros métodos de muestreo", "topics": ["Muestreo neuronal (multiplicidad).", "Líneas transectas y gráficos variables circulares.", "Muestreo de captura y recaptura.  Predicción espacial.", "Diseños de muestreo adaptativo.  Imputación de datos faltantes.", "Método de la respuesta aleatorizada.  Regresión con datos de encuestas complejas."]}]}, "314069": {"name": "Métodos numéricos I", "units": []}, "303313": {"name": "Probabilidad", "units": [{"title": "Unidad 1: Función de probabilidad", "topics": ["Espacio muestral, eventos", "Axiomas de la función de probabilidad", "Probabilidad clásica y probabilidad frecuentista", "Técnicas básicas de conteo", "Teorema de Bayes", "Independencia de eventos"]}, {"title": "Unidad 2:  Variable aleatoria", "topics": ["Definición y tipos de variables aleatorias", "Función de distribución acumulada", "Función de densidad de probabilidad", "Valores esperados", "Desigualdades importantes"]}, {"title": "Unidad 3:   Distribuciones de probabilidad especiales", "topics": ["Distribuciones discretas: Bernoulli, Binomial, Poisson, Geométrica, Hipergeométrica, Binomial negativa, Uniforme", "Distribuciones continuas:  Uniforme, Exponencial, Gamma, Chi-cuadrada, Normal"]}, {"title": "Unidad 4:   Distribuciones de varias variables", "topics": ["Distribuciones conjuntas discretas y continuas", "Distribución marginal y condicional", "Esperanzas condicionales", "Independencia entre variables"]}, {"title": "Unidad 5:   Distribución de funciones de variables aleatoria", "topics": ["Técnica de la función de distribución acumulada", "Técnica de la transformación para variables continuas", "Técnica de la función generadora de momentos", "Estadísticos de orden."]}]}, "314409": {"name": "Probabilidad y Estadística", "units": []}, "314306": {"name": "Procesos Estocásticos", "units": [{"title": "Unidad 1:  Definición y propiedades de Procesos estocásticos, Paseo aleatorio", "topics": ["Definiciones básicas y propiedades de procesos estocásticos.", "Paseo aleatorio sobre Z. Recurrencia y Transitoriedad.", "Problema Ruina del Jugador."]}, {"title": "Unidad 2:   Cadenas de Markov a tiempo discreto", "topics": ["Definiciones básicas.", "Probabilidades de transición.", "Evolución de las distribuciones.", "Clasificación de estados.", "Distribuciones Límites y distribuciones estacionarias.", "Aplicaciones."]}, {"title": "Unidad 3:   Proceso de Poisson", "topics": ["Definiciones y propiedades.", "Generalizaciones del Proceso de Poisson.", "Aplicaciones."]}, {"title": "Unidad 4:    Cadenas de Markov a tiempo continúo", "topics": ["Probabilidades de transición. Ecuaciones de Kolmogorov.", "Distribuciones límites y estacionarias.", "Procesos de nacimiento y muerte.", "Aplicación a Teoría de Filas."]}]}, "314404": {"name": "Series de Tiempo", "units": [{"title": "Unidad 1: Introducción, Modelos para Tendencia y Suavización.", "topics": ["Introducción al análisis de series de tiempo", "Modelos para tendencia", "Media Móviles", "Suavización Exponencial Simple"]}, {"title": "Unidad 2: Modelos de series de tiempo univariadas", "topics": ["Funciones ACF y PACF", "Modelos autorregresivos AR", "Modelos de promedios móviles MA", "Modelos ARMA", "Modelos ARIMA"]}, {"title": "Unidad 3: Construcción de modelos para series de tiempo univariadas", "topics": ["Identificación del modelo", "Estimación de los parámetros", "Verificación de la hipótesis"]}, {"title": "Unidad 4: Análisis de series de tiempo estacionales", "topics": ["Modelos ARIMA para series de tiempo estacionales", "Identificación de modelos de series de tiempo estacionales", "Construcción de modelos estacionales"]}, {"title": "Unidad 5: Pronósticos con modelos ARIMA", "topics": ["Pronósticos óptimos de series de tiempo", "Evaluación de pronósticos"]}]}, "314302": {"name": "Simulación", "units": [{"title": "Unidad 1: Números aleatorios", "topics": []}, {"title": "Unidad 2: Generación de variables aleatorias discretas", "topics": []}, {"title": "Unidad 3: Generación de variables aleatorias continuas", "topics": []}, {"title": "Unidad 4: El método de simulación por medio de eventos discretos", "topics": []}, {"title": "Unidad 5:  Análisis estadístico de datos simulados", "topics": []}, {"title": "Unidad 6: Reducción de varianza y validación estadística", "topics": []}, {"title": "Unidad 7: Técnicas de validación estadística", "topics": []}, {"title": "Unidad 8: Métodos de Monte Carlo con cadenas de Markov", "topics": []}]}, "303011": {"name": "Teoria de Conjuntos", "units": [{"title": "Unidad 1:  Relaciones de orden, relaciones de equivalencia y particiones.", "topics": ["Órdenes parciales y órdenes parciales estrictos.", "Elementos distinguidos: mínimos, máximos, minimales, maximales, cotas inferiores, cotas superiores, ínfimos y supremos.", "Cadenas y conjuntos totalmente ordenados.", "Conjuntos bien ordenados.", "Funciones crecientes e isomorfismos entre órdenes."]}, {"title": "Unidad 2: Formalización de conjuntos numéricos dentro de ZF.", "topics": ["Formalización de los naturales,", "Formalización de los enteros.", "Formalización de los racionales.", "Formalización de los reales.", "Formalización de los complejos."]}, {"title": "Unidad 3: Equipotencia y cardinalidad.", "topics": ["Relación de equipotencia.", "Cardinalidad finita.", "Cardinales infinitos y algunas operaciones entre ellos.", "Relación de dominancia."]}, {"title": "Unidad 4: Axioma de elección.", "topics": ["Diversos enunciados del axioma de elección y sus equivalencias.", "Principios maximales de Hausdorff y Lema de Zorn.", "Principio del buen orden.", "Algunos usos del axioma de elección."]}]}, "303258": {"name": "Teoría de Números y Combinatoria", "units": []}, "303452": {"name": "Teoría de la medida", "units": [{"title": "Unidad 1: Medida de Lebesgue.", "topics": ["Medida exterior de Lebesgue", "La sigma álgebra de Lebesgue", "Aproximación exterior e interior de conjuntos Lebesgue medibles.", "Aditividad contable, continuidad y el Lema de Borel Cantelli.", "Conjuntos no medibles.", "El conjunto de Cantor y la función de Cantor Lebesgue."]}, {"title": "Unidad 2: Integral de Lebesgue", "topics": ["Suma, producto y composiciones de funciones.", "Convergencia puntual y aproximación por funciones simples.", "Teorema de Egoroff y Teorema de Lusin.", "La integral de Riemann.", "La integral de Lebesgue.", "Aditividad contable y continuidad de la integral de Lebesgue.", "Integrabilidad uniforme"]}, {"title": "Unidad 3: Diferenciación e Integración", "topics": ["Continuidad de funciones monótonas", "Diferenciabilidad de funciones monótonas", "Funciones de variación acotada", "Funciones absolutamente continuas", "Funciones convexas"]}, {"title": "Unidad 4:Espacios Lp", "topics": ["Espacios lineales normados.", "Desigualdades de Young, Höldes y Minkowski.", "Completez de Lp", "Aproximación y separabilidad.", "El Teorema de representación de Riesz"]}]}, "303412": {"name": "Topología", "units": [{"title": "Unidad 1: Nombre: Espacios Topológicos y funciones continuas", "topics": ["Espacios Topológicos.", "Base de una topología.", "La topología del orden.", "La topología producto sobre el espacio XxY.", "La topología del subespacio.", "Conjuntos cerrados y punto límite.", "Funciones continuas.", "La topología producto.", "La topología métrica.", "La topología cociente (tema opcional, para realizar en una tarea)"]}, {"title": "Unidad 2: Nombre: Conexidad y compacidad", "topics": ["Espacios conexos.", "Subespacios conexos de la recta real.", "Espacios compactos.", "Subespacios compactos de la recta real.", "Compacidad por punto límite.", "Compacidad local"]}, {"title": "Unidad 3: Nombre: Axiomas de Separación y Numerabilidad", "topics": ["Axiomas de numerabilidad.", "Axiomas de separación.", "Espacios Normales.", "Lema de Uryshon.", "Teorema de metrización de Uryshon.", "Teorema de extensión de Tietze.", "Teorema de Tychonoff."]}]}, "303402": {"name": "Variable Compleja", "units": [{"title": "Unidad 1: Números complejos", "topics": ["Definición.", "Propiedades Algebraicas. Ejemplos.", "Interpretación geométrica.", "Desigualdad triangular. Ejemplos.", "Forma polar.", "Forma exponencial.", "Potencias y raíces. Ejemplos. Teorema de De Moivre.", "Topología del plano complejo- Conjuntos abiertos y cerrados.", "Teorema de Bolzano-Weiesstrass y Heine-Borel"]}, {"title": "Unidad 2: Funciones analíticas", "topics": ["Funciones de variable compleja.", "Aplicaciones", "Límites.", "Teoremas sobre límites.", "Límites y punto en el infinito.", "Continuidad.", "Derivadas.", "Fórmulas de derivación.", "Ecuaciones de Cauchy-Riemann.", "Condiciones suficientes.", "Coordenadas polares.", "Funciones analíticas.", "Funciones armónicas."]}, {"title": "Unidad 3: Funciones Elementales", "topics": ["La función exponencial.", "Otras propiedades de exp(z).", "Funciones trigonométricas.", "Funciones hiperbólicas.", "La función logaritmo y sus ramas.", "Otras propiedades de los logaritmos.", "Exponentes complejos.", "Funciones trigonométricas e hiperbólicas inversas."]}, {"title": "Unidad 4: Integrales", "topics": ["Funciones complejas w(t).", "Contornos.", "Integrales de contorno.", "Ejemplos.", "Teorema de Green", "Teorema de Cauchy", "Primitivas.", "Teorema de Cauchy-Goursat.", "Un lema preliminar.", "Demostración del teorema de Cauchy-Goursat.", "Dominios simplemente conexos y múltiplemente conexos.", "Fórmula integral de Cauchy.", "Derivadas de funciones analíticas.", "Teorema de Morera.", "Módulos máximos de funciones.", "Teorema de Liouville y teorema fundamental del álgebra."]}, {"title": "Unidad 5: Series", "topics": ["Convergencia de sucesiones y series.", "Convergencia absoluta y uniforme de series de potencias.", "Series de Taylor.", "Ejemplos.", "Series Laurent.", "Ejemplos."]}, {"title": "Unidad 6: Residuos y Polos.", "topics": ["Residuos.", "Teorema de los residuos.", "Parte principal de una función.", "Residuos en los polos.", "Ceros y polos de orden m.", "Cálculo de integrales reales impropios.", "Integrales impropias en las que aparecen senos y cosenos.", "Integrales definidas en las que aparecen senos y cosenos.", "Integración a lo largo de un corte de ramificación.", "Residuos logarítmicos y teorema de Rouche."]}, {"title": "Unidad 7:Transformaciones por Funciones Elementales", "topics": ["Funciones lineales.", "La función 1/z.", "Transformaciones racionales lineales.", "Transformaciones del semiplano superior.", "La transformación w= exp(z) y los logaritmos.", "La transformación w= sen z.", "La función z^2.", "La función z½."]}]}, "303304": {"name": "Álgebra I", "units": []}, "303354": {"name": "Álgebra II", "units": [{"title": "Unidad 1: Anillos y sus propiedades:", "topics": []}, {"title": "Unidad 2: Algunos D.I. particulares:", "topics": []}, {"title": "Unidad 3: Campos y extensiones de campos:", "topics": []}]}, "303010": {"name": "Álgebra Lineal", "units": [{"title": "Unidad 1: Determinantes", "topics": ["Definición y propiedades de los determinantes.", "Reducción de Gauss - Jordan y determinantes.", "Matriz adjunta y regla de Cramer.", "Volumen de un paralelepípedo."]}, {"title": "Unidad 2: Espacios vectoriales", "topics": ["Definición de espacio vectorial y ejemplos.", "Subespacio vectorial.", "Combinación lineal y espacio generado.", "Independencia y dependencia lineal.", "Base y dimensión de un espacio vectorial."]}, {"title": "Unidad 3:  Transformaciones lineales", "topics": ["Transformaciones lineales.", "Álgebra de las transformaciones lineales.", "lnyectividad y sobreyectividad.", "Isomorfismos.", "Matriz de cambio de una trasformación lineal.", "Propiedades de los isomorfismos."]}, {"title": "Unidad 4: Ortogonalidad", "topics": ["Definición y propiedades del producto interno.", "Complemento ortogonal de un subespacio.", "Proyección ortogonal.", "Mínimos cuadrados.", "Bases Ortogonales y Ortonormales.", "Procesos Gramm - Schmidt."]}, {"title": "Unidad 5: Valores y vectores propios", "topics": ["Definiciones y propiedades.", "Multiplicidad algebraica y geométrica.", "Diagonalización.", "Diagonalización de matrices simétricas.", "Formas cuadráticas.", "Aplicaciones."]}]}, "314412": {"name": "Álgebra Lineal y Ecuaciones Diferenciales", "units": []}, "303001": {"name": "Álgebra y trigonometría", "units": [{"title": "Unidad 1: Aritmética", "topics": []}, {"title": "Unidad 2: Funciones", "topics": []}, {"title": "Unidad 3: Polinomios", "topics": []}, {"title": "Unidad 4: Trigonometría", "topics": []}]}};
+
+function normCode(code) {
+  // HTML usa 7 dígitos con 0 inicial; Excel usa 6 dígitos sin él
+  if (code && code.startsWith('0')) return code.slice(1);
+  return code;
+}
+
+function showSaberes(code) {
+  const key = normCode(code);
+  const data = SABERES[key];
+  const panel = document.getElementById('saberes-panel');
+  const nombre = document.getElementById('saberes-curso-nombre');
+  const codigoEl = document.getElementById('saberes-curso-codigo');
+  const body = document.getElementById('saberes-body');
+
+  if (data) {
+    nombre.textContent = data.name;
+    codigoEl.textContent = 'Código: ' + code;
+    let html = '';
+    if (data.units && data.units.length > 0) {
+      data.units.forEach(u => {
+        html += '<div class="saberes-unit-title">' + u.title + '</div>';
+        if (u.topics && u.topics.length > 0) {
+          u.topics.forEach(t => {
+            html += '<div class="saberes-topic"><span>' + t + '</span></div>';
+          });
+        }
+      });
+    } else {
+      html = '<div class="saberes-no-info">Sin información de saberes.</div>';
+    }
+    body.innerHTML = html;
+  } else {
+    // Obtener nombre del curso desde el SVG
+    const box = document.querySelector('.course-box[data-code="' + code + '"]');
+    let name = code;
+    if (box) {
+      const texts = box.querySelectorAll('text');
+      const parts = [];
+      texts.forEach(t => { if (t.textContent && !t.textContent.match(/^\d+$/)) parts.push(t.textContent.trim()); });
+      name = parts.slice(1).join(' ') || code; // skip first text (code itself)
+    }
+    nombre.textContent = name || code;
+    codigoEl.textContent = 'Código: ' + code;
+    body.innerHTML = '<div class="saberes-no-info">Microcurrículo no disponible para este curso.</div>';
+  }
+  panel.classList.add('visible');
+  body.scrollTop = 0;
+}
+
+function hideSaberes() {
+  document.getElementById('saberes-panel').classList.remove('visible');
+}
+
+// Parchear funciones existentes de forma aditiva (sin modificar el código original)
+const _origShowChain = showChain;
+showChain = function(code) { _origShowChain(code); showSaberes(code); };
+
+const _origClearAll = clearAll;
+clearAll = function() { _origClearAll(); hideSaberes(); };
+
+const _origShowAll = showAll;
+showAll = function() { _origShowAll(); hideSaberes(); };
+</script>
+</body></html>
