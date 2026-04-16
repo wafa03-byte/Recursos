@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Plan de Estudios — Mat_v6</title>
+<style>
+  body { margin: 20px; background: #FAFAFA; font-family: Calibri, 'Segoe UI', sans-serif; }
+  h1 { text-align: center; font-size: 14px; color: #333; margin-bottom: 5px; }
+  .controls { text-align: center; margin: 8px 0; }
+  .controls button {
+    padding: 6px 18px; margin: 0 6px; border: 1px solid #999; border-radius: 4px;
+    background: white; font-size: 14px; cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .controls button:hover { background: #E8E8E8; }
+  .controls button.active { background: #333; color: white; border-color: #333; }
+  #info-box {
+    text-align: center; min-height: 22px; margin: 6px auto 10px;
+    font-size: 14px; color: #333; padding: 0 20px;
+  }
+  #info-box .code { font-weight: bold; }
+  #info-box .req { color: #B45309; }
+  svg { display: block; margin: 0 auto; }
+  .course-box { transition: opacity 0.2s; }
+  .course-box.dimmed { opacity: 0.25; }
+  .course-box.highlighted rect.box-code-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.highlighted rect.box-name-bg { stroke: #F59E0B; stroke-width: 2.5; }
+  .course-box.selected rect.box-code-bg { stroke: #DC2626; stroke-width: 3; }
+  .course-box.selected rect.box-name-bg { stroke: #DC2626; stroke-width: 3; }
+  .arrow { transition: opacity 0.3s; }
+  @media print {
+    body { margin: 0; background: white; }
+    .controls, #info-box { display: none; }
+  }
+
+  /* ── saberes-panel ─────────────────────────────────────────── */
+  #saberes-panel {
+    position: fixed; bottom: 20px; right: 20px;
+    width: 400px; max-height: 55vh;
+    background: white; border: 1px solid #ccc;
+    border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.25);
+    display: none; flex-direction: column;
+    font-family: sans-serif; font-size: 14px; z-index: 9999;
+  }
+  #saberes-panel.visible { display: flex; }
+  #saberes-header {
+    background: #1e3a5f; color: white;
+    padding: 10px 14px; font-size: 15px; font-weight: bold;
+    border-radius: 6px 6px 0 0; cursor: grab;
+    display: flex; justify-content: space-between; align-items: center;
+    user-select: none; flex-shrink: 0;
+  }
+  #saberes-header:active { cursor: grabbing; }
+  #saberes-close {
+    background: none; border: none; color: white;
+    font-size: 20px; line-height: 1; cursor: pointer;
+    padding: 0 2px; opacity: 0.8;
+  }
+  #saberes-close:hover { opacity: 1; }
+  #saberes-body {
+    padding: 12px 14px; overflow-y: auto;
+    white-space: pre-wrap; line-height: 1.5; flex: 1;
+  }
+  #saberes-body.no-data { color: #888; font-style: italic; }
+  @media print { #saberes-panel { display: none !important; } }
+
+</style>
+</head><body>
+<h1>Plan de Estudios — Mat_v6</h1>
+<div class="controls">
+  <button id="btn-clear" class="active" onclick="clearAll()">Sin flechas</button>
+  <button id="btn-all" onclick="showAll()">Mostrar todas</button>
+  <span style="color:#888; font-size:14px; margin-left:12px;">Clic en un curso para ver su cadena completa</span>
+</div>
+<div id="info-box"></div>
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="787" viewBox="0 0 1700 787">
+    <defs>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/></filter>
+<marker id="ap" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#333333"/></marker>
+<marker id="ac" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#2563EB"/></marker>
+</defs>
+    <text x="99.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">1</text>
+    <text x="263.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">2</text>
+    <text x="427.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">3</text>
+    <text x="591.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">4</text>
+    <text x="755.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">5</text>
+    <text x="919.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">6</text>
+    <text x="1083.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">7</text>
+    <text x="1247.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">8</text>
+    <text x="1411.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9</text>
+    <text x="1575.5" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">10</text>
+    <g class="course-box" data-code="0303001" data-name="ÁLGEBRA Y TRIGONOMETRÍA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="40" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303001</text>
+    <text x="147.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA Y</text>
+    <text x="99.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRIGONOMETRÍA</text>
+    </g>
+    <g class="course-box" data-code="0303006" data-name="GEOMETRÍA BÁSICA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="40" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303006</text>
+    <text x="147.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GEOMETRÍA</text>
+    <text x="99.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">BÁSICA</text>
+    </g>
+    <g class="course-box" data-code="0303117" data-name="FUNDAMENTOS DE MATEMÁTICA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="40" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303117</text>
+    <text x="147.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNDAMENTOS DE</text>
+    <text x="99.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MATEMÁTICA</text>
+    </g>
+    <g class="course-box" data-code="0305001" data-name="FUNDAMENTACIÓN EN CIENCIA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="40" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305001</text>
+    <text x="147.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNDAMENTACIÓN</text>
+    <text x="99.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">EN CIENCIA</text>
+    </g>
+    <g class="course-box" data-code="0305190" data-name="ESPAÑOL ACADÉMICO" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="40" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="40" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305190</text>
+    <text x="147.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="40" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="99.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESPAÑOL</text>
+    <text x="99.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ACADÉMICO</text>
+    </g>
+    <g class="course-box" data-code="0303002" data-name="CÁLCULO DIFERENCIAL" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="204" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303002</text>
+    <text x="311.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="263.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DIFERENCIAL</text>
+    </g>
+    <g class="course-box" data-code="0303010" data-name="ÁLGEBRA LINEAL" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="204" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303010</text>
+    <text x="311.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="225.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA LINEAL</text>
+    </g>
+    <g class="course-box" data-code="0303008" data-name="LÓGICA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="204" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303008</text>
+    <text x="311.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="327.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">LÓGICA</text>
+    </g>
+    <g class="course-box" data-code="0314029" data-name="FUND DE PROGRAMACIÓN" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="204" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314029</text>
+    <text x="311.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="204" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUND DE</text>
+    <text x="263.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PROGRAMACIÓN</text>
+    </g>
+    <g class="course-box" data-code="0305450" data-name="CÁTEDRA DE FORMACIÓN CIUD" data-cred="1" data-cred-exigidos="10" style="cursor:pointer;">
+    <rect x="204" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305450</text>
+    <text x="311.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="204" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁTEDRA DE</text>
+    <text x="263.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FORMACIÓN CIUD</text>
+    </g>
+    <g class="course-box" data-code="9003101" data-name="ENGLISH 1" data-cred="2" data-cred-exigidos="10" style="cursor:pointer;">
+    <rect x="204" y="580" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="204" y="580" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="580" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003101</text>
+    <text x="311.0" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="204" y="602" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="263.5" y="633.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 1</text>
+    </g>
+    <g class="course-box" data-code="0303005" data-name="CÁLCULO INTEGRAL" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="368" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303005</text>
+    <text x="475.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="427.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INTEGRAL</text>
+    </g>
+    <g class="course-box" data-code="0302270" data-name="FÍSICA BÁSICA I" data-cred="4" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="368" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0302270</text>
+    <text x="475.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="368" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FÍSICA BÁSICA</text>
+    <text x="427.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">I</text>
+    </g>
+    <g class="course-box" data-code="0303011" data-name="TEORÍA DE CONJUNTOS" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="368" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303011</text>
+    <text x="475.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TEORÍA DE</text>
+    <text x="427.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CONJUNTOS</text>
+    </g>
+    <g class="course-box" data-code="0303258" data-name="TEORÍA DE NÚMEROS Y COMB." data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="368" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303258</text>
+    <text x="475.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="368" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="416.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">TEORÍA DE</text>
+    <text x="427.5" y="429.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">NÚMEROS Y</text>
+    <text x="427.5" y="442.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">COMB.</text>
+    </g>
+    <g class="course-box" data-code="9003102" data-name="ENGLISH 2" data-cred="2" data-cred-exigidos="20" style="cursor:pointer;">
+    <rect x="368" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="368" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003102</text>
+    <text x="475.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="368" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="427.5" y="531.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 2</text>
+    </g>
+    <g class="course-box" data-code="0303009" data-name="CÁLCULO VECTORIAL" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="532" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303009</text>
+    <text x="639.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁLCULO</text>
+    <text x="591.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">VECTORIAL</text>
+    </g>
+    <g class="course-box" data-code="0302391" data-name="FÍSICA BÁSICA II" data-cred="4" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="532" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0302391</text>
+    <text x="639.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="532" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FÍSICA BÁSICA</text>
+    <text x="591.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">II</text>
+    </g>
+    <g class="course-box" data-code="0303313" data-name="PROBABILIDAD" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="532" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303313</text>
+    <text x="639.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="327.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PROBABILIDAD</text>
+    </g>
+    <g class="course-box" data-code="0303304" data-name="ÁLGEBRA I" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="532" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303304</text>
+    <text x="639.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="429.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA I</text>
+    </g>
+    <g class="course-box" data-code="0314069" data-name="MÉTODOS NUMÉRICOS I" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="532" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="532" y="478" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314069</text>
+    <text x="639.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="532" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="591.5" y="523.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MÉTODOS</text>
+    <text x="591.5" y="539.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">NUMÉRICOS I</text>
+    </g>
+    <g class="course-box" data-code="0303065" data-name="MÉTODOS NUMÉRICOS II" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="696" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303065</text>
+    <text x="803.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MÉTODOS</text>
+    <text x="755.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">NUMÉRICOS II</text>
+    </g>
+    <g class="course-box" data-code="0303013" data-name="ECUA DIFERENCI ORDINARIAS" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="696" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303013</text>
+    <text x="803.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ECUA DIFERENCI</text>
+    <text x="755.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ORDINARIAS</text>
+    </g>
+    <g class="course-box" data-code="0314070" data-name="INFERENCIA ESTADÍSTICA" data-cred="4" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="696" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314070</text>
+    <text x="803.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+    <rect class="box-name-bg" x="696" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INFERENCIA</text>
+    <text x="755.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ESTADÍSTICA</text>
+    </g>
+    <g class="course-box" data-code="0303354" data-name="ÁLGEBRA II" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="696" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303354</text>
+    <text x="803.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="696" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="429.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA II</text>
+    </g>
+    <g class="course-box" data-code="0305002" data-name="HISTORIA, POLÍTICA Y ESTÉ" data-cred="2" data-cred-exigidos="40" style="cursor:pointer;">
+    <rect x="696" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305002</text>
+    <text x="803.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="696" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="518.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">HISTORIA,</text>
+    <text x="755.5" y="531.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">POLÍTICA Y</text>
+    <text x="755.5" y="544.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ESTÉ</text>
+    </g>
+    <g class="course-box" data-code="9003103" data-name="ENGLISH 3" data-cred="2" data-cred-exigidos="40" style="cursor:pointer;">
+    <rect x="696" y="580" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="696" y="580" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="580" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003103</text>
+    <text x="803.0" y="595" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="696" y="602" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="755.5" y="633.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 3</text>
+    </g>
+    <g class="course-box" data-code="0303252" data-name="ANÁLISIS I" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="860" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303252</text>
+    <text x="967.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="123.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS I</text>
+    </g>
+    <g class="course-box" data-code="0303404" data-name="ÁLGEBRA MULTILINEAL" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="860" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303404</text>
+    <text x="967.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="860" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ÁLGEBRA</text>
+    <text x="919.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MULTILINEAL</text>
+    </g>
+    <g class="course-box" data-code="0305003" data-name="CÁTEDRA AMBIENTAL UDEA" data-cred="2" data-cred-exigidos="50" style="cursor:pointer;">
+    <rect x="860" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="274" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305003</text>
+    <text x="967.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="860" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">CÁTEDRA</text>
+    <text x="919.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">AMBIENTAL UDEA</text>
+    </g>
+    <g class="course-box" data-code="9003104" data-name="ENGLISH 4" data-cred="2" data-cred-exigidos="50" style="cursor:pointer;">
+    <rect x="860" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="860" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003104</text>
+    <text x="967.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="860" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="919.5" y="429.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 4</text>
+    </g>
+    <g class="course-box" data-code="0303412" data-name="TOPOLOGÍA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1024" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303412</text>
+    <text x="1131.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="123.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TOPOLOGÍA</text>
+    </g>
+    <g class="course-box" data-code="0303302" data-name="ANÁLISIS II" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1024" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303302</text>
+    <text x="1131.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="225.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS II</text>
+    </g>
+    <g class="course-box" data-code="0303015" data-name="HIST. DE LAS MATEMÁTICAS" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1024" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303015</text>
+    <text x="1131.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1024" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">HIST. DE LAS</text>
+    <text x="1083.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MATEMÁTICAS</text>
+    </g>
+    <g class="course-box" data-code="0305004" data-name="DESARROLLO HUMANO" data-cred="1" data-cred-exigidos="60" style="cursor:pointer;">
+    <rect x="1024" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305004</text>
+    <text x="1131.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="1024" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DESARROLLO</text>
+    <text x="1083.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">HUMANO</text>
+    </g>
+    <g class="course-box" data-code="9003105" data-name="ENGLISH 5" data-cred="2" data-cred-exigidos="60" style="cursor:pointer;">
+    <rect x="1024" y="478" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1024" y="478" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="478" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">9003105</text>
+    <text x="1131.0" y="493" text-anchor="middle" font-size="14" font-weight="bold" fill="white">2</text>
+    <rect class="box-name-bg" x="1024" y="500" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1083.5" y="531.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ENGLISH 5</text>
+    </g>
+    <g class="course-box" data-code="0303029" data-name="INTRO A LA INVESTIGACIÓN" data-cred="3" data-cred-exigidos="80" style="cursor:pointer;">
+    <rect x="1188" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303029</text>
+    <text x="1295.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INTRO A LA</text>
+    <text x="1247.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">INVESTIGACIÓN</text>
+    </g>
+    <g class="course-box" data-code="0303352" data-name="ANÁLISIS III" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1188" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303352</text>
+    <text x="1295.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="225.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS III</text>
+    </g>
+    <g class="course-box" data-code="0303402" data-name="VARIABLE COMPLEJA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1188" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303402</text>
+    <text x="1295.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1188" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">VARIABLE</text>
+    <text x="1247.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">COMPLEJA</text>
+    </g>
+    <g class="course-box" data-code="0305005" data-name="ÉTICA E INTEGRIDAD CIENTÍ" data-cred="1" data-cred-exigidos="70" style="cursor:pointer;">
+    <rect x="1188" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1188" y="376" width="95" height="22" fill="#D9E2F3" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0305005</text>
+    <text x="1295.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">1</text>
+    <rect class="box-name-bg" x="1188" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1247.5" y="416.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">ÉTICA E</text>
+    <text x="1247.5" y="429.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">INTEGRIDAD</text>
+    <text x="1247.5" y="442.0" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">CIENTÍ</text>
+    </g>
+    <g class="course-box" data-code="0314044" data-name="SEMINARIO DE TRABAJO DE G" data-cred="6" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1352" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314044</text>
+    <text x="1459.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">6</text>
+    <rect class="box-name-bg" x="1352" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">SEMINARIO DE</text>
+    <text x="1411.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRABAJO DE G</text>
+    </g>
+    <g class="course-box" data-code="0303459" data-name="GEOMETRÍA DIFERENCIAL" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1352" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303459</text>
+    <text x="1459.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1352" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GEOMETRÍA</text>
+    <text x="1411.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">DIFERENCIAL</text>
+    </g>
+    <g class="course-box" data-code="0303452" data-name="TEORÍA DE LA MEDIDA" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1352" y="274" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="274" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="274" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303452</text>
+    <text x="1459.0" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1352" y="296" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="319.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TEORÍA DE LA</text>
+    <text x="1411.5" y="335.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">MEDIDA</text>
+    </g>
+    <g class="course-box" data-code="0303527" data-name="ECU. DIF. PARCIALES" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1352" y="376" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1352" y="376" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="376" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303527</text>
+    <text x="1459.0" y="391" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1352" y="398" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1411.5" y="421.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ECU. DIF.</text>
+    <text x="1411.5" y="437.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">PARCIALES</text>
+    </g>
+    <g class="course-box" data-code="0314045" data-name="TRABAJO DE GRADO" data-cred="10" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1516" y="70" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1516" y="70" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="70" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0314045</text>
+    <text x="1623.0" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="white">10</text>
+    <rect class="box-name-bg" x="1516" y="92" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1575.5" y="115.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">TRABAJO DE</text>
+    <text x="1575.5" y="131.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">GRADO</text>
+    </g>
+    <g class="course-box" data-code="0303552" data-name="ANÁLISIS FUNCIONAL" data-cred="3" data-cred-exigidos="0" style="cursor:pointer;">
+    <rect x="1516" y="172" width="119" height="74" fill="transparent" stroke="none"/>
+    <rect class="box-code-bg" x="1516" y="172" width="95" height="22" fill="#C5DEB5" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="172" width="24" height="22" fill="#4472C4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">0303552</text>
+    <text x="1623.0" y="187" text-anchor="middle" font-size="14" font-weight="bold" fill="white">3</text>
+    <rect class="box-name-bg" x="1516" y="194" width="119" height="52" fill="white" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1575.5" y="217.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">ANÁLISIS</text>
+    <text x="1575.5" y="233.0" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">FUNCIONAL</text>
+    </g>
+    <g class="arrow" data-from="0303001" data-to="0303002" style="display:none;">
+    <path d="M162,107.0 Q181.5,92.0 201,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,107.0 Q181.5,92.0 201,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303001" data-to="0303010" style="display:none;">
+    <path d="M162,107.0 Q181.5,78.61975274911883 201,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M162,107.0 Q181.5,78.61975274911883 201,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303006" data-to="0303010" style="display:none;">
+    <path d="M162,209.0 Q181.5,194.0 201,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,209.0 Q181.5,194.0 201,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303117" data-to="0303008" style="display:none;">
+    <path d="M162,311.0 Q181.5,296.0 201,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,311.0 Q181.5,296.0 201,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303117" data-to="0314029" style="display:none;">
+    <path d="M162,311.0 Q181.5,282.61975274911885 201,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M162,311.0 Q181.5,282.61975274911885 201,413.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305190" data-to="0305450" style="display:none;">
+    <path d="M162,515.0 Q181.5,500.0 201,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M162,515.0 Q181.5,500.0 201,515.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303002" data-to="0303005" style="display:none;">
+    <path d="M326,107.0 Q345.5,92.0 365,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M326,107.0 Q345.5,92.0 365,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303002" data-to="0302270" style="display:none;">
+    <path d="M326,107.0 Q345.5,78.61975274911883 365,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M326,107.0 Q345.5,78.61975274911883 365,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303006" data-to="0302270" style="display:none;">
+    <path d="M162,209.0 Q263.5,178.55 365,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M162,209.0 Q263.5,178.55 365,209.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303008" data-to="0303011" style="display:none;">
+    <path d="M326,311.0 Q345.5,296.0 365,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M326,311.0 Q345.5,296.0 365,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303011" data-to="0303258" style="display:none;">
+    <path d="M490,311.0 Q427.5,274.7997417369153 365,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3386649449127686" transform="translate(1,2)"/>
+    <path d="M490,311.0 Q427.5,274.7997417369153 365,413.0" fill="none" stroke="#2563EB" stroke-width="1.8386649449127686" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003101" data-to="9003102" style="display:none;">
+    <path d="M326,617.0 Q345.5,486.61975274911885 365,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M326,617.0 Q345.5,486.61975274911885 365,515.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0303009" style="display:none;">
+    <path d="M490,107.0 Q509.5,92.0 529,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q509.5,92.0 529,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303009" style="display:none;">
+    <path d="M326,209.0 Q427.5,60.92225799733791 529,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q427.5,60.92225799733791 529,107.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0302270" data-to="0302391" style="display:none;">
+    <path d="M490,209.0 Q509.5,194.0 529,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,209.0 Q509.5,194.0 529,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303009" data-to="0303313" style="display:none;">
+    <path d="M654,107.0 Q591.5,47.11236285292664 529,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.260749085686178" transform="translate(1,2)"/>
+    <path d="M654,107.0 Q591.5,47.11236285292664 529,311.0" fill="none" stroke="#2563EB" stroke-width="1.7607490856861776" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303304" style="display:none;">
+    <path d="M326,209.0 Q427.5,141.83100070652551 529,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.212206671376837" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q427.5,141.83100070652551 529,413.0" fill="none" stroke="#333333" stroke-width="1.712206671376837"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303258" data-to="0303304" style="display:none;">
+    <path d="M490,413.0 Q509.5,398.0 529,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M490,413.0 Q509.5,398.0 529,413.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314029" data-to="0314069" style="display:none;">
+    <path d="M326,413.0 Q427.5,366.9222579973379 529,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M326,413.0 Q427.5,366.9222579973379 529,515.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0314069" style="display:none;">
+    <path d="M490,107.0 Q509.5,-2.478959815533642 529,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.0901402678964427" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q509.5,-2.478959815533642 529,515.0" fill="none" stroke="#333333" stroke-width="1.5901402678964425"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314069" data-to="0303065" style="display:none;">
+    <path d="M654,515.0 Q673.5,-2.478959815533642 693,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.0901402678964427" transform="translate(1,2)"/>
+    <path d="M654,515.0 Q673.5,-2.478959815533642 693,107.0" fill="none" stroke="#333333" stroke-width="1.5901402678964425"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303013" data-to="0303065" style="display:none;">
+    <path d="M818,209.0 Q755.5,70.79974173691528 693,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3386649449127686" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q755.5,70.79974173691528 693,107.0" fill="none" stroke="#2563EB" stroke-width="1.8386649449127686" stroke-dasharray="6,3" marker-end="url(#ac)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303005" data-to="0303013" style="display:none;">
+    <path d="M490,107.0 Q591.5,60.92225799733791 693,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M490,107.0 Q591.5,60.92225799733791 693,209.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303010" data-to="0303013" style="display:none;">
+    <path d="M326,209.0 Q509.5,153.95 693,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.133" transform="translate(1,2)"/>
+    <path d="M326,209.0 Q509.5,153.95 693,209.0" fill="none" stroke="#333333" stroke-width="1.633"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303313" data-to="0314070" style="display:none;">
+    <path d="M654,311.0 Q673.5,296.0 693,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M654,311.0 Q673.5,296.0 693,311.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303304" data-to="0303354" style="display:none;">
+    <path d="M654,413.0 Q673.5,398.0 693,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M654,413.0 Q673.5,398.0 693,413.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305450" data-to="0305002" style="display:none;">
+    <path d="M326,515.0 Q509.5,459.95 693,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.133" transform="translate(1,2)"/>
+    <path d="M326,515.0 Q509.5,459.95 693,515.0" fill="none" stroke="#333333" stroke-width="1.633"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003102" data-to="9003103" style="display:none;">
+    <path d="M490,515.0 Q591.5,468.9222579973379 693,617.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M490,515.0 Q591.5,468.9222579973379 693,617.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303011" data-to="0303252" style="display:none;">
+    <path d="M490,311.0 Q673.5,20.016966570353247 857,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.0801131104690214" transform="translate(1,2)"/>
+    <path d="M490,311.0 Q673.5,20.016966570353247 857,107.0" fill="none" stroke="#333333" stroke-width="1.5801131104690216"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303009" data-to="0303252" style="display:none;">
+    <path d="M654,107.0 Q755.5,76.55 857,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M654,107.0 Q755.5,76.55 857,107.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303354" data-to="0303404" style="display:none;">
+    <path d="M818,413.0 Q837.5,153.84582692479225 857,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M818,413.0 Q837.5,153.84582692479225 857,209.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305002" data-to="0305003" style="display:none;">
+    <path d="M818,515.0 Q837.5,255.84582692479225 857,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M818,515.0 Q837.5,255.84582692479225 857,311.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003103" data-to="9003104" style="display:none;">
+    <path d="M818,617.0 Q837.5,357.8458269247922 857,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M818,617.0 Q837.5,357.8458269247922 857,413.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303252" data-to="0303412" style="display:none;">
+    <path d="M982,107.0 Q1001.5,92.0 1021,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,92.0 1021,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303252" data-to="0303302" style="display:none;">
+    <path d="M982,107.0 Q1001.5,78.61975274911883 1021,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,78.61975274911883 1021,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303304" data-to="0303015" style="display:none;">
+    <path d="M654,413.0 Q837.5,241.8633873947711 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.119089249298474" transform="translate(1,2)"/>
+    <path d="M654,413.0 Q837.5,241.8633873947711 1021,311.0" fill="none" stroke="#333333" stroke-width="1.619089249298474"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314070" data-to="0303015" style="display:none;">
+    <path d="M818,311.0 Q919.5,280.55 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2969999999999997" transform="translate(1,2)"/>
+    <path d="M818,311.0 Q919.5,280.55 1021,311.0" fill="none" stroke="#333333" stroke-width="1.797"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303252" data-to="0303015" style="display:none;">
+    <path d="M982,107.0 Q1001.5,51.84582692479224 1021,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M982,107.0 Q1001.5,51.84582692479224 1021,311.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305003" data-to="0305004" style="display:none;">
+    <path d="M982,311.0 Q1001.5,282.61975274911885 1021,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M982,311.0 Q1001.5,282.61975274911885 1021,413.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="9003104" data-to="9003105" style="display:none;">
+    <path d="M982,413.0 Q1001.5,384.61975274911885 1021,515.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M982,413.0 Q1001.5,384.61975274911885 1021,515.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303015" data-to="0303029" style="display:none;">
+    <path d="M1146,311.0 Q1165.5,51.84582692479224 1185,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M1146,311.0 Q1165.5,51.84582692479224 1185,107.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303302" data-to="0303352" style="display:none;">
+    <path d="M1146,209.0 Q1165.5,194.0 1185,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1146,209.0 Q1165.5,194.0 1185,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303302" data-to="0303402" style="display:none;">
+    <path d="M1146,209.0 Q1165.5,180.61975274911885 1185,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M1146,209.0 Q1165.5,180.61975274911885 1185,311.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0305004" data-to="0305005" style="display:none;">
+    <path d="M1146,413.0 Q1165.5,398.0 1185,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1146,413.0 Q1165.5,398.0 1185,413.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303029" data-to="0314044" style="display:none;">
+    <path d="M1310,107.0 Q1329.5,92.0 1349,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1310,107.0 Q1329.5,92.0 1349,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303352" data-to="0303459" style="display:none;">
+    <path d="M1310,209.0 Q1329.5,194.0 1349,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1310,209.0 Q1329.5,194.0 1349,209.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303302" data-to="0303452" style="display:none;">
+    <path d="M1146,209.0 Q1247.5,162.9222579973379 1349,311.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.272815053315586" transform="translate(1,2)"/>
+    <path d="M1146,209.0 Q1247.5,162.9222579973379 1349,311.0" fill="none" stroke="#333333" stroke-width="1.772815053315586"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0302391" data-to="0303527" style="display:none;">
+    <path d="M654,209.0 Q1001.5,76.35184078871839 1349,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="2.7756789385914558" transform="translate(1,2)"/>
+    <path d="M654,209.0 Q1001.5,76.35184078871839 1349,413.0" fill="none" stroke="#333333" stroke-width="1.2756789385914558"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303013" data-to="0303527" style="display:none;">
+    <path d="M818,209.0 Q1083.5,99.67425652243047 1349,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="2.9311617101495364" transform="translate(1,2)"/>
+    <path d="M818,209.0 Q1083.5,99.67425652243047 1349,413.0" fill="none" stroke="#333333" stroke-width="1.4311617101495364"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303352" data-to="0303527" style="display:none;">
+    <path d="M1310,209.0 Q1329.5,153.84582692479225 1349,413.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.2923055128319483" transform="translate(1,2)"/>
+    <path d="M1310,209.0 Q1329.5,153.84582692479225 1349,413.0" fill="none" stroke="#333333" stroke-width="1.7923055128319483"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0314044" data-to="0314045" style="display:none;">
+    <path d="M1474,107.0 Q1493.5,92.0 1513,107.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.4610000000000003" transform="translate(1,2)"/>
+    <path d="M1474,107.0 Q1493.5,92.0 1513,107.0" fill="none" stroke="#333333" stroke-width="1.961"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303412" data-to="0303552" style="display:none;">
+    <path d="M1146,107.0 Q1329.5,37.86338739477111 1513,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.119089249298474" transform="translate(1,2)"/>
+    <path d="M1146,107.0 Q1329.5,37.86338739477111 1513,209.0" fill="none" stroke="#333333" stroke-width="1.619089249298474"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <g class="arrow" data-from="0303452" data-to="0303552" style="display:none;">
+    <path d="M1474,311.0 Q1493.5,180.61975274911885 1513,209.0" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3.3907983516607922" transform="translate(1,2)"/>
+    <path d="M1474,311.0 Q1493.5,180.61975274911885 1513,209.0" fill="none" stroke="#333333" stroke-width="1.8907983516607922"  marker-end="url(#ap)" opacity="0.85"/>
+    </g>
+    <rect x="40" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="147.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="40" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="135" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="87.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="147.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="204" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="311.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="204" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="299" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="251.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="311.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">30</text>
+    <rect x="368" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="475.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="368" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="463" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="415.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="475.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">45</text>
+    <rect x="532" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="639.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">16</text>
+    <rect x="532" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="627" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="579.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="639.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">61</text>
+    <rect x="696" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="803.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">17</text>
+    <rect x="696" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="791" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="743.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="803.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">78</text>
+    <rect x="860" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="967.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">10</text>
+    <rect x="860" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="955" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="907.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="967.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">88</text>
+    <rect x="1024" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1131.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">12</text>
+    <rect x="1024" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1119" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1071.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1131.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">100</text>
+    <rect x="1188" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1295.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">10</text>
+    <rect x="1188" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1283" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1235.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1295.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">110</text>
+    <rect x="1352" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1459.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">15</text>
+    <rect x="1352" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1447" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1399.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1459.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">125</text>
+    <rect x="1516" y="692" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="692" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Créditos</text>
+    <text x="1623.0" y="706" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">13</text>
+    <rect x="1516" y="720" width="95" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <rect x="1611" y="720" width="24" height="20" fill="#D6DCE4" stroke="#999" stroke-width="0.8" rx="2"/>
+    <text x="1563.5" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Suma</text>
+    <text x="1623.0" y="734" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">138</text>
+    <path d="M40,757 Q55,749 70,757" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#ap)"/>
+    <text x="76" y="761" font-size="14" fill="#333">Prerrequisito</text>
+    <path d="M200,757 Q215,749 230,757" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#ac)"/>
+    <text x="236" y="761" font-size="14" fill="#2563EB">Correquisito</text>
+</svg>
+<div id="saberes-panel">
+  <div id="saberes-header">
+    <span id="saberes-title"></span>
+    <button id="saberes-close" title="Cerrar panel">&#x00D7;</button>
+  </div>
+  <div id="saberes-body"></div>
+</div>
+<script>
+const edges = [{"from": "0303001", "to": "0303002", "tipo": "PRE"}, {"from": "0303001", "to": "0303010", "tipo": "PRE"}, {"from": "0303006", "to": "0303010", "tipo": "PRE"}, {"from": "0303117", "to": "0303008", "tipo": "PRE"}, {"from": "0303117", "to": "0314029", "tipo": "PRE"}, {"from": "0305190", "to": "0305450", "tipo": "PRE"}, {"from": "0303002", "to": "0303005", "tipo": "PRE"}, {"from": "0303002", "to": "0302270", "tipo": "PRE"}, {"from": "0303006", "to": "0302270", "tipo": "PRE"}, {"from": "0303008", "to": "0303011", "tipo": "PRE"}, {"from": "0303011", "to": "0303258", "tipo": "CO"}, {"from": "9003101", "to": "9003102", "tipo": "PRE"}, {"from": "0303005", "to": "0303009", "tipo": "PRE"}, {"from": "0303010", "to": "0303009", "tipo": "PRE"}, {"from": "0302270", "to": "0302391", "tipo": "PRE"}, {"from": "0303009", "to": "0303313", "tipo": "CO"}, {"from": "0303010", "to": "0303304", "tipo": "PRE"}, {"from": "0303258", "to": "0303304", "tipo": "PRE"}, {"from": "0314029", "to": "0314069", "tipo": "PRE"}, {"from": "0303005", "to": "0314069", "tipo": "PRE"}, {"from": "0314069", "to": "0303065", "tipo": "PRE"}, {"from": "0303013", "to": "0303065", "tipo": "CO"}, {"from": "0303005", "to": "0303013", "tipo": "PRE"}, {"from": "0303010", "to": "0303013", "tipo": "PRE"}, {"from": "0303313", "to": "0314070", "tipo": "PRE"}, {"from": "0303304", "to": "0303354", "tipo": "PRE"}, {"from": "0305450", "to": "0305002", "tipo": "PRE"}, {"from": "9003102", "to": "9003103", "tipo": "PRE"}, {"from": "0303011", "to": "0303252", "tipo": "PRE"}, {"from": "0303009", "to": "0303252", "tipo": "PRE"}, {"from": "0303354", "to": "0303404", "tipo": "PRE"}, {"from": "0305002", "to": "0305003", "tipo": "PRE"}, {"from": "9003103", "to": "9003104", "tipo": "PRE"}, {"from": "0303252", "to": "0303412", "tipo": "PRE"}, {"from": "0303252", "to": "0303302", "tipo": "PRE"}, {"from": "0303304", "to": "0303015", "tipo": "PRE"}, {"from": "0314070", "to": "0303015", "tipo": "PRE"}, {"from": "0303252", "to": "0303015", "tipo": "PRE"}, {"from": "0305003", "to": "0305004", "tipo": "PRE"}, {"from": "9003104", "to": "9003105", "tipo": "PRE"}, {"from": "0303015", "to": "0303029", "tipo": "PRE"}, {"from": "0303302", "to": "0303352", "tipo": "PRE"}, {"from": "0303302", "to": "0303402", "tipo": "PRE"}, {"from": "0305004", "to": "0305005", "tipo": "PRE"}, {"from": "0303029", "to": "0314044", "tipo": "PRE"}, {"from": "0303352", "to": "0303459", "tipo": "PRE"}, {"from": "0303302", "to": "0303452", "tipo": "PRE"}, {"from": "0302391", "to": "0303527", "tipo": "PRE"}, {"from": "0303013", "to": "0303527", "tipo": "PRE"}, {"from": "0303352", "to": "0303527", "tipo": "PRE"}, {"from": "0314044", "to": "0314045", "tipo": "PRE"}, {"from": "0303412", "to": "0303552", "tipo": "PRE"}, {"from": "0303452", "to": "0303552", "tipo": "PRE"}];
+const preOf = {};
+const depOn = {};
+edges.forEach(e => {
+  if (!preOf[e.to]) preOf[e.to] = [];
+  preOf[e.to].push(e.from);
+  if (!depOn[e.from]) depOn[e.from] = [];
+  depOn[e.from].push(e.to);
+});
+function getChain(code) {
+  const chain = new Set([code]);
+  const q1 = [code];
+  while (q1.length) {
+    const c = q1.shift();
+    (preOf[c] || []).forEach(p => { if (!chain.has(p)) { chain.add(p); q1.push(p); } });
+  }
+  const q2 = [code];
+  while (q2.length) {
+    const c = q2.shift();
+    (depOn[c] || []).forEach(d => { if (!chain.has(d)) { chain.add(d); q2.push(d); } });
+  }
+  return chain;
+}
+function updateInfoBox(code) {
+  const infoDiv = document.getElementById('info-box');
+  if (!code) { infoDiv.innerHTML = ''; return; }
+  const box = document.querySelector('.course-box[data-code="' + code + '"]');
+  if (!box) { infoDiv.innerHTML = ''; return; }
+  const name = box.getAttribute('data-name') || '';
+  const cred = box.getAttribute('data-cred') || '0';
+  const credExig = parseInt(box.getAttribute('data-cred-exigidos') || '0', 10);
+  let html = '<span class="code">' + code + '</span> · ' + name + ' · ' + cred + ' créditos';
+  if (credExig > 0) {
+    html += ' · <span class="req">requiere ' + credExig + ' créditos previos aprobados</span>';
+  }
+  infoDiv.innerHTML = html;
+}
+let mode = 'clear', selectedCode = null;
+function clearAll() {
+  mode = 'clear'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = 'none');
+  document.querySelectorAll('.course-box').forEach(b => b.classList.remove('dimmed','highlighted','selected'));
+  updateInfoBox(null);
+  updateButtons();
+}
+function showAll() {
+  mode = 'all'; selectedCode = null;
+  document.querySelectorAll('.arrow').forEach(a => a.style.display = '');
+  document.querySelectorAll('.course-box').forEach(b => b.classList.remove('dimmed','highlighted','selected'));
+  updateInfoBox(null);
+  updateButtons();
+}
+function showChain(code) {
+  mode = 'chain'; selectedCode = code;
+  const chain = getChain(code);
+  const chainEdges = edges.filter(e => chain.has(e.from) && chain.has(e.to));
+  document.querySelectorAll('.arrow').forEach(a => {
+    const f = a.getAttribute('data-from'), t = a.getAttribute('data-to');
+    a.style.display = chainEdges.some(e => e.from === f && e.to === t) ? '' : 'none';
+  });
+  document.querySelectorAll('.course-box').forEach(b => {
+    const bc = b.getAttribute('data-code');
+    if (!bc) { b.classList.add('dimmed'); b.classList.remove('highlighted','selected'); return; }
+    if (bc === code) { b.classList.add('selected'); b.classList.remove('dimmed','highlighted'); }
+    else if (chain.has(bc)) { b.classList.add('highlighted'); b.classList.remove('dimmed','selected'); }
+    else { b.classList.add('dimmed'); b.classList.remove('highlighted','selected'); }
+  });
+  updateInfoBox(code);
+  updateButtons();
+}
+function updateButtons() {
+  document.getElementById('btn-clear').classList.toggle('active', mode === 'clear');
+  document.getElementById('btn-all').classList.toggle('active', mode === 'all');
+}
+document.querySelectorAll('.course-box[data-code]').forEach(box => {
+  box.addEventListener('click', () => {
+    const code = box.getAttribute('data-code');
+    if (selectedCode === code) clearAll(); else showChain(code);
+  });
+});
+
+// ── saberes-panel ───────────────────────────────────────────────────────────
+const SABERES = {"303001": "Unidad 1: Aritmética\nTemas:\nNúmeros reales, potenciación, radicación, expresiones algebraicas y operaciones.\nProductos notables y factorización, números complejos, ecuaciones algebraicas.\nInecuaciones, razones, proporciones y porcentajes.\n\nUnidad 2: Funciones\nTemas:\nRectas, relaciones, funciones: dominio, rango, gráficas, operaciones, composición y transformaciones.\nFunciones por tramos, pares e impares, funciones 1-1, sobre y biyectivas, funciones invertibles.\nFunciones exponenciales, logarítmicas y ecuaciones asociadas.\n\nUnidad 3: Polinomios\nTemas:\nFunciones polinomiales, algoritmo de la división, álgebra de polinomios, Teorema fundamental del álgebra y del valor intermedio, regla de signos de Descartes\nCeros racionales, irracionales y complejos, sistemas de ecuaciones, fracciones parciales\nProgresiones aritméticas y geométricas, sumas y productos.\n\nUnidad 4: Trigonometría\nTemas:\nÁngulos, funciones trigonométricas de ángulos agudos, funciones trigonométricas de números reales, gráficas y propiedades\nFunciones trigonométricas inversas, gráficas y propiedades, identidades y ecuaciones trigonométricas, ley de senos y cosenos\nForma polar de números complejos, productos, cocientes, raíces y potencias, Teorema de Moivre", "303006": "Unidad 1: Cálculo de predicados, elementos de lógica\nTemas\nCálculo proposicional\nCuantificadores\nMétodos de demostración\n\nUnidad 2: Teoría intuitiva de conjuntos\nTemas\nDefiniciones básicas\nOperaciones entre conjuntos\nRelaciones\n\nUnidad 3: Nociones de Geometría Euclidiana\nTemas\nTérminos primitivos y postulados\nTriángulos, segmentos notables y congruencia\nRectas paralelas y Perpendicularidad\nParalelogramos y cuadriláteros\nÁreas y semejanza\nCircunferencias\n\nUnidad 4: Nociones de Geometría Analítica\nTemas\nCoordenadas en el plano y espacio\nSegmentos de recta, intersección, transporte paralelo y distancia\nEcuaciones de la recta, posiciones relativas y solución de sistema lineales (de orden 2 y 3)\n\nUnidad 5: Geometría Vectorial y nociones de álgebra lineal.\nTemas\nVectores\nOperaciones entre vectores\nVectores en el plano y el espacio\nColinealidad e independencia\nÁngulo entre vectores\nProducto interno y proyección ortogonal\nNociones de matrices 2x2 y 3x3\nProducto vectorial y aplicaciones de los vectores\nCambio de coordenadas y transformaciones lineales", "303117": "Unidad 1: Solución de problemas matemáticos\nTemas\nElementos y clasificación de problemas matemáticos.\nReglas de oro de Polya.\nAlgunas estrategias de solución de problemas matemáticos.\n\nUnidad 2:  Elementos de lógica\nTemas\nDel lenguaje natural al lenguaje lógico.\nElementos y métodos usados en las demostraciones matemáticas.\nUnidad 3: Teoría intuitiva de conjuntos\nTemas\nFormas de describir conjuntos.\nRelación de inclusión e igualdad de conjuntos.\nConjunto de partes.\nOperaciones básicas sobre conjuntos.\nRelaciones.\nFunciones.\nUnidad 4: Patrón de comportamiento e inducción matemática.\nTemas\nSumatorias y productorias.\nMétodo de patrón de comportamiento para hallar fórmulas generales", "303002": "Unidad 1: Pre-Cálculo\nTemas:\nLos números reales. Propiedades de campo. Propiedades de orden. \nDesigualdades. Intervalos. Inecuaciones. \nValor absoluto. Desigualdades con valor absoluto. \nEl sistema de coordenadas cartesianas. Pares ordenados. Distancia entre dos puntos del plano. Coordenadas del punto medio.\nLa línea recta. Las diferentes formas de la ecuación de una recta. Rectas paralelas y perpendiculares.\nFunciones y sus gráficas. Diferentes tipos de funciones. Dominio y rango.\nOperaciones con funciones. Desplazamientos y cambios de escala. \nDesplazamientos, alargamientos y compresiones. \n\nUnidad 2: Límites de funciones y Continuidad.\nTemas:\nNoción intuitiva del límite. Definición formal de límite.\nTeoremas sobre límites. Teorema del sándwich. Limites laterales. \nLimites que incluyen funciones trigonométricas. \nContinuidad de funciones. Continuidad en un punto. Clasificación de las discontinuidades.\nTeoremas sobre funciones continuas. Continuidad en un intervalo.\nLímites al infinito y límites infinitos.\n\nUnidad 3: La derivada.\nTemas:\nDefinición e Interpretación física y geométrica de la derivada. \nDerivada. Notación. Relación derivada-continuidad y derivada laterales. \nReglas de derivación. Regla de la cadena. \nDerivadas de orden superior. Derivación implícita.\nDerivada de las funciones trigonométricas. Derivada de funciones exponenciales y logarítmicas. \nDerivada de funciones trigonométricas inversas. Funciones hiperbólicas e hiperbólicas inversas y sus derivadas.\n\nUnidad 4: Aplicaciones de derivada\nTemas:\nVariables relacionadas. La derivada como razón de cambio.\nFormas indeterminadas y la regla de L'Hôpital. \nAsíntotas de una curva. Clasificación. Asíntotas horizontales, verticales y oblicuas. \nValores extremos de una función de variable real. Números críticos. Valores extremos relativos y absolutos.\nCriterios de la primera derivada. Puntos críticos. Criterio de la primera derivada para crecimiento -decrecimiento de una función. Criterio de la primera derivada para extremos relativos. \nCriterio de la segunda derivada. Puntos de inflexión. Criterio de la segunda derivada para concavidad. Criterio de la segunda derivada para extremos relativos.\nTrazado de curvas con todos sus elementos. \nProblemas de optimización.", "303010": "Unidad 1: Determinantes\nTemas\nDefinición y propiedades de los determinantes. \nReducción de Gauss - Jordan y determinantes. \nMatriz adjunta y regla de Cramer. \nVolumen de un paralelepípedo.\n\nUnidad 2: Espacios vectoriales\nTemas\nDefinición de espacio vectorial y ejemplos. \nSubespacio vectorial. \nCombinación lineal y espacio generado.\nIndependencia y dependencia lineal. \nBase y dimensión de un espacio vectorial.\n\nUnidad 3:  Transformaciones lineales\nTemas\nTransformaciones lineales. \nÁlgebra de las transformaciones lineales. \nlnyectividad y sobreyectividad.\nIsomorfismos. \nMatriz de cambio de una trasformación lineal. \nPropiedades de los isomorfismos.\n\nUnidad 4: Ortogonalidad\nTemas\nDefinición y propiedades del producto interno. \nComplemento ortogonal de un subespacio. \nProyección ortogonal. \nMínimos cuadrados. \nBases Ortogonales y Ortonormales. \nProcesos Gramm - Schmidt.\n\nUnidad 5: Valores y vectores propios\nTemas\nDefiniciones y propiedades. \nMultiplicidad algebraica y geométrica. \nDiagonalización. \nDiagonalización de matrices simétricas. \nFormas cuadráticas. \nAplicaciones.", "303008": "Unidad 1: Lógica proposicional clásica.\nTemas\nLenguaje de la lógica proposicional\nSemántica de la lógica proposicional\nAxiomas y reglas de inferencia del cálculo proposicional\nDemostración de algunas leyes lógicas\nMétodos de demostración\nTeoremas de validez y completitud\n\nUnidad 2: Lógica de predicados de primer orden.\nTemas\nLenguajes de primer orden\nInterpretación de lenguajes de primer orden\nAxiomas y reglas de inferencia del cálculo de predicados\nMétodos de demostración del cálculo de predicados\nAxiomas para la igualdad\nTeoremas de validez y completitud\n\nUnidad 3: Elementos iniciales de la teoría de conjuntos de Zermelo-Fraenkel (ZF).\nTemas\nPrimeros Axiomas de ZF (extensionalidad, vacío, comprensión, pares, unión y partes)\nÁlgebra de conjuntos\nPares ordenados y producto Cartesiano\nUniones e intersecciones generalizadas\n\nUnidad 4: Formalización de relaciones y funciones en ZF.\nTemas\nRelaciones inversas y compuestas\nFunciones y composición de funciones\nImágenes directa e inversa de relaciones y funciones\nFamilias de conjuntos y producto Cartesiano generalizado", "314029": "Unidad 1: Elementos de programación \nTemas\nIntroducción al curso\nLenguajes de programación\nIntroducción a Python\nTipos de datos, operadores, estructuras de datos en Python, estructuras dinámicas y estáticas\n\nUnidad 2: Estructuras de control \nTemas\nEstructuras condicionales simple y compuesta \nEstructuras condicionales múltiples, anidadas\nEstructuras de iteración definida e indefinida\n\nUnidad 3: Funciones \nTemas\nFunciones incorporadas\nMódulos, submódulos.\nDefinición de funciones, ámbito de las variables, problemas de aplicación\n\nUnidad 4: Bases de datos con SQL y visualización de datos \nTemas\nFundamentos de SQL, creación y particionamiento, filtros, funciones, subconsultas, unions, joins.", "303005": "Unidad 1: Nombre: Antiderivada y Técnicas de Integración.\nTemas\nFunción Primitiva o Antiderivada. La integral indefinida definición y notación.\nFórmulas de la integración. Propiedades de la integral indefinida. \nMétodos de integración: Regla de sustitución (cambio de variables), Integración por partes. Integración de potencias de funciones trigonométricas, Sustituciones trigonométricas, descomposición en fracciones parciales, Sustituciones para racionalizar.\n\nUnidad 2: Nombre: Integral Definida\nTemas\nLa integral definida. La notación sumatoria (notación sigma).\nSumas de Riemann. Definición de la integral definida según Riemann. Teorema: continuidad implica integrabilidad. Análisis del recíproco.\nPropiedades de la integral definida y sus generalizaciones. Propiedades que ayudan a simplificar la integral. Funciones pares e impares.\nLos teoremas fundamentales del cálculo. Teorema del valor medio para integrales.\nIntegrales impropias\n\nUnidad 3: Nombre: Aplicaciones de la Integral\nTemas\nÁreas entre curvas.\nVolúmenes de sólidos: Método de secciones planas. Volúmenes de sólidos de revolución: método de los discos, método de las arandelas, método de la corteza cilíndrica. Longitud de arco de una curva plana y área de superficie de revolución.\nMomentos y centros de masa de una barra, centroide de una región plana. Los teoremas de Pappus\n\nUnidad 4: Nombre: Sucesiones y Series\nTemas\nSucesiones y series. Sucesiones, definición y límite de una sucesión, clasificación y teoremas sobre límites de sucesiones.\nSeries numéricas.  Propiedades. Serie geométrica. Serie telescópica. Criterios de convergencia y divergencia de series. Criterio del término n-ésimo para divergencia. Criterio de la integral. Criterios de comparación. Comparación en el límite. Criterio del cociente y de la raíz, criterio de Raabe.\nSeries alternantes, convergencia absoluta y condicional. Criterio del cociente y de la raíz para convergencia absoluta.\nSeries de potencia. Representación de funciones por series de potencias. Formula de Euler. Cálculo con series de potencias. La serie binomial.", "303011": "Unidad 1:  Relaciones de orden, relaciones de equivalencia y particiones.\nTemas\nÓrdenes parciales y órdenes parciales estrictos.\nElementos distinguidos: mínimos, máximos, minimales, maximales, cotas inferiores, cotas superiores, ínfimos y supremos.\nCadenas y conjuntos totalmente ordenados.\nConjuntos bien ordenados.\nFunciones crecientes e isomorfismos entre órdenes.\n\nUnidad 2: Formalización de conjuntos numéricos dentro de ZF.\nTemas\nFormalización de los naturales,\nFormalización de los enteros.\nFormalización de los racionales.\nFormalización de los reales.\nFormalización de los complejos.\n\nUnidad 3: Equipotencia y cardinalidad.\nTemas\nRelación de equipotencia.\nCardinalidad finita.\nCardinales infinitos y algunas operaciones entre ellos.\nRelación de dominancia.\n\nUnidad 4: Axioma de elección.\nTemas\nDiversos enunciados del axioma de elección y sus equivalencias.\nPrincipios maximales de Hausdorff y Lema de Zorn.\nPrincipio del buen orden.\nAlgunos usos del axioma de elección.", "303258": "Unidad 1: Los números enteros\n\nPrincipio del buen orden.\nDivisibilidad en los enteros.\nRepresentación de enteros.\nAlgoritmo de la división.\nNúmeros primos.\n\nUnidad 2:  y Máximo común divisor y  el Teorema fundamental de la Aritmética\n\nMáximo común Divisor (MCD).\nMínimo Común múltiplo(MCM).\nAlgoritmo de Euclides.\nTeorema fundamental de la aritmética.\nFactorización de Enteros. \n\nUnidad 3: Ecuaciones diofánticas y Congruencias lineales\n\nEcuaciones Diofánticas lineales y aplicaciones.\nTeoría de la congruencia.\nTeorema chino del Residuo.\nTeorema de Fermat y el teorema de Wilson.\nAplicaciones de las congruencias. \n\nUnidad 4: Introducción a la combinatoria y Funciones Aritméticas\n\nPrincipios combinatoriales aditivo y multiplicativo.\nNúmeros binomiales: interpretación combinatorial y algebraica.\nLas funciones  tau y sigma.\nLa phi de Euler y la función de Möbius\nFunción aritméticas.\n\nUnidad 5:Raices primitivas \n\nOrden de un entero módulo n\nRaíces primitivas para primos\nReciprocidad cuadrática", "303009": "Unidad 1: Ecuaciones paramétricas y coordenadas polares, cilíndricas y esféricas\nTemas:\nParametrización de curvas planas, sistema de coordinadas polares, cilíndricas y esféricas\nCálculo con curvas paramétricas, longitud de curva, curvatura y sus aplicaciones.\nTrazado de curvas y superficies en el espacio y curvas de nivel.\n\nUnidad 2: Nombre: Límites, Diferenciabilidad y aplicaciones\nTemas:\nLímites y continuidad\nDerivadas parciales\nRegla de la cadena\nDerivadas Direccionales y vector gradiente\nPlanos tangentes y diferenciales\nValores extremos y puntos de silla\nMultiplicadores de Lagrange\n\nUnidad 3: Nombre: Integrales múltiples\nTemas:\nIntegrales dobles e iteradas sobre rectángulos\nIntegrales dobles sobre regiones generales\nIntegrales dobles y áreas\nIntegrales dobles en coordinadas polares\nIntegrales triples en coordenadas rectangulares, cilíndricas y esféricas\nMomentos y centros de masa\nTeorema del cambio de variable\n\nUnidad 4: Nombre: Campos vectoriales e integración sobre campos vectoriales\nTemas:\nIntegrales de línea\nCampos vectoriales e integrales de línea:  Independencia de la trayectoria, campos conservativos y funciones potenciales\nTeorema de Green\nIntegrales de superficie\nTeorema de Stokes\nTeorema de la Divergencia", "303313": "Unidad 1: Función de probabilidad\nTemas\nEspacio muestral, eventos\nAxiomas de la función de probabilidad\nProbabilidad clásica y probabilidad frecuentista\nTécnicas básicas de conteo\nTeorema de Bayes\nIndependencia de eventos    \n\nUnidad 2:  Variable aleatoria\nTemas\nDefinición y tipos de variables aleatorias\nFunción de distribución acumulada\nFunción de densidad de probabilidad\nValores esperados\nDesigualdades importantes\n  \nUnidad 3:   Distribuciones de probabilidad especiales\nTemas\nDistribuciones discretas: Bernoulli, Binomial, Poisson, Geométrica, Hipergeométrica, Binomial negativa, Uniforme\nDistribuciones continuas:  Uniforme, Exponencial, Gamma, Chi-cuadrada, Normal\n\nUnidad 4:   Distribuciones de varias variables   \nTemas\nDistribuciones conjuntas discretas y continuas\nDistribución marginal y condicional\nEsperanzas condicionales\nIndependencia entre variables \n\nUnidad 5:   Distribución de funciones de variables aleatoria   \nTemas\nTécnica de la función de distribución acumulada\nTécnica de la transformación para variables continuas\nTécnica de la función generadora de momentos\nEstadísticos de orden.", "303304": "Unidad 1: Grupos y homomorfismos de grupos\nOperaciones binarias y grupos.\nGrupos abelianos y no abelianos.\nSubgrupos.\nGrupos cíclicos, propiedades y teoremas.\nHomomorfismos de grupos.\n\nUnidad 2: Clases lateras y grupo cociente\nClases laterales, teorema de Lagrange.\nSubgrupos normales.\nGrupos cociente y teorema de Cauchy para grupos abelianos.\nTeoremas de homomorfismos.\nÓrbitas y teorema de Cauchy para grupos no abelianos.\n\nUnidad 3: Producto directo y teorema fundamental de los grupos abelianos \nProducto directo interno (P.D.I.)\nProducto directo externo (P.D.E.)\nTeorema fundamental de los grupos abelianos finitos.\nGrupo simétrico, propiedades y teoremas.\n\nUnidad 4: Teoremas de Cayley y Sylow\nGrupo Diedral, teorema de Cayley y acciones de grupos.\nÓrbitas, estabilizadores, clases de conjugación.\nTeoremas de Sylow.\nP-Grupos de Sylow.", "314069": "1. Métodos iterativos de resolución de ecuaciones no lineales (punto fijo,\nbisección, método de regula-falsi, secante, método de Newton-\nRaphson)\n2. Métodos directos e iterativos de resolución de sistemas de ecuaciones\nlineales.\n3. Interpolación\n4. Integración numérica\n5. Diferenciación numérica\n6. Resolución de ecuaciones diferenciales ordinarias\n7. Matrices estocásticas y cadenas de Markov", "303013": "Unidad 1: Ecuaciones diferenciales de primer orden \nTemas\nDefinición de ecuación diferencial y orden de una ecuación diferencial. Clasificación de las ecuaciones diferenciales: \ttipo, orden y linealidad.\nDefinición de solución, definición de solución general y solución particular, problema de valor inicial.\nTeorema de Existencia y unicidad.\nEcuaciones diferenciales de primer orden: Ecuaciones lineales, Ecuaciones separables, Ecuaciones homogéneas, Ecuaciones exactas, teoremas sobre exactas y factores integrantes, Ecuación de Bernoulli. Sustituciones varias. \n\nIdentificar las diferentes ecuaciones diferenciales con los diferentes métodos para resolverlas. \n\nUnidad 2: Aplicaciones de las Ecuaciones diferenciales de primer orden \nTemas\nAplicaciones geométricas (trayectorias isogonales y ortogonales, problemas de persecución y problemas de geometría analítica).\nProblemas de crecimiento y decrecimiento exponencial.\nProblemas de mezclas químicas. Problemas de vaciado de tanques.\nCircuitos. Problemas de aplicación a la física.\nConstruir la ecuación diferencial que modele cada problema planteado y resolverla por los métodos de la unidad anterior.\n\nUnidad 3: Teoría de las Ecuaciones lineales de primer orden\nTemas\nConceptos básicos, espacio C(I), C'(I), C''(I), etc., funciones linealmente dependientes e independientes, Wronskiano y teoremas sobre la dimensión del espacio solución de una Ecuaciones diferenciales  homogénea, Método de reducción de orden.\nSoluciones fundamentales de las ecuaciones lineales homogéneas. \nEcuaciones homogéneas con coeficientes constantes. Ecuación característica.\nEcuación no homogénea: Método de los coeficientes indeterminados.  Método de variación de parámetros. \nMétodo de los operadores inversos.\nAplicaciones de las ecuaciones diferenciales de segundo orden: Vibraciones mecánicas y eléctricas, vibraciones forzadas. \n\nIdentificar las ecuaciones homogéneas y los diferentes métodos para resolverlas. \nResolver la ecuación característica con el objetivo de hallar un conjunto de soluciones. \nAplicar el método de los coeficientes indeterminados, variación de parámetros y operadores inversos. \nIlustrar la utilidad de estos métodos para resolver problemas del área de física e ingeniería.\n\nUnidad 4: Solución por Series\nTemas\nRefrescar el concepto de serie y las propiedades de las series. \nDefinición de punto ordinario y solución de una ecuación diferencial alrededor de un punto ordinario. \nDefinición de punto singular y solución alrededor de un punto singular, teorema de Frobenius, ecuación de índices y los tres casos que surgen con las raíces indiciales. \nFunción gamma y teoremas relativos.\nEcuación diferencial de Bessell y propiedades de la función de Bessell\n\nUsar los métodos de series para resolver Ecuaciones Diferenciales con coeficientes variables.\n\nUnidad 5: Transformada de Laplace \nTemas\nDefinición de Trasformada de Laplace y trasformada inversa de Laplace y la tabla de las principales fórmulas de trasformada y trasformada inversa de Laplace, ejemplos.\nTeoremas de trasformada de Laplace: teorema de existencia de la trasformada de Laplace, primer teorema de traslación, segundo teorema de traslación, teorema de la derivada de una trasformada, teorema de la trasformada de una derivada, teorema del producto convolutivo y trasformada de la integral, teorema de la generalización de la trasformada de una potencia con exponente real, teorema de la trasformada de una función periódica.\nAplicaciones de la trasformada a Ecuaciones diferenciales lineales de coeficientes constantes o variables y a ecuaciones Integrales y ecuaciones integro-diferenciales.\nFunción Impulso Unitario o Delta de Dirac, sus propiedades y su trasformada de Laplace, aplicación a Ecuaciones diferenciales que contengan la función Delta-Dirac \n\nUtilizar la Trasformada de Laplace como método alternativo para resolver Ecuaciones Diferenciales con condiciones iniciales, ecuaciones integrales o integrodiferenciales", "314070": "Unidad 1:   Distribuciones límite y distribuciones muestrales\nTemas\n Sucesiones de variables aleatorias \nTeorema del límite central\nAproximaciones para la distribución binomial\nDistribuciones asintóticas\nPropiedades de convergencia estocástica\nTeoremas límite adicionales \nDistribuciones muestrales \nDistribuciones t, F y beta, aproximaciones para grandes muestras.\n\nUnidad 2:  Teoría de los estimadores\nTemas\nAlgunos métodos de estimación\nCriterios para la evaluación de estimadores, \nPropiedades asintóticas\nEstadísticos suficientes y sus propiedades\nCompletez\nFamilia exponencial de distribuciones.\n  \nUnidad 3:   Intervalos de confianza y pruebas de hipótesis\nTemas\nDefinición de intervalo de confianza\nMétodo de la cantidad pivotal\nMétodo general \nProcedimientos sobre dos poblaciones\nConceptos básicos sobre pruebas de hipótesis\n Procedimientos con hipótesis compuestas\nPruebas para los parámetros de la distribución normal\nPruebas más potentes\nPruebas uniformemente más potentes \nPruebas basadas en la verosimilitud.\n        \nUnidad 6:  Pruebas de Hipótesis\nTemas\n   Introducción, la idea de una prueba de hipótesis.\n   Términos básicos: hipótesis nula, hipótesis alternativa.\n   Clases de hipótesis.\n   Procedimiento para realizar una prueba de hipótesis (definir: estadístico de prueba o contraste, valor-p,   \n   nivel de significancia).\n   Prueba de hipótesis para la media con varianza conocida.", "303354": "Unidad 1: Anillos y sus propiedades:\nTemas:\nDefinición, ejemplos y propiedades de los anillos.\nSubanillos y dominios de integridad (D.I.).\nIdeales y anillos cocientes.\nIdeales primos e ideales maximales.\nHomomorfismos de anillos y teoremas de homomorfismos.\nPropiedades de los D.I., mcd, mcm, primos e irreducibles.\nCampo de fracciones de un D.I. y polinomios sobre un D.I.\n\nUnidad 2: Algunos D.I. particulares:\nTemas:\nDominios de ideales principales (D.I.P.)\nDominios Euclídeos (D.E.)\nPolinomios sobre un D.I.P. y sobre un D.E.\nDominios de factorización única (D.F.U.) \nPolinomios sobre un D.F.U.\nCriterios de irreducibilidad.\nUnidad 3: Campos y extensiones de campos:\nTemas:\nExtensiones de campos y campos de descomposición.\nTeoremas para polinomios irreducibles.\nRaíces múltiples y polinomios derivados.\nCampos perfectos.\nExtensiones algebraicas, trascendentes, simples y finitas.\nTeorema del elemento primitivo.\nCampos finitos y subcampos.", "303252": "Unidad 1: Números Reales\nTemas\nAxiomas de Campo, orden y completitud.\nConsecuencias de los axiomas de campo y de los axiomas de orden.\nConsecuencias del Axioma de Completitud.\nConjuntos de enteros, racionales e irracionales.\nPrincipio de Arquímedes.\n\nUnidad 2:  Topología en R\nTemas\nIntervalos y vecindades.\nConjuntos cerrados y abiertos de números reales.\nInterior, exterior y frontera de un conjunto de números reales. Conjuntos acotados.\nCaracterización de conjuntos abiertos por intervalos y sucesiones de conjuntos.\nCubrimiento de conjuntos de números reales. Lema de subcubrimiento finito o principio de Heine-Borel.\nConjuntos compactos, Teorema de Bolzano-Weierstrass y puntos de acumulación.\nTopología en R*.\n\nUnidad 3:  Sucesiones\nTemas\nConvergencia de sucesiones.\nOperaciones aritméticas y desigualdades en el paso al límite de sucesiones.\nCriterio de Cauchy. Sucesiones monótonas.\nSubsucesiones.\nLímite inferior y límite superior de una sucesión.\nConvergencia en R*.\n\nUnidad 4:  Series Numéricas\nTemas\nDefinición. Convergencia de series.\nCriterios de convergencia de series de términos no negativos.\nSeries alternantes. Series de términos de signo arbitrario. Convergencia absoluta y condicional.\nReordenamiento y producto de series\n\nUnidad 5:  Límites y Continuidad de Funciones\nTemas\nLímite de funciones. Propiedades generales del límite de funciones.\nOperaciones aritméticas y desigualdades en el paso al límite de funciones.\nContinuidad. Definiciones y ejemplos.\nPuntos de discontinuidad. Tipos de discontinuidad\nPropiedades locales de las funciones continuas.\nPropiedades globales de las funciones continuas.\nTeorema del valor intermedio. Teorema del valor extremo.\nFunciones uniformemente continuas. Funciones monótonas.\n\nUnidad 6:  Diferenciación\nTemas\nDefiniciones y ejemplos.\nReglas de diferenciación. Derivadas de orden superior.\nPrincipales teoremas del Cálculo Diferencial.\nTeorema del Valor Medio.\nFórmula de Taylor.", "303404": "Unidad 1: Álgebra Lineal\nTemas\nEspacios vectoriales y transformaciones lineales.\nSuma directa de espacios vectoriales.\nCociente de espacios vectoriales.\nTeorema del rango y la nulidad.\nFuncionales lineales y dualidad.\nTransformación adjunta.\nEntendimiento del concepto de suma directa de espacios vectoriales.\nInterpretación del cociente entre espacios vectoriales y el cálculo de su dimensión.\nUso del teorema del rango y la nulidad para determinar información sobre el espacio de soluciones de un sistema de ecuaciones lineales.\nEntendimiento de la definición de espacio dual y la funtorialidad.\n\nUnidad 2: Funciones Multilineal\nTemas\nFunciones y formas bilineales.\nFunciones y formas multilineales.\nFunciones y formas multilineales simétricas y antisimétricas.\nDeterminantes.\nEl grupo ortogonal.\nDeterminación de una función como multilineal y clasificación de aquellas que son simétricas y antisimétricas.\nEntendimiento del determinante como única forma multilineal alternante unitaria y caracterización de las formas multilineales alternadas.\nEntendimiento del grupo ortogonal como aquel que preserva la forma bilineal asociada al producto interno usual.\n\nUnidad 3: Producto tensorial\nTemas\nPropiedad universal.\nProducto tensorial de funcionales lineales.\nPropiedad universal del producto tensorial de espacios vectoriales.\nExistencia y unicidad del producto tensorial.\nRelación del producto tensorial con cocientes, sumas directas y transformaciones lineales.\nDimensión del producto tensorial.\nEntendimiento de la propiedad universal que define al producto tensorial.\nConstrucción del producto tensorial.\nCálculo de la dimensión del producto tensorial.\n\nUnidad 4: Álgebra Exterior y Álgebra Simétrica\nTEMAS\nProducto exterior.\nÁlgebra exterior.\nProducto simétrico.\nÁlgebra simétrica.\nFormas diferenciales.\nReconocimiento de la propiedad universal del producto exterior.\nDefinición del álgebra exterior.\nRelación entre álgebra exterior y dualidad.\nRelación entre álgebra exterior y transformaciones\nlineales.\nReconocimiento de la propiedad universal del producto simétrico.\nDefinición del álgebra simétrica.\nRelación entre álgebra simétrica y dualidad.\nRelación entre álgebra simétrica y transformaciones lineales.\nAplicación del álgebra exterior en el estudio de formas diferenciales.", "303412": "Unidad 1: Nombre: Espacios Topológicos y funciones continuas\nTemas\nEspacios Topológicos.\nBase de una topología.\nLa topología del orden.\nLa topología producto sobre el espacio XxY.\nLa topología del subespacio.\nConjuntos cerrados y punto límite.\nFunciones continuas.\nLa topología producto.\nLa topología métrica.\nLa topología cociente (tema opcional, para realizar en una tarea)\n\nUnidad 2: Nombre: Conexidad y compacidad\nTemas\nEspacios conexos.\nSubespacios conexos de la recta real.\nEspacios compactos.\nSubespacios compactos de la recta real.\nCompacidad por punto límite.\nCompacidad local\n\nUnidad 3: Nombre: Axiomas de Separación y Numerabilidad\nTemas\nAxiomas de numerabilidad.\nAxiomas de separación.\nEspacios Normales.\nLema de Uryshon.\nTeorema de metrización de Uryshon.\nTeorema de extensión de Tietze.\nTeorema de Tychonoff.", "303302": "Unidad 1: Integral de Riemann y de Riemann-Stieltjes  (9 clases incluye evaluación)\nTemas\nLa integral de Riemann. Definición y ejemplos.\nPropiedades de la integral de Riemann.\nTeorema fundamental del cálculo.\nSumas integrales de Riemann.\nCaracterización de las funciones integrables.\nIntegrales impropias\n    Integral de Riemann - Stieltjes. Criterio de integrabilidad.\nPropiedades de la integral de Riemann - Stieltjes.\nSumas integrales de Riemann - Stieltjes.\n\nUnidad 2: Sucesiones y series de funciones (9 clases incluye evaluación)\nTemas\nConvergencia puntual y uniforme de sucesiones de funciones.\nIntegración y derivación término a término de sucesiones de funciones.\nConvergencia puntual y uniforme de series funcionales. \nIntegración y diferenciación término a término de series funcionales.\n    Series de potencias \n    Intervalo de convergencia y radio de convergencia.\nFunciones analíticas reales.\nSeries de Taylor\n\nUnidad 3: Series de Fourier (7 clases incluye evaluación)\nTemas\nSistemas Ortogonales. \nSeries de Fourier con respecto a un sistema ortogonal. \nConvergencia en media cuadrática.\nSerie Trigonométrica de Fourier. \nLema Riemann Lebesgue.\nConvergencia puntual de la serie trigonométrica de Fourier.\nSeries trigonométricas de Fourier de funciones pares e impares.\nForma compleja de la serie trigonométrica de Fourier\nIntegración de la serie trigonométrica de Fourier.\nConvergencia uniforme de la serie trigonométrica de Fourier\n\nUnidad 4: Integrales Paramétricas (7 clases incluye evaluación)\nTemas\nFunciones continuas en . Compacidad en .\nFunciones uniformemente continuas.\nIntegrales de Riemann dependientes de un parámetro.\nDiferenciación bajo el signo de la integral. \nCambio del orden de integración. \nIntegrales impropias dependientes de un parámetro. \nConvergencia puntual y uniforme.\nContinuidad, integración y diferenciación de integrales impropias dependientes de un parámetro.\nFunción Gamma. \nFunción Beta.\nNúcleos de Dirac.\nTransformada de Fourier", "303029": "Unidad 1: Exploración de la actividad investigativa en la Universidad\nCentros de investigación de la Universidad de Antioquia, Grupos de investigación, Clasificación de los grupos de investigación, clasificación de los proyectos de investigación.\n\nUnidad 2: Búsqueda de la Información\nIntroducir al estudiante en la búsqueda de información en bases de datos. Explorar diferentes bases de datos matemáticas y estadísticas.\n\nUnidad 3: Escritura de documentos en LATEX\nIntroducción a la edición de documentos científicos en latex.\n\nUnidad 4: Elaboración del proyecto de trabajo de grado\nDefinición y formulación del trabajo de grado, planteamiento del problema, objetivos, metodología, marco teórico, cronograma. Referencias bibliográficas. Redacción de las distintas partes que componen el texto del proyecto de trabajo de grado. Presentación del proyecto de investigación.\nNota: Las unidades 3 y 4 se realizan simultáneamente, ya que se busca que el estudiante, al finalizar el curso, elabore el texto completo de Proyecto de trabajo de grado. El estudiante debe invertir varias horas en un trabajo de consulta bibliográfica, conversación sobre el tema o problema a trabajar con su eventual asesor y redacción de las distintas partes que compondrán el texto de su proyecto de grado. Por esta razón el curso se clasifica como teórico-práctico: 2 horas teóricas, 2 horas prácticas. De manera transversal a todas las actividades el estudiante debe hacer un curso LaTex que es la escritura básica en matemáticas.", "303352": "Unidad 1: Diferenciabilidad en  \nTemas\nEl espacio  , topología, normas (equivalencia de normas), sucesiones y completitud. \nLímites y continuidad en , continuidad uniforme, funciones definidas en compactos y conexos \nHomeomorfismos en .\nDiferenciabilidad de funciones de  en .\nTeorema sobre diferenciabilidad.\nDerivada direccional, gradiente y teorema de valor medio para funciones de  en R.\nTeorema de la función inversa, Teorema de la función implícita.\nFórmula de Taylor hasta orden 2, Teorema de Schwarz.\nExtremos de funciones de varias variables.\n\nUnidad 2: Integrabilidad en \nTemas\nIntegral de Riemann sobre un rectángulo.\nExistencia de la integral, medida cero y contenido cero. \nTeorema de Fubini.\nConjuntos rectificables.\n Integración sobre subconjuntos acotados de .\nPartición de la unidad.\nTeorema del cambio de variables.\nIntegrales impropias.\nAplicaciones.\n\nUnidad 3: Variedades diferenciables en \nTemas\nDefinición de variedades (sin frontera), propiedades y ejemplos.\nFunciones definidas entre variedades.\nEspacios tangentes, definición por curvas y por cartas coordenadas. \nDiferencial de una función entre variedades. Regla de la cadena y otros teoremas.\nTeorema de la función inversa, inmersiones y submersiones y difeomorfismos.\nTeorema del valor regular. \nDefinición de variedades con frontera.", "303402": "Unidad 1: Números complejos\nTemas\nDefinición.\nPropiedades Algebraicas. Ejemplos.\nInterpretación geométrica.\nDesigualdad triangular. Ejemplos.\nForma polar.\nForma exponencial.\nPotencias y raíces. Ejemplos. Teorema de De Moivre.\nTopología del plano complejo- Conjuntos abiertos y cerrados.\nTeorema de Bolzano-Weiesstrass y Heine-Borel\n\nUnidad 2: Funciones analíticas\nTemas\nFunciones de variable compleja.\nAplicaciones\nLímites.\nTeoremas sobre límites.\nLímites y punto en el infinito.\nContinuidad.\nDerivadas.\nFórmulas de derivación.\nEcuaciones de Cauchy-Riemann.\nCondiciones suficientes.\nCoordenadas polares.\nFunciones analíticas.\nFunciones armónicas.\n\nUnidad 3: Funciones Elementales\nTemas\nLa función exponencial.\nOtras propiedades de exp(z).\nFunciones trigonométricas.\nFunciones hiperbólicas.\nLa función logaritmo y sus ramas.\nOtras propiedades de los logaritmos.\nExponentes complejos.\nFunciones trigonométricas e hiperbólicas inversas.\n\nUnidad 4: Integrales\nTemas\nFunciones complejas w(t).\nContornos.\nIntegrales de contorno.\nEjemplos.\nTeorema de Green\nTeorema de Cauchy\nPrimitivas.\nTeorema de Cauchy-Goursat.\nUn lema preliminar.\nDemostración del teorema de Cauchy-Goursat.\nDominios simplemente conexos y múltiplemente conexos.\nFórmula integral de Cauchy.\nDerivadas de funciones analíticas.\nTeorema de Morera.\nMódulos máximos de funciones.\nTeorema de Liouville y teorema fundamental del álgebra.\n\nUnidad 5: Series\nTemas\nConvergencia de sucesiones y series.\nConvergencia absoluta y uniforme de series de potencias.\nSeries de Taylor.\nEjemplos.\nSeries Laurent.\nEjemplos.\n\nUnidad 6: Residuos y Polos.\nTemas\nResiduos.\nTeorema de los residuos.\nParte principal de una función.\nResiduos en los polos.\nCeros y polos de orden m.\nCálculo de integrales reales impropios.\nIntegrales impropias en las que aparecen senos y cosenos.\nIntegrales definidas en las que aparecen senos y cosenos.\nIntegración a lo largo de un corte de ramificación.\nResiduos logarítmicos y teorema de Rouche.\n\nUnidad 7:Transformaciones por Funciones Elementales\nTemas\nFunciones lineales.\nLa función 1/z.\nTransformaciones racionales lineales.\nTransformaciones del semiplano superior.\nLa transformación w= exp(z) y los logaritmos.\nLa transformación w= sen z. \n La función z^2. \nLa función z½.", "303459": "Unidad 1: Curvas en \nTemas\nCurvas parametrizadas, regularidad y reparametrizaciones.\nEl referencial de Frenet-Serret, curvatura y torsión.\nTeorema fundamental para curvas.\n\nUnidad 2: Superficies regulares\nTemas\nSuperficies regulares, el plano tangente y la diferencial de una función \nFormas fundamentales, operador de forma y curvatura de Gauss\nEl teorema Egregio, aplicaciones entre superficies y el transporte paralelo\nEl teorema de Gauss Bonnet", "303452": "Unidad 1: Medida de Lebesgue.\nTemas\nMedida exterior de Lebesgue\nLa sigma álgebra de Lebesgue\nAproximación exterior e interior de conjuntos Lebesgue medibles.\nAditividad contable, continuidad y el Lema de Borel Cantelli.\nConjuntos no medibles.\nEl conjunto de Cantor y la función de Cantor Lebesgue.\n\nUnidad 2: Integral de Lebesgue\nTemas\nSuma, producto y composiciones de funciones.\nConvergencia puntual y aproximación por funciones simples.\nTeorema de Egoroff y Teorema de Lusin.\nLa integral de Riemann.\nLa integral de Lebesgue.\nAditividad contable y continuidad de la integral de Lebesgue.\nIntegrabilidad uniforme\n\nUnidad 3: Diferenciación e Integración\nTemas\nContinuidad de funciones monótonas\nDiferenciabilidad de funciones monótonas\nFunciones de variación acotada\nFunciones absolutamente continuas\nFunciones convexas\n\nUnidad 4:Espacios Lp\nTemas\nEspacios lineales normados.\nDesigualdades de Young, Höldes y Minkowski.\nCompletez de Lp\nAproximación y separabilidad.\nEl Teorema de representación de Riesz", "303527": "Unidad 1: Introducción\nTemas\nPreliminares\nClasificación\nOperadores diferenciales y principio de superposición \n\nUnidad 2: Ecuaciones de Primer Orden\nTemas\nIntroducción\nEcuaciones cuasilineales\nEl método de las características\nTeorema de existencia y unicidad\nEl método de Lagrange, leyes de conservación y ondas de choque\nLa ecuación general\nEcuaciones no lineales generales\n\nUnidad 3: Ecuaciones lineales de segundo orden en dos variables independientes\nTemas\nIntroducción\nClasificación\nFormas Canónicas de las ecuaciones hiperbólicas, parabólicas y elípticas\n\nUnidad 4: La ecuación de onda unidimensional\nTemas\nIntroducción\nSolución general \nProblema de Cauchy y fórmula de d’Alembert \nDominio de dependencia y región de influencia \nProblema de Cauchy para ecuación de onda no homogéneo \n\nUnidad 5: El método de separación de variables.  Ecuación del calor\nTemas\nIntroducción\nEcuación del calor: condiciones de frontera homogéneos\nSeparación de variables para ecuación no homogéneas\nMétodo de energía y unicidad\nAplicaciones de la ecuación del calor\n\nUnidad 6: Problemas de Sturm-Liouville\nTemas\nIntroducción \nEspacios con producto interior y sistemas ortonormales\nPropiedades básicas de las funciones propias y valores propios de Strum-Liouville\nEcuaciones no homogéneas\nCondiciones de frontera no homogénea\n\nUnidad 7: Ecuaciones elípticas\nTemas\nIntroducción\nPropiedades Básicas de problemas elípticos\nEl principio del máximo y su aplicación\nIdentidades de Green\nPrincipio del máximo para la ecuación del calor\nSeparación de variable para problemas elípticos\nFórmula de Poisson", "303552": "Unidad 1: Espacios normales y espacios de banach.\nTemas\nDefinición de los conceptos de espacio normado y espacio de Banach. Ejemplos.\nLos espacios de sucesiones como espacios normados: Lp, l∞, C, Co. Completitud de estos espacios.\nLos espacios de funciones Lebesgue-Integrables Lp como espacios de Banach. Los espacios de funciones continuas, completa según la norma escogida.\nFunciones lineales y acotadas en espacios normados. La norma de un funcional. Ejemplos.\nDual topológico y dual algebraico de un espacio normado. Caracterización del dual topológico como espacio de Banach.\nSegundo dual topológico y algebraico. Reflexividad. Bases duales en espacios finitos dimensionales.\nLos duales topológicos de Lp, Lp, 1<p<∞.\nTeorema de Hahn-Banach. Aplicaciones.\n\nUnidad 2: Operadores lineales en espacios normados \nTemas\nDefiniciones y teoremas generales.\nEjemplos de operadores acotados y no acotados.\nPropiedades generales de los operadores lineales acotados.\nTeorema de la aplicación abierta. Aplicaciones.\nOperadores cerrados. Teorema del gráfico cerrado.\nPrincipio de acotamiento uniforme. Noción de convergencia débil.\nUnidad 3: Espacios de Hilbert\nTemas\nDefiniciones y ejemplos. Desigualdad de Cauchy-Schwarz.\nOrtogonalidad y teorema de Riesz sobre el vector minimizante. Descomposición de un espacio de Hilbert como suma directa de un espacio cerrado y su complemento ortogonal.\nTeorema de Riesz. Conjuntos ortogonales. Proceso de Gram-Schimdt y desigualdad de Bessel.\nPropiedad variacional de los coeficientes de Fourier. El sistema ortogonal completo de funciones trigonométricas L2, [-,].\nIdentidad de Parseval y aplicaciones al cálculo de series.\nDefinición del operador adjunto. Propiedades de la operación de adjunción\n\nUnidad 4: Introducción a la teoría espectral de operadores compactos y autoadjuntos en espacios de Hilbert.\nTemas\nNociones de valor y vector propio de un operador. Ejemplos.\nEspectro y resolvente de un operador.\nDefinición, ejemplos y propiedades de operadores compactos.\nOperadores compactos y autoadjuntos en espacios de Hilbert. Ejemplos.\nTeorema espectral para operadores compactos y autoadjuntos.\nAplicación del teorema espectral a la ecuación integral de Fredholm de segunda clase.\nProblemas físicos que dan lugar a ecuaciones de Fredholm de segunda clase.\nSolubilidad de la ecuación de Fredholm, vía al teorema espectral."};
+
+function showSaberes(code) {
+  const nc = code.replace(/^0+/, '');
+  const panel  = document.getElementById('saberes-panel');
+  const titleEl = document.getElementById('saberes-title');
+  const bodyEl  = document.getElementById('saberes-body');
+  const box  = document.querySelector('.course-box[data-code="' + code + '"]');
+  const name = box ? box.getAttribute('data-name') : code;
+  titleEl.textContent = name + '  (' + code + ')';
+  if (SABERES[nc]) {
+    bodyEl.textContent = SABERES[nc];
+    bodyEl.classList.remove('no-data');
+  } else {
+    bodyEl.textContent = 'No hay microcurrículo registrado para este curso.';
+    bodyEl.classList.add('no-data');
+  }
+  panel.classList.add('visible');
+}
+
+function hideSaberes() {
+  document.getElementById('saberes-panel').classList.remove('visible');
+}
+
+document.getElementById('saberes-close').addEventListener('click', hideSaberes);
+
+// Parcheo aditivo: showChain también abre el panel
+const __origShowChain = showChain;
+showChain = function(code) { __origShowChain(code); showSaberes(code); };
+
+// Parcheo aditivo: clearAll también cierra el panel
+const __origClearAll = clearAll;
+clearAll = function() { __origClearAll(); hideSaberes(); };
+
+// Arrastre del panel por el header
+(function() {
+  const panel  = document.getElementById('saberes-panel');
+  const header = document.getElementById('saberes-header');
+  let dragging = false, ox = 0, oy = 0;
+  header.addEventListener('mousedown', function(e) {
+    dragging = true;
+    const r = panel.getBoundingClientRect();
+    ox = e.clientX - r.left;
+    oy = e.clientY - r.top;
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!dragging) return;
+    let nx = e.clientX - ox;
+    let ny = e.clientY - oy;
+    nx = Math.max(0, Math.min(nx, window.innerWidth  - panel.offsetWidth));
+    ny = Math.max(0, Math.min(ny, window.innerHeight - panel.offsetHeight));
+    panel.style.right  = 'auto';
+    panel.style.bottom = 'auto';
+    panel.style.left   = nx + 'px';
+    panel.style.top    = ny + 'px';
+  });
+  document.addEventListener('mouseup', function() { dragging = false; });
+})();
+
+</script>
+</body></html>
