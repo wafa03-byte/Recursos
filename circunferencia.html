@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Circunferencia. Álgebra y Trigonometría</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<script>
+  MathJax = {
+    tex: { inlineMath:[['\\(','\\)']], displayMath:[['\\[','\\]']] },
+    svg: { fontCache:'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+/* ── TOKENS ─────────────────────────────────────────── */
+:root{
+  --bg:#F4F3FB;
+  --surf:#FFFFFF;
+  --bdr:#DDD6FE;
+  --bdr-soft:#EDE9FE;
+  --txt:#1C1B2E;
+  --muted:#6B688A;
+  --violet:#6D28D9;
+  --violet-m:#7C3AED;
+  --violet-100:#EDE9FE;
+  --violet-50:#F5F3FF;
+  --teal:#0D9488;
+  --teal-100:#CCFBF1;
+  --teal-50:#F0FDFA;
+  --blue:#1D4ED8;
+  --blue-100:#DBEAFE;
+  --blue-50:#EFF6FF;
+  --red:#DC2626;
+  --red-100:#FEE2E2;
+  --red-50:#FEF2F2;
+  --shadow:0 2px 6px rgba(109,40,217,.09),0 10px 36px rgba(109,40,217,.07);
+  --r-s:6px;--r-m:8px;--r-l:12px;
+  --font-h:'Lora',Georgia,serif;
+  --font-b:'Inter',system-ui,sans-serif;
+}
+
+/* ── RESET ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-b);font-size:16px;line-height:1.75;
+  color:var(--txt);background-color:var(--bg);
+  background-image:radial-gradient(#E4E1F5 1px,transparent 1px);
+  background-size:32px 32px;
+}
+p{margin-bottom:.7rem;}p:last-child{margin-bottom:0;}
+ul{padding-left:1.4rem;}li{margin-bottom:.3rem;}
+strong{font-weight:600;color:var(--txt);}
+
+/* ── LAYOUT ────────────────────────────────────────── */
+.page{max-width:820px;margin:0 auto;padding:0 1.25rem 3.5rem;}
+
+/* ── HEADER ────────────────────────────────────────── */
+.hdr{text-align:center;padding:1.8rem 0 1rem;}
+.eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--violet);margin-bottom:.6rem;}
+.hdr h1{font-family:var(--font-h);font-size:clamp(2rem,5vw,2.9rem);
+  font-weight:700;line-height:1.2;color:var(--txt);}
+.hdr h1 em{font-style:normal;color:var(--violet);}
+.hdr-sub{margin-top:.5rem;font-size:.88rem;color:var(--muted);}
+.rule{width:50px;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,var(--violet),var(--teal));margin:1.5rem auto 0;}
+
+/* ── CARD ─────────────────────────────────────────── */
+.card{background:var(--surf);border:1px solid var(--bdr-soft);
+  border-radius:var(--r-l);box-shadow:var(--shadow);margin-bottom:1.25rem;}
+.intro-p{padding:.6rem 1rem;}
+
+/* ── TOC ─────────────────────────────────────────── */
+.toc{overflow:hidden;}
+.toc-hd{width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:.4rem 1rem;cursor:pointer;background:var(--violet-50);
+  border:none;border-bottom:1px solid var(--bdr-soft);font:inherit;
+  text-align:left;transition:background .2s;}
+.toc-hd:hover{background:var(--violet-100);}
+.toc-hd-l{display:flex;align-items:center;gap:.5rem;
+  font-family:var(--font-h);font-size:.88rem;font-weight:600;color:var(--violet);}
+.toc-arr{color:var(--violet);font-size:.8rem;transition:transform .3s;}
+.toc.open .toc-arr{transform:rotate(180deg);}
+.toc-bd{display:none;padding:.35rem 1rem .5rem;}
+.toc.open .toc-bd{display:block;}
+.toc-ol{list-style:none;counter-reset:toc;}
+.toc-ol li{counter-increment:toc;padding:.2rem 0;}
+.toc-ol a{display:flex;align-items:center;gap:.7rem;text-decoration:none;
+  font-size:.88rem;color:var(--muted);transition:color .2s;}
+.toc-ol a:hover{color:var(--violet);}
+.toc-ol a::before{content:counter(toc,decimal-leading-zero);
+  font-size:.7rem;font-weight:700;color:var(--violet-m);min-width:20px;}
+
+/* ── ACCORDION ────────────────────────────────────── */
+.acc{overflow:hidden;}
+.acc-hd{width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem 1rem;cursor:pointer;background:transparent;
+  border:none;font:inherit;text-align:left;transition:background .2s;}
+.acc-hd:hover{background:var(--violet-50);}
+.acc-hd-l{display:flex;align-items:center;gap:.75rem;}
+.acc-icon{width:30px;height:30px;border-radius:var(--r-m);
+  display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0;}
+.teal-bg{background:var(--teal-50);color:var(--teal);}
+.violet-bg{background:var(--violet-50);color:var(--violet);}
+.red-bg{background:var(--red-50);color:var(--red);}
+.blue-bg{background:var(--blue-50);color:var(--blue);}
+.acc-title{font-family:var(--font-h);font-size:1rem;font-weight:600;color:var(--txt);}
+.acc-arr{font-size:.8rem;color:var(--muted);transition:transform .3s;}
+.acc.open .acc-arr{transform:rotate(180deg);}
+.acc-bd{display:none;padding:.65rem 1rem .875rem;border-top:1px solid var(--bdr-soft);}
+.acc.open .acc-bd{display:block;}
+
+/* ── MATH BOXES ───────────────────────────────────── */
+.mbox{border-radius:var(--r-m);padding:.5rem .875rem;margin:.45rem 0;border-left:4px solid;}
+.mbox-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:.6rem;}
+.recuerda{background:var(--teal-50);border-left-color:var(--teal);}
+.recuerda .mbox-lbl{color:var(--teal);}
+.mdef{background:var(--violet-50);border-left-color:var(--violet);}
+.mdef .mbox-lbl{color:var(--violet);}
+.mwarn{background:var(--red-50);border-left-color:var(--red);}
+.mwarn .mbox-lbl{color:var(--red);}
+.mex{background:var(--blue-50);border-left-color:var(--blue);}
+.mex .mbox-lbl{color:var(--blue);}
+
+/* ── DISPLAY MATH ─────────────────────────────────── */
+.dm{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r-s);
+  padding:.12rem .75rem;margin:.25rem 0;text-align:center;line-height:1;overflow-x:auto;}
+.kf{background:var(--violet-100);border:2px solid var(--violet);border-radius:var(--r-m);
+  padding:.15rem .75rem;margin:.25rem 0;text-align:center;line-height:1;overflow-x:auto;}
+.beq{background:var(--violet-50);border:2px solid var(--violet);border-radius:var(--r-m);
+  padding:.12rem .75rem;margin:.25rem 0;text-align:center;line-height:1;}
+
+/* ── REVEAL BUTTON / HINT ────────────────────────── */
+.rbtn{display:inline-flex;align-items:center;gap:.35rem;
+  padding:.25rem .65rem;border:1.5px solid var(--bdr);border-radius:var(--r-s);
+  background:transparent;font:inherit;font-size:.8rem;color:var(--muted);
+  cursor:pointer;transition:all .2s;margin-top:.75rem;}
+.rbtn:hover{border-color:var(--violet);color:var(--violet);background:var(--violet-50);}
+.rbtn svg{transition:transform .3s;}
+.rbtn.open svg{transform:rotate(90deg);}
+.hint{display:none;margin-top:.75rem;padding:.4rem .75rem;
+  background:var(--teal-50);border:1px solid var(--teal-100);border-radius:var(--r-s);font-size:.9rem;}
+.hint.open{display:block;}
+.just-list{list-style:none;padding:0;margin:.75rem 0 0;display:flex;flex-direction:column;gap:.5rem;}
+.just-list li{padding:.25rem .6rem;border-radius:var(--r-s);background:rgba(255,255,255,.6);border-left:3px solid var(--teal);}
+.just-claim{display:block;font-weight:600;font-size:.88rem;margin-bottom:.2rem;}
+.just-reason{display:block;font-size:.85rem;color:var(--muted);}
+
+/* ── SVG BOX ──────────────────────────────────────── */
+.svgbox{border:1px solid var(--bdr);border-radius:var(--r-m);overflow:hidden;margin:1rem 0;}
+.svghd{display:flex;align-items:center;gap:.5rem;padding:.3rem .75rem;
+  background:var(--violet-50);border-bottom:1px solid var(--bdr);
+  font-size:.75rem;font-weight:600;color:var(--violet);
+  text-transform:uppercase;letter-spacing:.08em;}
+.svghd-blue{background:var(--blue-50);border-bottom-color:var(--blue-100);color:var(--blue);}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;
+  animation:pulse 2s ease-in-out infinite;}
+.dot-b{background:var(--blue);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.isvg{display:block;width:100%;height:auto;touch-action:none;}
+.isvg text{font-family:'STIX Two Text','Cambria Math','Georgia',serif;paint-order:stroke;
+  stroke:#FFFFFF;stroke-width:2.6px;stroke-linejoin:round;}
+.rad{text-decoration:overline;padding:0 .08em;}
+.svgft{padding:.3rem .75rem;font-size:.8rem;color:var(--muted);
+  text-align:center;border-top:1px solid var(--bdr-soft);background:#FAFAFE;
+  font-family:'Lora',serif;font-style:italic;}
+
+/* ── SLIDERS ──────────────────────────────────────── */
+.sliders{display:grid;grid-template-columns:repeat(3,1fr);gap:.875rem;
+  padding:.4rem .75rem;background:var(--violet-50);border-bottom:1px solid var(--bdr-soft);}
+.sl-item label{display:block;font-size:.8rem;font-weight:600;
+  color:var(--violet);margin-bottom:.2rem;}
+.sl-item input[type=range]{width:100%;accent-color:var(--violet-m);cursor:pointer;}
+.sl-val{font-size:.75rem;color:var(--muted);text-align:center;margin-top:.1rem;}
+
+/* ── DIST SLIDERS (2 grupos) ──────────────────────── */
+.dist-sliders{grid-template-columns:1fr 1fr;gap:1rem;}
+.pt-group{background:rgba(255,255,255,.4);border-radius:var(--r-m);padding:.55rem .75rem;}
+.pt-header{font-size:.88rem;font-weight:700;color:var(--violet);text-align:center;margin-bottom:.4rem;}
+.pt-sub{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;}
+
+/* ── EQ DISPLAY ───────────────────────────────────── */
+.eq-disp{padding:.3rem .75rem;background:var(--surf);
+  border-top:1px solid var(--bdr-soft);text-align:center;}
+.eq-text{font-family:var(--font-h);font-size:1.05rem;color:var(--violet);font-weight:600;}
+.eq-cap{font-size:.72rem;color:var(--muted);margin-top:.2rem;}
+
+/* ── SIGN DEMO ────────────────────────────────────── */
+.sdemo{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r-m);
+  padding:.5rem .875rem;margin:.45rem 0;}
+.sdemo-tit{font-size:.82rem;font-weight:600;color:var(--txt);margin-bottom:.875rem;}
+.sdemo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;align-items:end;}
+.sdemo label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:.25rem;}
+.sdemo select{width:100%;padding:.45rem .65rem;border:1px solid var(--bdr);
+  font:inherit;font-size:.85rem;color:var(--txt);background:white;cursor:pointer;border-radius:var(--r-s);}
+.sdemo select:focus{outline:none;border-color:var(--violet);
+  box-shadow:0 0 0 3px rgba(109,40,217,.1);}
+.sdemo-out{margin-top:.45rem;padding:.4rem .75rem;background:var(--violet-50);
+  border:1px solid var(--violet-100);border-radius:var(--r-s);font-size:.85rem;}
+.sdemo-vals{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0;}
+.sdemo-val{background:white;border:1px solid var(--violet-100);border-radius:var(--r-s);padding:.25rem .4rem;text-align:center;}
+.sdemo-val .lbl{font-size:.7rem;font-weight:700;color:var(--muted);}
+.sdemo-val .num{font-family:var(--font-h);font-size:1.1rem;font-weight:700;color:var(--violet);}
+.note-warn{font-size:.78rem;color:var(--red);margin-top:.3rem;}
+.note-ok{font-size:.78rem;color:var(--teal);margin-top:.3rem;}
+.note-eq{font-weight:700;font-size:.88rem;color:var(--violet);margin-bottom:.5rem;}
+
+/* ── STEPS ────────────────────────────────────────── */
+.steps{margin:.875rem 0;}
+.step{border:1px solid var(--bdr);border-radius:var(--r-m);margin-bottom:.6rem;overflow:hidden;}
+.step-hd{width:100%;display:flex;align-items:center;gap:.7rem;
+  padding:.4rem .875rem;cursor:pointer;background:white;border:none;
+  font:inherit;text-align:left;transition:background .2s;}
+.step-hd:hover{background:var(--blue-50);}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--blue);
+  color:white;font-size:.72rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-title{font-weight:600;font-size:.88rem;flex:1;}
+.step-arr{font-size:.8rem;color:var(--muted);transition:transform .3s;}
+.step.open .step-arr{transform:rotate(180deg);}
+.step-bd{display:none;padding:.45rem .875rem;border-top:1px solid var(--bdr);
+  background:#FAFAFE;font-size:.9rem;}
+.step.open .step-bd{display:block;}
+
+/* ── CONTROL BUTTONS ──────────────────────────────── */
+.ctrl-btns{display:flex;justify-content:flex-end;gap:.5rem;margin-bottom:.6rem;}
+.ctrl-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .85rem;
+  border:1.5px solid var(--bdr);border-radius:var(--r-s);background:var(--surf);
+  font:inherit;font-size:.8rem;font-weight:600;color:var(--muted);cursor:pointer;
+  transition:all .2s;}
+.ctrl-btn:hover{border-color:var(--violet);color:var(--violet);background:var(--violet-50);}
+.ctrl-btn svg{flex-shrink:0;}
+
+/* ── CONTROL BUTTONS ──────────────────────────────── */
+/* ── OVERRIDE MATHJAX DISPLAY MARGIN ─────────────────── */
+.dm mjx-container,.kf mjx-container,.beq mjx-container{margin:.2em 0!important;}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:560px){
+  .sliders,.sdemo-grid,.sdemo-vals{grid-template-columns:1fr;}
+  .dist-sliders{grid-template-columns:repeat(2,1fr);}
+  .svghd{font-size:.7rem;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<header class="hdr">
+  <h1>La Circunferencia</h1>
+  <p class="hdr-sub">Ecuaciones, geometría y representación gráfica</p>
+  <div class="rule"></div>
+</header>
+
+<!-- INTRO -->
+<div class="card intro-p">
+  <p>Aprenderás a reconocer la gráfica de la circunferencia a partir de sus ecuaciones. En esta sección deducimos su ecuación estándar a partir de la fórmula de la distancia y exploramos sus propiedades.</p>
+</div>
+
+<!-- BOTONES DE CONTROL -->
+<div class="ctrl-btns">
+  <button class="ctrl-btn" onclick="expandAll()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+    Desplegar todo
+  </button>
+</div>
+
+<!-- TOC -->
+<nav class="card toc" id="toc">
+  <button class="toc-hd" onclick="document.getElementById('toc').classList.toggle('open')">
+    <span class="toc-hd-l">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/>
+        <circle cx="3" cy="6" r="1.2" fill="currentColor" stroke="none"/>
+        <circle cx="3" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+        <circle cx="3" cy="18" r="1.2" fill="currentColor" stroke="none"/>
+      </svg>
+      Contenido
+    </span>
+    <span class="toc-arr">▾</span>
+  </button>
+  <div class="toc-bd">
+    <ol class="toc-ol">
+      <li><a role="button" tabindex="0" style="cursor:pointer;" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Fórmula de la distancia</a></li>
+      <li><a role="button" tabindex="0" style="cursor:pointer;" onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})">Forma estándar de la circunferencia</a></li>
+      <li><a role="button" tabindex="0" style="cursor:pointer;" onclick="document.getElementById('s3').scrollIntoView({behavior:'smooth'})">Cuidado con los signos</a></li>
+      <li><a role="button" tabindex="0" style="cursor:pointer;" onclick="document.getElementById('s4').scrollIntoView({behavior:'smooth'})">Ejemplo resuelto 1</a></li>
+      <li><a role="button" tabindex="0" style="cursor:pointer;" onclick="document.getElementById('s5').scrollIntoView({behavior:'smooth'})">Ejemplo resuelto 2</a></li>
+    </ol>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 1: FÓRMULA DE LA DISTANCIA                 -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="card acc" id="s1">
+  <button class="acc-hd" onclick="this.closest('.acc').classList.toggle('open')">
+    <span class="acc-hd-l">
+      <span class="acc-icon teal-bg">💡</span>
+      <span class="acc-title">Fórmula de la distancia: \(d = \sqrt{(x_2-x_1)^2+(y_2-y_1)^2}\)</span>
+    </span>
+    <span class="acc-arr">▾</span>
+  </button>
+  <div class="acc-bd">
+    <div class="mbox recuerda">
+      <p class="mbox-lbl">Recuerda</p>
+      <p>La distancia entre dos puntos \((x_1,\,y_1)\) y \((x_2,\,y_2)\) en el plano es</p>
+      <div class="dm">\[ d = \sqrt{(x_2-x_1)^2+(y_2-y_1)^2}. \]</div>
+
+      <svg viewBox="0 0 340 210" xmlns="http://www.w3.org/2000/svg"
+           style="display:block;width:100%;max-width:380px;margin:.5rem auto 1rem;"
+           aria-hidden="true">
+        <!-- grid -->
+        <g stroke="#EDE9FE" stroke-width="0.6">
+          <line x1="30" y1="20" x2="30" y2="175"/>
+          <line x1="80" y1="20" x2="80" y2="175"/>
+          <line x1="130" y1="20" x2="130" y2="175"/>
+          <line x1="180" y1="20" x2="180" y2="175"/>
+          <line x1="230" y1="20" x2="230" y2="175"/>
+          <line x1="280" y1="20" x2="280" y2="175"/>
+          <line x1="28" y1="25" x2="310" y2="25"/>
+          <line x1="28" y1="75" x2="310" y2="75"/>
+          <line x1="28" y1="125" x2="310" y2="125"/>
+          <line x1="28" y1="175" x2="310" y2="175"/>
+        </g>
+        <!-- axes -->
+        <line x1="28" y1="195" x2="315" y2="195" stroke="#1C1B2E" stroke-width="1.6"/>
+        <polygon points="313,191 313,199 320,195" fill="#1C1B2E"/>
+        <text x="323" y="199" font-size="11" fill="#1C1B2E" font-style="italic" font-family="'STIX Two Text',Georgia,serif">x</text>
+        <line x1="28" y1="197" x2="28" y2="12" stroke="#1C1B2E" stroke-width="1.6"/>
+        <polygon points="24,16 32,16 28,9" fill="#1C1B2E"/>
+        <text x="28" y="7" text-anchor="middle" font-size="11" fill="#1C1B2E" font-style="italic" font-family="'STIX Two Text',Georgia,serif">y</text>
+        <!-- dashed projections -->
+        <g stroke="#B0ACCC" stroke-width="0.9" stroke-dasharray="4,3">
+          <line x1="55" y1="195" x2="55" y2="148"/>
+          <line x1="28" y1="148" x2="55" y2="148"/>
+          <line x1="255" y1="195" x2="255" y2="50"/>
+          <line x1="28" y1="50" x2="255" y2="50"/>
+        </g>
+        <!-- axis tick labels -->
+        <text x="55"  y="207" text-anchor="middle" font-size="9" fill="#1D4ED8" font-style="italic" font-family="'STIX Two Text',Georgia,serif">x₁</text>
+        <text x="255" y="207" text-anchor="middle" font-size="9" fill="#DC2626" font-style="italic" font-family="'STIX Two Text',Georgia,serif">x₂</text>
+        <text x="20"  y="152" text-anchor="end"    font-size="9" fill="#1D4ED8" font-style="italic" font-family="'STIX Two Text',Georgia,serif">y₁</text>
+        <text x="20"  y="54"  text-anchor="end"    font-size="9" fill="#DC2626" font-style="italic" font-family="'STIX Two Text',Georgia,serif">y₂</text>
+        <!-- shaded triangle -->
+        <polygon points="55,148 255,148 255,50" fill="#7C3AED" fill-opacity="0.07"/>
+        <!-- horizontal cateto (blue) -->
+        <line x1="55" y1="148" x2="255" y2="148" stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- vertical cateto (red) -->
+        <line x1="255" y1="148" x2="255" y2="50" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- hypotenuse d (violet) -->
+        <line x1="55" y1="148" x2="255" y2="50" stroke="#7C3AED" stroke-width="2.6" stroke-linecap="round"/>
+        <!-- right-angle mark -->
+        <polyline points="247,148 247,140 255,140" fill="none" stroke="#9896B0" stroke-width="1.3"/>
+        <!-- dots -->
+        <circle cx="55"  cy="148" r="5" fill="#7C3AED" stroke="white" stroke-width="1.8"/>
+        <circle cx="255" cy="50"  r="5" fill="#7C3AED" stroke="white" stroke-width="1.8"/>
+        <!-- point labels -->
+        <text x="55"  y="138" text-anchor="middle" font-size="11" font-style="italic"
+              fill="#4C1D95" font-family="'STIX Two Text',Georgia,serif">(x₁, y₁)</text>
+        <text x="255" y="41"  text-anchor="middle" font-size="11" font-style="italic"
+              fill="#4C1D95" font-family="'STIX Two Text',Georgia,serif">(x₂, y₂)</text>
+        <!-- cateto labels -->
+        <text x="155" y="164" text-anchor="middle" font-size="11" font-style="italic"
+              fill="#1D4ED8" font-family="'STIX Two Text',Georgia,serif">x₂ &#x2212; x₁</text>
+        <text x="270" y="102" text-anchor="start"  font-size="11" font-style="italic"
+              fill="#DC2626" font-family="'STIX Two Text',Georgia,serif">y₂ &#x2212; y₁</text>
+        <!-- d label -->
+        <text x="138" y="82"  text-anchor="middle" font-size="14" font-style="italic"
+              font-weight="700" fill="#6D28D9" font-family="'STIX Two Text',Georgia,serif">d</text>
+      </svg>
+
+      <p>Esta fórmula se deduce del Teorema de Pitágoras.</p>
+      <button class="rbtn" id="rb-pit" onclick="toggleHint('h-pit','rb-pit')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+        ¿Por qué? Derivación desde el Teorema de Pitágoras
+      </button>
+      <div class="hint" id="h-pit">
+        <!-- SVG INTERACTIVO: DISTANCIA -->
+        <div class="svgbox" style="margin-top:.75rem;">
+          <div class="sliders dist-sliders">
+            <div class="pt-group">
+              <div class="pt-header">P₁ = (<span id="vl-x1">1</span>,&thinsp;<span id="vl-y1">1</span>)</div>
+              <div class="pt-sub">
+                <div class="sl-item">
+                  <label>x₁</label>
+                  <input type="range" id="sl-x1" min="0.5" max="8.5" step="0.5" value="1" oninput="updateDist()">
+                </div>
+                <div class="sl-item">
+                  <label>y₁</label>
+                  <input type="range" id="sl-y1" min="0.5" max="5.5" step="0.5" value="1" oninput="updateDist()">
+                </div>
+              </div>
+            </div>
+            <div class="pt-group">
+              <div class="pt-header">P₂ = (<span id="vl-x2">5.5</span>,&thinsp;<span id="vl-y2">4</span>)</div>
+              <div class="pt-sub">
+                <div class="sl-item">
+                  <label>x₂</label>
+                  <input type="range" id="sl-x2" min="0.5" max="8.5" step="0.5" value="5.5" oninput="updateDist()">
+                </div>
+                <div class="sl-item">
+                  <label>y₂</label>
+                  <input type="range" id="sl-y2" min="0.5" max="5.5" step="0.5" value="4" oninput="updateDist()">
+                </div>
+              </div>
+            </div>
+          </div>
+          <svg id="dsvg" class="isvg" viewBox="0 0 420 300"></svg>
+          <div class="svgft" id="dsvg-ft"></div>
+        </div>
+        <ol class="just-list">
+          <li>
+            <span class="just-claim" style="color:var(--blue);">Longitud del cateto horizontal \(= |x_2-x_1|\)</span>
+            <span class="just-reason">\(\overline{P_1 V}\), donde \(V=(x_2,y_1)\) es el vértice del ángulo recto, a lo largo de la recta \(y=y_1\).</span>
+          </li>
+          <li>
+            <span class="just-claim" style="color:var(--red);">Longitud del cateto vertical \(= |y_2-y_1|\)</span>
+            <span class="just-reason">\(\overline{V P_2}\), donde \(V=(x_2,y_1)\), a lo largo de la recta \(x=x_2\).</span>
+          </li>
+          <li>
+            <span class="just-claim" style="color:var(--violet);">La longitud de la hipotenusa \(\overline{P_1P_2}\) es \(d\), la distancia buscada</span>
+            <span class="just-reason">\(\overline{P_1 P_2}\) es la hipotenusa del triángulo rectángulo con ángulo recto en \(V=(x_2,y_1)\); su longitud es precisamente la distancia entre \(P_1\) y \(P_2\).</span>
+          </li>
+          <li>
+            <span class="just-claim">Teorema de Pitágoras: \(d^2=(x_2-x_1)^2+(y_2-y_1)^2\)</span>
+            <span class="just-reason">Elevar al cuadrado reemplaza al valor absoluto, pues \(|a|^2=a^2\) para todo \(a\). Ambos sumandos son siempre \(\ge 0\).</span>
+          </li>
+          <li>
+            <span class="just-claim">Como \(d&gt;0\): \(\;d=\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}\)</span>
+            <span class="just-reason">Tomamos la raíz cuadrada positiva, que existe y es única porque la suma de cuadrados es no negativa.</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 2: DEFINICIÓN                              -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="card acc" id="s2">
+  <button class="acc-hd" onclick="this.closest('.acc').classList.toggle('open')">
+    <span class="acc-hd-l">
+      <span class="acc-icon violet-bg">📐</span>
+      <span class="acc-title">Forma estándar de la circunferencia: \((x-h)^2+(y-k)^2=r^2\)</span>
+    </span>
+    <span class="acc-arr">▾</span>
+  </button>
+  <div class="acc-bd">
+    <p>Un punto \((x,y)\) está sobre una circunferencia de radio \(r\) y centro \((h,k)\)
+    si y solo si su distancia al centro es exactamente \(r\):</p>
+    <div class="dm">\[ \sqrt{(x-h)^2+(y-k)^2} = r. \]</div>
+    <p>Elevando al cuadrado ambos lados (válido porque \(r>0\)) se obtiene la forma estándar.</p>
+
+    <div class="mbox mdef">
+      <p class="mbox-lbl">Definición: Forma estándar de la ecuación de una circunferencia</p>
+      <p>El punto \((x,y)\) está sobre la circunferencia de <strong>radio</strong> \(r>0\) y
+      <strong>centro</strong> \((h,k)\) si y solo si</p>
+      <div class="kf">\[ (x-h)^2+(y-k)^2=r^2. \]</div>
+      <p>En particular, si el centro es el origen \((0,0)\), la ecuación se reduce a \(x^2+y^2=r^2\).</p>
+
+      <svg viewBox="0 0 320 205" xmlns="http://www.w3.org/2000/svg"
+           style="display:block;width:100%;max-width:360px;margin:.5rem auto 1rem;"
+           aria-hidden="true">
+        <!-- grid -->
+        <g stroke="#EDE9FE" stroke-width="0.6">
+          <line x1="95"  y1="10" x2="95"  y2="175"/>
+          <line x1="130" y1="10" x2="130" y2="175"/>
+          <line x1="165" y1="10" x2="165" y2="175"/>
+          <line x1="200" y1="10" x2="200" y2="175"/>
+          <line x1="235" y1="10" x2="235" y2="175"/>
+          <line x1="58"  y1="140" x2="295" y2="140"/>
+          <line x1="58"  y1="105" x2="295" y2="105"/>
+          <line x1="58"  y1="70"  x2="295" y2="70"/>
+          <line x1="58"  y1="35"  x2="295" y2="35"/>
+        </g>
+        <!-- axes -->
+        <line x1="58" y1="175" x2="298" y2="175" stroke="#1C1B2E" stroke-width="1.6"/>
+        <polygon points="296,171 296,179 304,175" fill="#1C1B2E"/>
+        <text x="307" y="179" font-size="11" fill="#1C1B2E" font-style="italic" font-family="'STIX Two Text',Georgia,serif">x</text>
+        <line x1="60" y1="177" x2="60" y2="8" stroke="#1C1B2E" stroke-width="1.6"/>
+        <polygon points="56,12 64,12 60,5" fill="#1C1B2E"/>
+        <text x="60" y="4" text-anchor="middle" font-size="11" fill="#1C1B2E" font-style="italic" font-family="'STIX Two Text',Georgia,serif">y</text>
+        <!-- dashed projections from center (h,k) = SVG(148,105) to axes -->
+        <g stroke="#B0ACCC" stroke-width="0.9" stroke-dasharray="4,3">
+          <line x1="148" y1="175" x2="148" y2="105"/>
+          <line x1="60"  y1="105" x2="148" y2="105"/>
+        </g>
+        <!-- tick h on x-axis -->
+        <line x1="148" y1="172" x2="148" y2="178" stroke="#7C3AED" stroke-width="1.5"/>
+        <text x="148" y="191" text-anchor="middle" font-size="12" fill="#7C3AED" font-style="italic" font-family="'STIX Two Text',Georgia,serif">h</text>
+        <!-- tick k on y-axis -->
+        <line x1="57" y1="105" x2="63" y2="105" stroke="#7C3AED" stroke-width="1.5"/>
+        <text x="50" y="109" text-anchor="end" font-size="12" fill="#7C3AED" font-style="italic" font-family="'STIX Two Text',Georgia,serif">k</text>
+        <!-- circle: center (148,105), r=63 -->
+        <circle cx="148" cy="105" r="63" fill="none" stroke="#6D28D9" stroke-width="2.2"/>
+        <!-- dashed radius to (x,y) at 45 deg: SVG(192,61) -->
+        <line x1="148" y1="105" x2="192" y2="61" stroke="#DC2626" stroke-width="1.6" stroke-dasharray="5,3.5"/>
+        <!-- r label -->
+        <text x="184" y="77" font-size="12" fill="#DC2626" font-weight="700" font-style="italic" font-family="'STIX Two Text',Georgia,serif">r</text>
+        <!-- center point (h,k) -->
+        <circle cx="148" cy="105" r="4.5" fill="#DC2626" stroke="white" stroke-width="1.8"/>
+        <text x="148" y="124" text-anchor="middle" font-size="10" fill="#DC2626" font-weight="700" font-family="'STIX Two Text',Georgia,serif">(h, k)</text>
+        <!-- point (x,y) on circle -->
+        <circle cx="192" cy="61" r="4.5" fill="#1D4ED8" stroke="white" stroke-width="1.8"/>
+        <text x="205" y="56" font-size="10" fill="#1D4ED8" font-weight="700" font-family="'STIX Two Text',Georgia,serif">(x, y)</text>
+      </svg>
+
+      <button class="rbtn" id="rb-bic" onclick="toggleHint('h-bic','rb-bic')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+        ¿Por qué "si y solo si"?
+      </button>
+      <div class="hint" id="h-bic">
+        <p>La circunferencia es, <em>por definición geométrica</em>, el <strong>lugar geométrico</strong>
+        de todos los puntos del plano cuya distancia a un punto fijo (el centro) es
+        igual a una constante positiva \(r\) (el radio). Observa en el explorador
+        cómo solo los puntos <em>sobre</em> la curva satisfacen la igualdad:</p>
+        <!-- SVG INTERACTIVO: CIRCUNFERENCIA -->
+        <div class="svgbox" style="margin-top:.75rem;">
+          <div class="svghd">
+            <span class="dot"></span>
+            Explorador interactivo: ajusta los parámetros con las barras y arrastra el punto
+          </div>
+          <div class="sliders">
+            <div class="sl-item">
+              <label>Centro \(h\)</label>
+              <input type="range" id="sl-h" min="-3.5" max="3.5" step="0.5" value="1" oninput="updateCircle()">
+              <div class="sl-val">h = <span id="vl-h">1</span></div>
+            </div>
+            <div class="sl-item">
+              <label>Centro \(k\)</label>
+              <input type="range" id="sl-k" min="-3.5" max="3.5" step="0.5" value="1" oninput="updateCircle()">
+              <div class="sl-val">k = <span id="vl-k">1</span></div>
+            </div>
+            <div class="sl-item">
+              <label>Radio \(r\)</label>
+              <input type="range" id="sl-r" min="0.5" max="3.5" step="0.25" value="2" oninput="updateCircle()">
+              <div class="sl-val">r = <span id="vl-r">2</span></div>
+            </div>
+          </div>
+          <svg id="csvg" class="isvg" viewBox="0 0 420 300" style="touch-action:none;"></svg>
+          <div class="eq-disp">
+            <div class="eq-text" id="ceq">(x − 1)² + (y − 1)² = 4</div>
+            <div class="eq-cap">Ecuación estándar con los parámetros actuales. Arrastra el punto rojo para verificar que solo los puntos sobre la curva satisfacen la igualdad</div>
+          </div>
+        </div>
+        <ol class="just-list" style="margin-top:.75rem;">
+          <li>
+            <span class="just-claim">(\(\Rightarrow\)) Si el punto está en la circunferencia, cumple la ecuación</span>
+            <span class="just-reason">Por definición, todo punto de la circunferencia está a distancia \(r\) del centro:
+            \(\sqrt{(x-h)^2+(y-k)^2}=r\). Elevando al cuadrado (válido porque ambos lados son \(\ge 0\)) se obtiene \((x-h)^2+(y-k)^2=r^2\).</span>
+          </li>
+          <li>
+            <span class="just-claim">(\(\Leftarrow\)) Si el punto cumple la ecuación, está en la circunferencia</span>
+            <span class="just-reason">Si \((x-h)^2+(y-k)^2=r^2\) con \(r>0\), tomando raíz cuadrada positiva se obtiene
+            \(\sqrt{(x-h)^2+(y-k)^2}=r\): la distancia al centro es exactamente \(r\), luego el punto pertenece a la circunferencia.</span>
+          </li>
+          <li>
+            <span class="just-claim">¿Qué pasa si la distancia no es exactamente \(r\)?</span>
+            <span class="just-reason">Si la distancia fuera \(&lt;r\), el punto estaría en el <em>interior</em> del disco;
+            si fuera \(&gt;r\), en el <em>exterior</em>. Solo la igualdad exacta describe la circunferencia.</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <p>Observa que el lado derecho de la ecuación es \(r^2\), no \(r\).
+    Para extraer el radio, debes tomar la raíz cuadrada positiva del número que aparece a la derecha.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 3: CUIDADO CON LOS SIGNOS                 -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="card acc" id="s3">
+  <button class="acc-hd" onclick="this.closest('.acc').classList.toggle('open')">
+    <span class="acc-hd-l">
+      <span class="acc-icon red-bg">⚠️</span>
+      <span class="acc-title">¡Cuidado con los signos!: \((x+a)^2 \Rightarrow h=-a\)</span>
+    </span>
+    <span class="acc-arr">▾</span>
+  </button>
+  <div class="acc-bd">
+    <div class="mbox mwarn">
+      <p class="mbox-lbl">Advertencia</p>
+      <p>Al leer el centro \((h,k)\) de la ecuación estándar, recuerda que los términos
+      aparecen como <strong>restas</strong>: \((x-h)^2\) y \((y-k)^2\).
+      Si el paréntesis contiene una <em>suma</em>, la coordenada del centro es <strong>negativa</strong>.</p>
+      <p>Por ejemplo, la ecuación \((x+1)^2+(y-2)^2=20\) debe leerse como:</p>
+      <div class="dm">\[(x+1)^2 = \bigl(x-(-1)\bigr)^2 \implies h = -1.\]</div>
+      <p>El término en \(y\) ya aparece como resta directa, por lo que \(k=2\).</p>
+    </div>
+
+    <!-- DEMO INTERACTIVO DE SIGNOS -->
+    <div class="sdemo">
+      <p class="sdemo-tit">Extractor de parámetros: elige cómo aparece cada término en la ecuación</p>
+      <div class="sdemo-grid">
+        <div>
+          <label>Término en \(x\):</label>
+          <select id="sd-x" onchange="updateSignDemo()">
+            <option value="-3">(x + 3)²</option>
+            <option value="-2">(x + 2)²</option>
+            <option value="-1" selected>(x + 1)²</option>
+            <option value="0">x²</option>
+            <option value="1">(x − 1)²</option>
+            <option value="2">(x − 2)²</option>
+            <option value="3">(x − 3)²</option>
+          </select>
+        </div>
+        <div>
+          <label>Término en \(y\):</label>
+          <select id="sd-y" onchange="updateSignDemo()">
+            <option value="-3">(y + 3)²</option>
+            <option value="-2">(y + 2)²</option>
+            <option value="-1">(y + 1)²</option>
+            <option value="0">y²</option>
+            <option value="1">(y − 1)²</option>
+            <option value="2" selected>(y − 2)²</option>
+            <option value="3">(y − 3)²</option>
+          </select>
+        </div>
+        <div>
+          <label>Lado derecho \((r^2)\):</label>
+          <select id="sd-r2" onchange="updateSignDemo()">
+            <option value="0.5">= 0.5</option>
+            <option value="1">= 1</option>
+            <option value="3">= 3</option>
+            <option value="4">= 4</option>
+            <option value="5">= 5</option>
+            <option value="9">= 9</option>
+            <option value="16" selected>= 16</option>
+          </select>
+        </div>
+      </div>
+      <div class="sdemo-out" id="sd-out"></div>
+      <div class="svgbox" style="margin-top:.875rem;">
+        <div class="svghd svghd-blue">
+          <span class="dot dot-b"></span>
+          Circunferencia resultante
+        </div>
+        <svg id="sdemo-svg" class="isvg" viewBox="0 0 340 260" style="touch-action:none;"></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 4: EJEMPLO                                 -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="card acc" id="s4">
+  <button class="acc-hd" onclick="this.closest('.acc').classList.toggle('open')">
+    <span class="acc-hd-l">
+      <span class="acc-icon blue-bg">✏️</span>
+      <span class="acc-title">Ejemplo 1: Hallar la ecuación de la circunferencia que pasa por el punto \((3,4)\) si tiene su centro en el punto \((-1,2)\)</span>
+    </span>
+    <span class="acc-arr">▾</span>
+  </button>
+  <div class="acc-bd">
+    <div class="steps">
+      <!-- PASO 1 -->
+      <div class="step" id="st1">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open')">
+          <span class="step-num">1</span>
+          <span class="step-title">Identificar los datos</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <p>Se nos proporcionan:</p>
+          <ul>
+            <li><strong>Centro:</strong> \((h,k)=(-1,2)\).</li>
+            <li><strong>Punto sobre la circunferencia:</strong> \((3,4)\).</li>
+          </ul>
+          <p>Como el punto está <em>sobre</em> la circunferencia, su distancia al centro es
+          exactamente el radio \(r\). Esa distancia es lo que calculamos en el siguiente paso.</p>
+        </div>
+      </div>
+
+      <!-- PASO 2 -->
+      <div class="step" id="st2">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open')">
+          <span class="step-num">2</span>
+          <span class="step-title">Calcular el radio con la fórmula de la distancia</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <p>Aplicamos la fórmula entre el centro \((-1,2)\) y el punto \((3,4)\):</p>
+          <div class="dm">
+            \[ r = \sqrt{(3-(-1))^2+(4-2)^2}
+               = \sqrt{4^2+2^2}
+               = \sqrt{16+4}
+               = \sqrt{20}. \]
+          </div>
+          <p>No es necesario reescribir \(\sqrt{20}=2\sqrt{5}\) en este paso: en la
+          ecuación estándar utilizaremos \(r^2=20\) directamente. Si se quisiera, el desarrollo es:</p>
+          <div class="dm">\[ \sqrt{20}=\sqrt{4\cdot5}=\sqrt{2^2\cdot5}=\sqrt{2^2}\cdot\sqrt{5}=2\sqrt{5}. \]</div>
+        </div>
+      </div>
+
+      <!-- PASO 3 -->
+      <div class="step" id="st3">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open')">
+          <span class="step-num">3</span>
+          <span class="step-title">Sustituir en la forma estándar</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <p>Con \((h,k)=(-1,2)\) y \(r^2=20\):</p>
+          <div class="dm">\[(x-(-1))^2+(y-2)^2=20.\]</div>
+          <p>Simplificando \(x-(-1)=x+1\):</p>
+          <div class="beq">\[(x+1)^2+(y-2)^2=20.\]</div>
+          <p>Como verificación: el punto \((3,4)\) satisface la ecuación porque
+          \((3+1)^2+(4-2)^2=16+4=20\). ✓</p>
+        </div>
+      </div>
+
+      <!-- PASO 4 -->
+      <div class="step" id="st4">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open'); setTimeout(buildExSvg,80);">
+          <span class="step-num">4</span>
+          <span class="step-title">Visualización gráfica</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <div class="svgbox">
+            <div class="svghd svghd-blue">
+              <span class="dot dot-b"></span>
+              Gráfica de \((x+1)^2+(y-2)^2=20\), centro \((-1,2)\), radio \(\sqrt{20}\)
+            </div>
+            <svg id="esvg" class="isvg" viewBox="0 0 420 330"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 5: EJEMPLO 2                               -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="card acc" id="s5">
+  <button class="acc-hd" onclick="this.closest('.acc').classList.toggle('open')">
+    <span class="acc-hd-l">
+      <span class="acc-icon blue-bg">✏️</span>
+      <span class="acc-title">Ejemplo 2: Determinar los valores de \(r\) para los que el punto \((-5,4)\) pertenece, está dentro o está fuera de la circunferencia con centro \((-1,2)\)</span>
+    </span>
+    <span class="acc-arr">▾</span>
+  </button>
+  <div class="acc-bd">
+
+    <div class="steps">
+      <!-- PASO 1 -->
+      <div class="step" id="s5-st1">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open')">
+          <span class="step-num">1</span>
+          <span class="step-title">Identificar los datos</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <p>Se nos proporcionan:</p>
+          <ul>
+            <li><strong>Centro:</strong> \((h,k)=(-1,2)\).</li>
+            <li><strong>Punto:</strong> \(P=(-5,4)\).</li>
+            <li><strong>Pregunta:</strong> ¿Para qué valores de \(r\) el punto \(P\) pertenece a la circunferencia, está en su interior o en su exterior?</li>
+          </ul>
+          <p>La clave está en comparar \(r\) con la distancia entre \(P\) y el centro.
+          Esa comparación es exactamente la bicondicional de la sección 2.</p>
+        </div>
+      </div>
+
+      <!-- PASO 2 -->
+      <div class="step" id="s5-st2">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open')">
+          <span class="step-num">2</span>
+          <span class="step-title">Calcular la distancia del punto al centro</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <p>Aplicamos la fórmula de la distancia entre el centro \((-1,2)\) y el punto \((-5,4)\):</p>
+          <div class="dm">
+            \[ d = \sqrt{(-5-(-1))^2+(4-2)^2}
+               = \sqrt{(-4)^2+2^2}
+               = \sqrt{16+4}
+               = \sqrt{20}. \]
+          </div>
+          <p>Este valor \(d=\sqrt{20}\) es el <strong>radio pivote</strong>: la distancia exacta del punto al centro.
+          Todo depende de cómo se compare \(r\) con él.</p>
+        </div>
+      </div>
+
+      <!-- PASO 3 -->
+      <div class="step" id="s5-st3">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open')">
+          <span class="step-num">3</span>
+          <span class="step-title">Los tres casos</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <p><strong>(a) El punto pertenece a la circunferencia</strong> cuando su distancia al centro es exactamente \(r\):</p>
+          <div class="dm">\[ r = \sqrt{20} \implies r^2 = 20. \]</div>
+          <p>La ecuación resultante es \((x+1)^2+(y-2)^2=20\), la misma del Ejemplo 1, lo que confirma que \((-5,4)\) también está sobre esa circunferencia:
+          \((-5+1)^2+(4-2)^2=16+4=20\). ✓</p>
+
+          <p><strong>(b) El punto está en el interior</strong> cuando su distancia al centro es menor que \(r\):</p>
+          <div class="dm">\[ r > \sqrt{20} \implies r^2 > 20. \]</div>
+
+          <p><strong>(c) El punto está en el exterior</strong> cuando su distancia al centro es mayor que \(r\):</p>
+          <div class="dm">\[ r < \sqrt{20} \implies r^2 < 20. \]</div>
+        </div>
+      </div>
+
+      <!-- PASO 4 -->
+      <div class="step" id="s5-st4">
+        <button class="step-hd" onclick="this.closest('.step').classList.toggle('open'); setTimeout(buildEx2Svg,80);">
+          <span class="step-num">4</span>
+          <span class="step-title">Visualización gráfica</span>
+          <span class="step-arr">▾</span>
+        </button>
+        <div class="step-bd">
+          <div class="svgbox">
+            <div class="svghd svghd-blue">
+              <span class="dot dot-b"></span>
+              Los tres casos según el valor de \(r\)
+            </div>
+            <svg id="esvg2" class="isvg" viewBox="0 0 420 330"></svg>
+          </div>
+          <ul class="just-list" style="margin-top:.6rem;">
+            <li style="border-left-color:#6D28D9;background:var(--violet-50);">
+              <span class="just-claim" style="color:#6D28D9;">
+                <svg width="28" height="8" style="vertical-align:middle;margin-right:.3rem;"><line x1="0" y1="4" x2="28" y2="4" stroke="#6D28D9" stroke-width="2.2"/></svg>
+                \(r^2 = 20\): el punto \(P(-5,4)\) pertenece a la circunferencia.
+              </span>
+              <span class="just-reason">\((-5+1)^2+(4-2)^2 = 16+4 = 20\). ✓</span>
+            </li>
+            <li style="border-left-color:#1D4ED8;background:var(--blue-50);">
+              <span class="just-claim" style="color:#1D4ED8;">
+                <svg width="28" height="8" style="vertical-align:middle;margin-right:.3rem;"><line x1="0" y1="4" x2="28" y2="4" stroke="#1D4ED8" stroke-width="2.2" stroke-dasharray="6,3"/></svg>
+                \(r^2 > 20\): el punto \(P\) está en el <em>interior</em> de la circunferencia.
+              </span>
+              <span class="just-reason">La distancia al centro es menor que \(r\), luego \(P\) queda dentro del disco.</span>
+            </li>
+            <li style="border-left-color:#0D9488;background:var(--teal-50);">
+              <span class="just-claim" style="color:#0D9488;">
+                <svg width="28" height="8" style="vertical-align:middle;margin-right:.3rem;"><line x1="0" y1="4" x2="28" y2="4" stroke="#0D9488" stroke-width="2.2" stroke-dasharray="6,3"/></svg>
+                \(r^2 < 20\): el punto \(P\) está en el <em>exterior</em> de la circunferencia.
+              </span>
+              <span class="just-reason">La distancia al centro es mayor que \(r\), luego \(P\) queda fuera del disco.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="ctrl-btns" style="margin-top:.75rem;margin-bottom:0;">
+  <button class="ctrl-btn" onclick="collapseAll()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+    Contraer todo
+  </button>
+</div>
+
+</div><!-- .page -->
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                         -->
+<!-- ══════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── EXPAND / COLLAPSE ALL ────────────────────────── */
+function expandAll() {
+  document.querySelectorAll('.acc,.toc,.step').forEach(el => el.classList.add('open'));
+  buildExSvg();
+  buildEx2Svg();
+  if (window.MathJax) MathJax.typesetPromise().catch(e => console.log(e));
+}
+function collapseAll() {
+  document.querySelectorAll('.acc,.toc,.step').forEach(el => el.classList.remove('open'));
+}
+
+/* ── UTILITIES ─────────────────────────────────────── */
+function svgPt(svg, evt) {
+  const pt = svg.createSVGPoint();
+  pt.x = evt.touches ? evt.touches[0].clientX : evt.clientX;
+  pt.y = evt.touches ? evt.touches[0].clientY : evt.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+function cl(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function fmt(n) { return (n % 1 === 0) ? n.toString() : n.toFixed(2).replace(/\.?0+$/, ''); }
+
+/* ── HINT TOGGLE ─────────────────────────────────── */
+function toggleHint(id, btnId) {
+  const el = document.getElementById(id);
+  const btn = document.getElementById(btnId);
+  el.classList.toggle('open');
+  btn.classList.toggle('open');
+  if (el.classList.contains('open') && window.MathJax) {
+    MathJax.typesetPromise([el]).catch(e => console.log(e));
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   DISTANCE SVG
+   viewBox: 420 × 300
+   Origin at SVG (48, 262), scale = 40 px/unit
+   Logical range: x ∈ [0,9], y ∈ [0,6]
+══════════════════════════════════════════════════════ */
+const dSvg = document.getElementById('dsvg');
+const D = { ox: 48, oy: 262, sc: 40 };
+let dP1 = { lx: 1.2, ly: 1.0 };
+let dP2 = { lx: 5.5, ly: 4.0 };
+
+function dToS(lx, ly) { return { x: D.ox + lx * D.sc, y: D.oy - ly * D.sc }; }
+
+function buildDist() {
+  const s1 = dToS(dP1.lx, dP1.ly);
+  const s2 = dToS(dP2.lx, dP2.ly);
+  const sRA = { x: s2.x, y: s1.y };
+  const dx = dP2.lx - dP1.lx, dy = dP2.ly - dP1.ly;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  let h = '';
+
+  // Subtle grid
+  h += '<g stroke="#EDE9FE" stroke-width="0.6" opacity="0.9">';
+  for (let i = 0; i <= 9; i++) {
+    const gx = D.ox + i * D.sc;
+    h += `<line x1="${gx}" y1="18" x2="${gx}" y2="${D.oy}"/>`;
+  }
+  for (let j = 0; j <= 6; j++) {
+    const gy = D.oy - j * D.sc;
+    h += `<line x1="${D.ox}" y1="${gy}" x2="${D.ox + 9 * D.sc}" y2="${gy}"/>`;
+  }
+  h += '</g>';
+
+  // Axes
+  const AX = D.ox + 9 * D.sc + 12;
+  h += `<line x1="${D.ox}" y1="${D.oy}" x2="${AX}" y2="${D.oy}" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  h += `<polygon points="${AX-2},${D.oy-4} ${AX-2},${D.oy+4} ${AX+6},${D.oy}" fill="#1C1B2E"/>`;
+  h += `<text x="${AX+9}" y="${D.oy+4}" font-size="12" fill="#1C1B2E" font-style="italic">x</text>`;
+  h += `<line x1="${D.ox}" y1="${D.oy}" x2="${D.ox}" y2="10" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  h += `<polygon points="${D.ox-4},14 ${D.ox+4},14 ${D.ox},8" fill="#1C1B2E"/>`;
+  h += `<text x="${D.ox}" y="6" font-size="12" fill="#1C1B2E" font-style="italic" text-anchor="middle">y</text>`;
+
+  // Tick labels
+  for (let i = 1; i <= 9; i++) {
+    const gx = D.ox + i * D.sc;
+    h += `<text x="${gx}" y="${D.oy + 14}" font-size="8" fill="#9896B0" text-anchor="middle">${i}</text>`;
+  }
+  for (let j = 1; j <= 6; j++) {
+    const gy = D.oy - j * D.sc;
+    h += `<text x="${D.ox - 8}" y="${gy + 3}" font-size="8" fill="#9896B0" text-anchor="end">${j}</text>`;
+  }
+
+  // Shaded triangle
+  h += `<polygon points="${s1.x},${s1.y} ${s2.x},${s1.y} ${s2.x},${s2.y}"
+         fill="#6D28D9" opacity="0.05"/>`;
+
+  // Dashed projections to axes
+  h += `<g stroke="#B0ACCC" stroke-width="0.9" stroke-dasharray="4,3">
+    <line x1="${s1.x}" y1="${D.oy}" x2="${s1.x}" y2="${s1.y}"/>
+    <line x1="${D.ox}" y1="${s1.y}" x2="${s1.x}" y2="${s1.y}"/>
+    <line x1="${s2.x}" y1="${D.oy}" x2="${s2.x}" y2="${s2.y}"/>
+    <line x1="${D.ox}" y1="${s2.y}" x2="${s2.x}" y2="${s2.y}"/>
+  </g>`;
+
+  // Right-angle mark
+  if (Math.abs(dx) > 0.45 && Math.abs(dy) > 0.45) {
+    const sx = dx > 0 ? -8 : 8, sy = dy > 0 ? 8 : -8;
+    h += `<polyline points="${sRA.x+sx},${sRA.y} ${sRA.x+sx},${sRA.y+sy} ${sRA.x},${sRA.y+sy}"
+           fill="none" stroke="#9896B0" stroke-width="1.2"/>`;
+  }
+
+  // Catetos and hypotenuse
+  h += `<line x1="${s1.x}" y1="${s1.y}" x2="${s2.x}" y2="${s1.y}"
+         stroke="#1D4ED8" stroke-width="2.2" stroke-linecap="round"/>`;
+  h += `<line x1="${s2.x}" y1="${s1.y}" x2="${s2.x}" y2="${s2.y}"
+         stroke="#DC2626" stroke-width="2.2" stroke-linecap="round"/>`;
+  h += `<line x1="${s1.x}" y1="${s1.y}" x2="${s2.x}" y2="${s2.y}"
+         stroke="#7C3AED" stroke-width="2.8" stroke-linecap="round"/>`;
+
+  // Axis marks for x1, x2, y1, y2
+  h += `<line x1="${s1.x}" y1="${D.oy-3}" x2="${s1.x}" y2="${D.oy+3}" stroke="#1D4ED8" stroke-width="1.5"/>`;
+  h += `<text x="${s1.x}" y="${D.oy+16}" font-size="11" fill="#1D4ED8" text-anchor="middle" font-style="italic">x₁</text>`;
+  h += `<line x1="${s2.x}" y1="${D.oy-3}" x2="${s2.x}" y2="${D.oy+3}" stroke="#DC2626" stroke-width="1.5"/>`;
+  h += `<text x="${s2.x}" y="${D.oy+16}" font-size="11" fill="#DC2626" text-anchor="middle" font-style="italic">x₂</text>`;
+  h += `<line x1="${D.ox-3}" y1="${s1.y}" x2="${D.ox+3}" y2="${s1.y}" stroke="#1D4ED8" stroke-width="1.5"/>`;
+  h += `<text x="${D.ox-9}" y="${s1.y+4}" font-size="11" fill="#1D4ED8" text-anchor="end" font-style="italic">y₁</text>`;
+  h += `<line x1="${D.ox-3}" y1="${s2.y}" x2="${D.ox+3}" y2="${s2.y}" stroke="#DC2626" stroke-width="1.5"/>`;
+  h += `<text x="${D.ox-9}" y="${s2.y+4}" font-size="11" fill="#DC2626" text-anchor="end" font-style="italic">y₂</text>`;
+
+  // Cateto labels con valor numérico
+  const mhx = (s1.x + s2.x) / 2;
+  const mvy = (s1.y + s2.y) / 2;
+  const hlY = s1.y + (dy > 0 ? 16 : -6);
+  if (Math.abs(dx) > 0.2) {
+    h += `<text x="${mhx}" y="${hlY}" font-size="10.5" fill="#1D4ED8"
+           text-anchor="middle" font-weight="600">` +
+         `<tspan font-style="italic">x₂−x₁</tspan>` +
+         `<tspan font-style="normal" font-weight="700"> = ${fmt(dx)}</tspan>` +
+         `</text>`;
+  }
+
+  const vlX = s2.x + (dx > 0 ? 10 : -10);
+  const vlA = dx > 0 ? 'start' : 'end';
+  const vRectX = dx > 0 ? s2.x + 4 : s2.x - 88;
+  if (Math.abs(dy) > 0.2) {
+    h += `<text x="${vlX}" y="${mvy+3}" font-size="10.5" fill="#DC2626"
+           text-anchor="${vlA}" font-weight="600">` +
+         `<tspan font-style="italic">y₂−y₁</tspan>` +
+         `<tspan font-style="normal" font-weight="700"> = ${fmt(dy)}</tspan>` +
+         `</text>`;
+  }
+
+  // d label on hypotenuse (perpendicular offset)
+  if (dist > 0.5) {
+    const mhypx = (s1.x + s2.x) / 2, mhypy = (s1.y + s2.y) / 2;
+    const svgDist = Math.sqrt((s2.x-s1.x)**2 + (s2.y-s1.y)**2);
+    const px = -(s2.y - s1.y) / svgDist * 15;
+    const py = (s2.x - s1.x) / svgDist * 15;
+    h += `<text x="${mhypx+px}" y="${mhypy+py+2}" font-size="11" fill="#6D28D9"
+           text-anchor="middle" font-weight="700">` +
+         `<tspan font-style="italic">d</tspan>` +
+         `<tspan font-style="normal"> = ${fmt(dist)}</tspan>` +
+         `</text>`;
+  }
+
+  // Pythagorean reference (top-right corner)
+  h += `<text x="272" y="18" font-size="8.5" fill="#6B688A" font-weight="700">Teorema de Pitágoras:</text>`;
+  h += `<text x="272" y="32" font-size="9" fill="#4C1D95">d² = (x₂−x₁)² + (y₂−y₁)²</text>`;
+  h += `<text y="47" font-size="9" fill="#4C1D95"><tspan x="258">⟹</tspan><tspan x="272"> d = √<tspan text-decoration="overline">(x₂−x₁)²+(y₂−y₁)²</tspan></tspan></text>`;
+
+  // Static point circles + labels
+  function ptSvg(sx, sy, lbl, ly) {
+    const textY = ly < 2 ? sy + 22 : sy - 14;
+    return `<circle cx="${sx}" cy="${sy}" r="7" fill="#7C3AED" stroke="white" stroke-width="2"/>` +
+      `<text x="${sx}" y="${textY}" font-size="9.5" fill="#4C1D95"
+             text-anchor="middle" font-weight="700">${lbl}</text>`;
+  }
+  h += ptSvg(s1.x, s1.y, '(x₁, y₁)', dP1.ly);
+  h += ptSvg(s2.x, s2.y, '(x₂, y₂)', dP2.ly);
+
+  dSvg.innerHTML = h;
+
+  // Update footer
+  const ft = document.getElementById('dsvg-ft');
+  ft.innerHTML = `d = √<span class="rad">(${fmt(dx)})² + (${fmt(dy)})²</span>` +
+    ` = √<span class="rad">${fmt(dx*dx+dy*dy)}</span> ≈ ${dist.toFixed(4)}`;
+}
+
+// Slider-driven update
+function updateDist() {
+  const x1 = parseFloat(document.getElementById('sl-x1').value);
+  const y1 = parseFloat(document.getElementById('sl-y1').value);
+  const x2 = parseFloat(document.getElementById('sl-x2').value);
+  const y2 = parseFloat(document.getElementById('sl-y2').value);
+  document.getElementById('vl-x1').textContent = fmt(x1);
+  document.getElementById('vl-y1').textContent = fmt(y1);
+  document.getElementById('vl-x2').textContent = fmt(x2);
+  document.getElementById('vl-y2').textContent = fmt(y2);
+  dP1 = { lx: x1, ly: y1 };
+  dP2 = { lx: x2, ly: y2 };
+  buildDist();
+}
+
+updateDist();
+
+/* ══════════════════════════════════════════════════════
+   CIRCLE SVG
+   viewBox: 420 × 370
+   Math origin at SVG (210, 195), scale = 35 px/unit
+   Logical range: x ∈ [−6,6], y ∈ [−5,5.5]
+══════════════════════════════════════════════════════ */
+const cSvg = document.getElementById('csvg');
+const C = { ox: 210, oy: 160, sc: 35 };
+let cAngle = 40 * Math.PI / 180;
+let cDrag = false;
+
+function cToS(lx, ly) { return { x: C.ox + lx * C.sc, y: C.oy - ly * C.sc }; }
+
+function buildCirc(h, k, r) {
+  const ctr = cToS(h, k);
+  const cRad = r * C.sc;
+  const px = h + r * Math.cos(cAngle);
+  const py = k + r * Math.sin(cAngle);
+  const pS = cToS(px, py);
+  let sv = '';
+
+  // Grid
+  sv += '<g stroke="#EDE9FE" stroke-width="0.5">';
+  for (let i = -6; i <= 6; i++) {
+    const gx = C.ox + i * C.sc;
+    sv += `<line x1="${gx}" y1="10" x2="${gx}" y2="290"/>`;
+  }
+  for (let j = -4; j <= 4; j++) {
+    const gy = C.oy - j * C.sc;
+    if (gy >= 5 && gy <= 295)
+      sv += `<line x1="5" y1="${gy}" x2="415" y2="${gy}"/>`;
+  }
+  sv += '</g>';
+
+  // Axes
+  sv += `<line x1="8" y1="${C.oy}" x2="412" y2="${C.oy}" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  sv += `<polygon points="409,${C.oy-4} 409,${C.oy+4} 415,${C.oy}" fill="#1C1B2E"/>`;
+  sv += `<text x="414" y="${C.oy+4}" font-size="12" fill="#1C1B2E" font-style="italic">x</text>`;
+  sv += `<line x1="${C.ox}" y1="290" x2="${C.ox}" y2="10" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  sv += `<polygon points="${C.ox-4},14 ${C.ox+4},14 ${C.ox},8" fill="#1C1B2E"/>`;
+  sv += `<text x="${C.ox+6}" y="14" font-size="12" fill="#1C1B2E" font-style="italic">y</text>`;
+
+  // Ticks + labels
+  for (let i = -6; i <= 6; i++) {
+    if (i === 0) continue;
+    const gx = C.ox + i * C.sc;
+    sv += `<line x1="${gx}" y1="${C.oy-3}" x2="${gx}" y2="${C.oy+3}" stroke="#1C1B2E" stroke-width="1"/>`;
+    sv += `<text x="${gx}" y="${C.oy+14}" font-size="8" fill="#9896B0" text-anchor="middle">${i}</text>`;
+  }
+  for (let j = -4; j <= 4; j++) {
+    if (j === 0) continue;
+    const gy = C.oy - j * C.sc;
+    if (gy < 8 || gy > 292) continue;
+    sv += `<line x1="${C.ox-3}" y1="${gy}" x2="${C.ox+3}" y2="${gy}" stroke="#1C1B2E" stroke-width="1"/>`;
+    sv += `<text x="${C.ox-7}" y="${gy+3}" font-size="8" fill="#9896B0" text-anchor="end">${j}</text>`;
+  }
+  sv += `<text x="${C.ox-7}" y="${C.oy+14}" font-size="8" fill="#9896B0" text-anchor="end">0</text>`;
+
+  // Dashed projections of center to axes
+  sv += `<g stroke="#0D9488" stroke-width="1.1" stroke-dasharray="4,3" opacity="0.55">
+    <line x1="${ctr.x}" y1="${C.oy}" x2="${ctr.x}" y2="${ctr.y}"/>
+    <line x1="${C.ox}" y1="${ctr.y}" x2="${ctr.x}" y2="${ctr.y}"/>
+  </g>`;
+  if (Math.abs(h) > 0.15) sv += `<text x="${ctr.x}" y="${C.oy+15}" font-size="11" fill="#0D9488" text-anchor="middle" font-style="italic">h</text>`;
+  if (Math.abs(k) > 0.15) sv += `<text x="${C.ox-8}" y="${ctr.y+3}" font-size="11" fill="#0D9488" text-anchor="end" font-style="italic">k</text>`;
+
+  // The circle
+  sv += `<circle cx="${ctr.x}" cy="${ctr.y}" r="${cRad}"
+          fill="none" stroke="#7C3AED" stroke-width="2.2" opacity="0.9"/>`;
+
+  // Dashed projections of circumference point to axes
+  sv += `<g stroke="#DC2626" stroke-width="0.9" stroke-dasharray="3,3" opacity="0.35">
+    <line x1="${pS.x}" y1="${C.oy}" x2="${pS.x}" y2="${pS.y}"/>
+    <line x1="${C.ox}" y1="${pS.y}" x2="${pS.x}" y2="${pS.y}"/>
+  </g>`;
+
+  // Catetos (center → corner → circumference point)
+  const dxPx = Math.abs(pS.x - ctr.x), dyPx = Math.abs(pS.y - ctr.y);
+  if (dxPx > 5) sv += `<line x1="${ctr.x}" y1="${ctr.y}" x2="${pS.x}" y2="${ctr.y}"
+    stroke="#1D4ED8" stroke-width="1.3" stroke-dasharray="4,2" opacity="0.7"/>`;
+  if (dyPx > 5) sv += `<line x1="${pS.x}" y1="${ctr.y}" x2="${pS.x}" y2="${pS.y}"
+    stroke="#DC2626" stroke-width="1.3" stroke-dasharray="4,2" opacity="0.7"/>`;
+
+  // Right-angle mark
+  if (dxPx > 14 && dyPx > 14) {
+    const raSz = 6;
+    const raX = px > h ? -raSz : raSz, raY = py > k ? raSz : -raSz;
+    sv += `<polyline points="${pS.x+raX},${ctr.y} ${pS.x+raX},${ctr.y+raY} ${pS.x},${ctr.y+raY}"
+            fill="none" stroke="#9896B0" stroke-width="1"/>`;
+  }
+
+  // Cateto labels with numeric values
+  if (dxPx > 22) {
+    const mx = (ctr.x + pS.x) / 2;
+    const lY = ctr.y + (py > k ? 16 : -6);
+    const dxVal = fmt(px - h);
+    sv += `<text x="${mx}" y="${lY}" font-size="10" fill="#1D4ED8" text-anchor="middle" font-weight="600">` +
+          `<tspan font-style="italic">x−h</tspan>` +
+          `<tspan font-style="normal"> = ${dxVal}</tspan></text>`;
+  }
+  if (dyPx > 22) {
+    const my = (ctr.y + pS.y) / 2;
+    const lX = pS.x + (px > h ? 12 : -12);
+    const dyVal = fmt(py - k);
+    sv += `<text x="${lX}" y="${my+3}" font-size="10" fill="#DC2626"
+            text-anchor="${px > h ? 'start' : 'end'}" font-weight="600">` +
+          `<tspan font-style="italic">y−k</tspan>` +
+          `<tspan font-style="normal"> = ${dyVal}</tspan></text>`;
+  }
+
+  // Radius line
+  sv += `<line x1="${ctr.x}" y1="${ctr.y}" x2="${pS.x}" y2="${pS.y}"
+          stroke="#7C3AED" stroke-width="2" opacity="0.75"/>`;
+
+  // r label (perpendicular offset from midpoint)
+  const rMidX = (ctr.x + pS.x) / 2, rMidY = (ctr.y + pS.y) / 2;
+  const rLen = Math.sqrt((pS.x-ctr.x)**2 + (pS.y-ctr.y)**2);
+  if (rLen > 10) {
+    const rOx = -(pS.y - ctr.y) / rLen * 14, rOy = (pS.x - ctr.x) / rLen * 14;
+    sv += `<text x="${rMidX+rOx}" y="${rMidY+rOy+2}" font-size="11" fill="#6D28D9"
+            text-anchor="middle" font-weight="700" font-style="italic">r</text>`;
+  }
+
+  // Center point + label (placed below the dot, outside the circle)
+  const hS = fmt(h), kS = fmt(k);
+  const cLblTxt = `(${hS}, ${kS})`;
+  sv += `<circle cx="${ctr.x}" cy="${ctr.y}" r="6" fill="#7C3AED" stroke="white" stroke-width="2" pointer-events="none"/>`;
+  sv += `<text x="${ctr.x}" y="${ctr.y + cRad + 16}" font-size="9.5" fill="#4C1D95"
+          font-weight="700" text-anchor="middle" pointer-events="none">${cLblTxt}</text>`;
+
+  // Circumference point (large transparent hit area + visible point)
+  sv += `<circle data-cp="1" cx="${pS.x}" cy="${pS.y}" r="18"
+          fill="white" fill-opacity="0" stroke="none" style="cursor:grab;"/>`;
+  sv += `<circle cx="${pS.x}" cy="${pS.y}" r="6" fill="#DC2626"
+          stroke="white" stroke-width="2" pointer-events="none"/>`;
+  const pxS = fmt(px), pyS = fmt(py);
+  sv += `<text x="${pS.x+12}" y="${pS.y-10}" font-size="9.5" fill="#991B1B"
+          font-weight="700" pointer-events="none">(x, y) = (${pxS}, ${pyS})</text>`;
+
+  cSvg.innerHTML = sv;
+}
+
+function updateCircle() {
+  const h = parseFloat(document.getElementById('sl-h').value);
+  const k = parseFloat(document.getElementById('sl-k').value);
+  const r = parseFloat(document.getElementById('sl-r').value);
+  document.getElementById('vl-h').textContent = fmt(h);
+  document.getElementById('vl-k').textContent = fmt(k);
+  document.getElementById('vl-r').textContent = fmt(r);
+  buildCirc(h, k, r);
+
+  // Update equation display
+  const hS = fmt(Math.abs(h)), kS = fmt(Math.abs(k));
+  const r2S = fmt(r * r);
+  const xT = h === 0 ? 'x²' : (h > 0 ? `(x − ${hS})²` : `(x + ${hS})²`);
+  const yT = k === 0 ? 'y²' : (k > 0 ? `(y − ${kS})²` : `(y + ${kS})²`);
+  document.getElementById('ceq').textContent = `${xT} + ${yT} = ${r2S}`;
+}
+
+// Circle drag events (attached once)
+cSvg.addEventListener('mousedown', e => {
+  if (e.target.dataset.cp) { cDrag = true; e.preventDefault(); }
+});
+cSvg.addEventListener('mousemove', e => {
+  if (!cDrag) return; e.preventDefault();
+  const h = parseFloat(document.getElementById('sl-h').value);
+  const k = parseFloat(document.getElementById('sl-k').value);
+  const r = parseFloat(document.getElementById('sl-r').value);
+  const p = svgPt(cSvg, e);
+  const lx = (p.x - C.ox) / C.sc, ly = (C.oy - p.y) / C.sc;
+  cAngle = Math.atan2(ly - k, lx - h);
+  buildCirc(h, k, r);
+});
+cSvg.addEventListener('touchstart', e => {
+  if (e.target.dataset.cp) { cDrag = true; e.preventDefault(); }
+}, { passive: false });
+cSvg.addEventListener('touchmove', e => {
+  if (!cDrag) return; e.preventDefault();
+  const h = parseFloat(document.getElementById('sl-h').value);
+  const k = parseFloat(document.getElementById('sl-k').value);
+  const r = parseFloat(document.getElementById('sl-r').value);
+  const p = svgPt(cSvg, e);
+  const lx = (p.x - C.ox) / C.sc, ly = (C.oy - p.y) / C.sc;
+  cAngle = Math.atan2(ly - k, lx - h);
+  buildCirc(h, k, r);
+}, { passive: false });
+document.addEventListener('mouseup', () => { cDrag = false; });
+document.addEventListener('touchend', () => { cDrag = false; });
+
+updateCircle();
+
+/* ══════════════════════════════════════════════════════
+   SIGN DEMO
+══════════════════════════════════════════════════════ */
+function updateSignDemo() {
+  const h = parseInt(document.getElementById('sd-x').value);
+  const k = parseInt(document.getElementById('sd-y').value);
+  const r2 = parseFloat(document.getElementById('sd-r2').value);
+  const r = Math.sqrt(r2);
+  const rDisp = Number.isInteger(r) ? r.toString() : `√<span class="rad">${r2}</span>`;
+
+  const xT = h === 0 ? 'x²' : (h < 0 ? `(x + ${Math.abs(h)})²` : `(x − ${h})²`);
+  const yT = k === 0 ? 'y²' : (k < 0 ? `(y + ${Math.abs(k)})²` : `(y − ${k})²`);
+
+  function hNote(val, varName) {
+    if (val < 0) return `<p class="note-warn">⚠ (${varName} + ${Math.abs(val)})² = (${varName} − (${val}))², el centro tiene coordenada negativa.</p>`;
+    if (val > 0) return `<p class="note-ok">✓ (${varName} − ${val})², lectura directa, coordenada positiva.</p>`;
+    return `<p class="note-ok">✓ ${varName}², el centro está sobre el eje correspondiente.</p>`;
+  }
+
+  document.getElementById('sd-out').innerHTML = `
+    <div style="display:grid;grid-template-columns:max-content 1fr;gap:.05rem .55rem;align-items:baseline;margin-bottom:.6rem;">
+      <span style="font-size:.72rem;font-weight:700;color:var(--violet);">Ecuación</span>
+      <span style="font-weight:700;font-size:.88rem;color:var(--violet);">${xT} + ${yT} = ${r2}</span>
+      <span style="font-size:.72rem;color:#B0ACCC;">Forma</span>
+      <span style="color:#B0ACCC;font-size:.88rem;">(x − h)² + (y − k)² = r²</span>
+    </div>
+    <div class="sdemo-vals">
+      <div class="sdemo-val"><div class="lbl">h (centro x)</div><div class="num">${h}</div></div>
+      <div class="sdemo-val"><div class="lbl">k (centro y)</div><div class="num">${k}</div></div>
+      <div class="sdemo-val"><div class="lbl">r (radio)</div><div class="num">${rDisp}</div></div>
+    </div>
+  `;
+  buildSignSvg(h, k, r);
+}
+updateSignDemo();
+
+/* ══════════════════════════════════════════════════════
+   SIGN DEMO: CIRCLE SVG
+   viewBox: 340 × 260, origin (170,130), scale 22 px/unit
+══════════════════════════════════════════════════════ */
+function buildSignSvg(h, k, r) {
+  const svg = document.getElementById('sdemo-svg');
+  if (!svg) return;
+  const W = 340, H = 260, ox = 170, oy = 130, sc = 22;
+  function toS(mx, my) { return { x: ox + mx*sc, y: oy - my*sc }; }
+  const ctr = toS(h, k);
+  const rPx = r * sc;
+  let s = '';
+
+  // Grid
+  s += '<g stroke="#EDE9FE" stroke-width="0.5">';
+  for (let i = -7; i <= 7; i++) {
+    const gx = ox + i*sc; if (gx < 2 || gx > W-2) continue;
+    s += `<line x1="${gx}" y1="5" x2="${gx}" y2="${H-5}"/>`;
+  }
+  for (let j = -5; j <= 5; j++) {
+    const gy = oy - j*sc; if (gy < 2 || gy > H-2) continue;
+    s += `<line x1="5" y1="${gy}" x2="${W-5}" y2="${gy}"/>`;
+  }
+  s += '</g>';
+
+  // Axes
+  s += `<line x1="5" y1="${oy}" x2="${W-8}" y2="${oy}" stroke="#1C1B2E" stroke-width="1.4"/>`;
+  s += `<polygon points="${W-10},${oy-3} ${W-10},${oy+3} ${W-4},${oy}" fill="#1C1B2E"/>`;
+  s += `<text x="${W-2}" y="${oy+4}" font-size="10" fill="#1C1B2E" font-style="italic">x</text>`;
+  s += `<line x1="${ox}" y1="${H-5}" x2="${ox}" y2="8" stroke="#1C1B2E" stroke-width="1.4"/>`;
+  s += `<polygon points="${ox-3},12 ${ox+3},12 ${ox},6" fill="#1C1B2E"/>`;
+  s += `<text x="${ox+4}" y="14" font-size="10" fill="#1C1B2E" font-style="italic">y</text>`;
+
+  // Tick labels
+  for (let i = -7; i <= 7; i++) {
+    if (i === 0) continue;
+    const gx = ox + i*sc; if (gx < 10 || gx > W-12) continue;
+    s += `<line x1="${gx}" y1="${oy-2}" x2="${gx}" y2="${oy+2}" stroke="#1C1B2E" stroke-width="0.8"/>`;
+    s += `<text x="${gx}" y="${oy+11}" font-size="7" fill="#9896B0" text-anchor="middle">${i}</text>`;
+  }
+  for (let j = -5; j <= 5; j++) {
+    if (j === 0) continue;
+    const gy = oy - j*sc; if (gy < 10 || gy > H-10) continue;
+    s += `<line x1="${ox-2}" y1="${gy}" x2="${ox+2}" y2="${gy}" stroke="#1C1B2E" stroke-width="0.8"/>`;
+    s += `<text x="${ox-5}" y="${gy+3}" font-size="7" fill="#9896B0" text-anchor="end">${j}</text>`;
+  }
+  s += `<text x="${ox-5}" y="${oy+11}" font-size="7" fill="#9896B0" text-anchor="end">0</text>`;
+
+  // Dashed projections center → axes
+  s += `<g stroke="#0D9488" stroke-width="0.9" stroke-dasharray="3,2.5" opacity="0.55">`;
+  if (Math.abs(h) > 0.1) s += `<line x1="${ctr.x}" y1="${oy}" x2="${ctr.x}" y2="${ctr.y}"/>`;
+  if (Math.abs(k) > 0.1) s += `<line x1="${ox}" y1="${ctr.y}" x2="${ctr.x}" y2="${ctr.y}"/>`;
+  s += '</g>';
+  if (Math.abs(h) > 0.1) s += `<text x="${ctr.x}" y="${oy+13}" font-size="10" fill="#7C3AED" text-anchor="middle" font-style="italic">h</text>`;
+  if (Math.abs(k) > 0.1) s += `<text x="${ox-6}" y="${ctr.y+3}" font-size="10" fill="#7C3AED" text-anchor="end" font-style="italic">k</text>`;
+
+  // Circle
+  s += `<circle cx="${ctr.x}" cy="${ctr.y}" r="${rPx}" fill="none" stroke="#6D28D9" stroke-width="2.2"/>`;
+
+  // Center point + label
+  s += `<circle cx="${ctr.x}" cy="${ctr.y}" r="4.5" fill="#DC2626" stroke="white" stroke-width="1.6"/>`;
+  const lblAnchor = ctr.x > W/2 ? 'end' : 'start';
+  const lblDx = ctr.x > W/2 ? -8 : 8;
+  const lblDy = ctr.y > H/2 ? -8 : 16;
+  s += `<text x="${ctr.x+lblDx}" y="${ctr.y+lblDy}" font-size="9" fill="#DC2626" font-weight="700" text-anchor="${lblAnchor}">(${h}, ${k})</text>`;
+
+  svg.innerHTML = s;
+}
+
+/* ══════════════════════════════════════════════════════
+   EXAMPLE SVG
+   viewBox: 420 × 330
+   Circle: center (−1, 2), r = √20 ≈ 4.472, point (3, 4)
+   Logical range: x ∈ [−7, 6], y ∈ [−3.5, 7.5]
+   Scale chosen for uniform aspect ratio
+══════════════════════════════════════════════════════ */
+function buildExSvg() {
+  const eSvg = document.getElementById('esvg');
+  if (!eSvg) return;
+
+  const EW = 420, EH = 330, EM = 40;
+  const xMin = -7, xMax = 6, yMin = -3.5, yMax = 7.5;
+  // Uniform scale: both axes same units/pixel
+  const sc = Math.min((EW - 2*EM) / (xMax - xMin), (EH - 2*EM) / (yMax - yMin));
+  // Compute svg origin (where math (0,0) maps to)
+  const eOx = EM + (-xMin) * sc;
+  const eOy = EH - EM - (-yMin) * sc;
+
+  function ex(mx, my) { return { x: eOx + mx * sc, y: eOy - my * sc }; }
+
+  const h = -1, k = 2, r = Math.sqrt(20);
+  const cP = ex(h, k);    // center in SVG
+  const p34 = ex(3, 4);   // point (3,4) in SVG
+  const rPx = r * sc;     // radius in SVG pixels
+
+  let sv = '';
+
+  // Grid
+  sv += '<g stroke="#EDE9FE" stroke-width="0.55">';
+  for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+    const gx = ex(i, 0).x;
+    sv += `<line x1="${gx}" y1="${EM}" x2="${gx}" y2="${EH-EM}"/>`;
+  }
+  for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
+    const gy = ex(0, j).y;
+    sv += `<line x1="${EM}" y1="${gy}" x2="${EW-EM}" y2="${gy}"/>`;
+  }
+  sv += '</g>';
+
+  // Axes
+  sv += `<line x1="${EM}" y1="${eOy}" x2="${EW-EM+8}" y2="${eOy}" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  sv += `<polygon points="${EW-EM+6},${eOy-4} ${EW-EM+6},${eOy+4} ${EW-EM+13},${eOy}" fill="#1C1B2E"/>`;
+  sv += `<text x="${EW-EM+17}" y="${eOy+4}" font-size="12" fill="#1C1B2E" font-style="italic">x</text>`;
+  sv += `<line x1="${eOx}" y1="${EH-EM+8}" x2="${eOx}" y2="${EM-6}" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  sv += `<polygon points="${eOx-4},${EM-4} ${eOx+4},${EM-4} ${eOx},${EM-10}" fill="#1C1B2E"/>`;
+  sv += `<text x="${eOx+6}" y="${EM-4}" font-size="12" fill="#1C1B2E" font-style="italic">y</text>`;
+
+  // Ticks
+  for (let i = -6; i <= 5; i++) {
+    if (i === 0) continue;
+    const gx = ex(i, 0).x;
+    sv += `<line x1="${gx}" y1="${eOy-3}" x2="${gx}" y2="${eOy+3}" stroke="#1C1B2E" stroke-width="1"/>`;
+    sv += `<text x="${gx}" y="${eOy+14}" font-size="8.5" fill="#9896B0" text-anchor="middle">${i}</text>`;
+  }
+  for (let j = -3; j <= 7; j++) {
+    if (j === 0) continue;
+    const gy = ex(0, j).y;
+    if (gy < EM || gy > EH-EM) continue;
+    sv += `<line x1="${eOx-3}" y1="${gy}" x2="${eOx+3}" y2="${gy}" stroke="#1C1B2E" stroke-width="1"/>`;
+    sv += `<text x="${eOx-8}" y="${gy+3}" font-size="8.5" fill="#9896B0" text-anchor="end">${j}</text>`;
+  }
+  sv += `<text x="${eOx-8}" y="${eOy+14}" font-size="8.5" fill="#9896B0" text-anchor="end">0</text>`;
+
+  // Circle
+  sv += `<circle cx="${cP.x}" cy="${cP.y}" r="${rPx}" fill="none" stroke="#1D4ED8" stroke-width="2.2"/>`;
+
+  // Dashed radius from center to (3,4)
+  sv += `<line x1="${cP.x}" y1="${cP.y}" x2="${p34.x}" y2="${p34.y}"
+          stroke="#7C3AED" stroke-width="1.6" stroke-dasharray="5,3.5"/>`;
+
+  // r label (perpendicular offset)
+  const rmx = (cP.x + p34.x) / 2, rmy = (cP.y + p34.y) / 2;
+  const rdx = p34.x - cP.x, rdy = p34.y - cP.y;
+  const rlen2 = Math.sqrt(rdx*rdx + rdy*rdy);
+  const rpx2 = -rdy/rlen2 * 13, rpy2 = rdx/rlen2 * 13;
+  sv += `<text x="${rmx+rpx2}" y="${rmy+rpy2+2}" font-size="10.5" fill="#7C3AED"
+          text-anchor="middle" font-weight="700">r = √<tspan text-decoration="overline">20</tspan></text>`;
+
+  // Center (−1, 2)
+  sv += `<circle cx="${cP.x}" cy="${cP.y}" r="5.5" fill="#DC2626" stroke="white" stroke-width="1.8"/>`;
+  sv += `<text x="${cP.x}" y="${cP.y+21}" font-size="10" fill="#DC2626"
+          text-anchor="middle" font-weight="700">Centro (−1, 2)</text>`;
+
+  // Point (3, 4)
+  sv += `<circle cx="${p34.x}" cy="${p34.y}" r="5.5" fill="#DC2626" stroke="white" stroke-width="1.8"/>`;
+  sv += `<text x="${p34.x+10}" y="${p34.y-11}" font-size="10" fill="#DC2626"
+          font-weight="700">(3, 4)</text>`;
+
+  eSvg.innerHTML = sv;
+}
+
+// Build immediately in case step 4 is already open
+buildExSvg();
+
+/* ══════════════════════════════════════════════════════
+   EXAMPLE 2 SVG
+   Center (−1, 2), point (−5, 4), d = √20
+   Three circles: r=√20 (on), r=√29 (outside), r=√13 (inside)
+   viewBox: 420 × 330
+══════════════════════════════════════════════════════ */
+function buildEx2Svg() {
+  const eSvg2 = document.getElementById('esvg2');
+  if (!eSvg2) return;
+
+  const EW = 420, EH = 330, EM = 40;
+  const xMin = -8, xMax = 5, yMin = -3, yMax = 7;
+  const sc = Math.min((EW - 2*EM)/(xMax-xMin), (EH - 2*EM)/(yMax-yMin));
+  const eOx = EM + (-xMin)*sc;
+  const eOy = EH - EM - (-yMin)*sc;
+  function ex(mx, my) { return { x: eOx + mx*sc, y: eOy - my*sc }; }
+
+  const h = -1, k = 2;
+  const cP      = ex(h, k);
+  const pP      = ex(-5, 4);
+  const rExact  = Math.sqrt(20);
+  const rIn     = Math.sqrt(13);
+  const rOut    = Math.sqrt(29);
+
+  let sv = '';
+
+  // Grid
+  sv += '<g stroke="#EDE9FE" stroke-width="0.55">';
+  for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+    const gx = ex(i,0).x;
+    sv += `<line x1="${gx}" y1="${EM}" x2="${gx}" y2="${EH-EM}"/>`;
+  }
+  for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
+    const gy = ex(0,j).y;
+    sv += `<line x1="${EM}" y1="${gy}" x2="${EW-EM}" y2="${gy}"/>`;
+  }
+  sv += '</g>';
+
+  // Axes
+  sv += `<line x1="${EM}" y1="${eOy}" x2="${EW-EM+8}" y2="${eOy}" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  sv += `<polygon points="${EW-EM+6},${eOy-4} ${EW-EM+6},${eOy+4} ${EW-EM+13},${eOy}" fill="#1C1B2E"/>`;
+  sv += `<text x="${EW-EM+17}" y="${eOy+4}" font-size="12" fill="#1C1B2E" font-style="italic">x</text>`;
+  sv += `<line x1="${eOx}" y1="${EH-EM+8}" x2="${eOx}" y2="${EM-6}" stroke="#1C1B2E" stroke-width="1.6"/>`;
+  sv += `<polygon points="${eOx-4},${EM-4} ${eOx+4},${EM-4} ${eOx},${EM-10}" fill="#1C1B2E"/>`;
+  sv += `<text x="${eOx+6}" y="${EM-4}" font-size="12" fill="#1C1B2E" font-style="italic">y</text>`;
+
+  // Ticks
+  for (let i = Math.ceil(xMin); i <= Math.floor(xMax); i++) {
+    if (i===0) continue;
+    const gx = ex(i,0).x;
+    sv += `<line x1="${gx}" y1="${eOy-3}" x2="${gx}" y2="${eOy+3}" stroke="#1C1B2E" stroke-width="1"/>`;
+    sv += `<text x="${gx}" y="${eOy+14}" font-size="8.5" fill="#9896B0" text-anchor="middle">${i}</text>`;
+  }
+  for (let j = Math.ceil(yMin); j <= Math.floor(yMax); j++) {
+    if (j===0) continue;
+    const gy = ex(0,j).y;
+    if (gy < EM || gy > EH-EM) continue;
+    sv += `<line x1="${eOx-3}" y1="${gy}" x2="${eOx+3}" y2="${gy}" stroke="#1C1B2E" stroke-width="1"/>`;
+    sv += `<text x="${eOx-8}" y="${gy+3}" font-size="8.5" fill="#9896B0" text-anchor="end">${j}</text>`;
+  }
+  sv += `<text x="${eOx-8}" y="${eOy+14}" font-size="8.5" fill="#9896B0" text-anchor="end">0</text>`;
+
+  // (c) r² < 20: P exterior (teal, punteada)
+  sv += `<circle cx="${cP.x}" cy="${cP.y}" r="${rIn*sc}"
+          fill="none" stroke="#0D9488" stroke-width="2.2" stroke-dasharray="6,3"/>`;
+
+  // (a) r² = 20: P sobre la circunferencia (violeta, sólida)
+  sv += `<circle cx="${cP.x}" cy="${cP.y}" r="${rExact*sc}"
+          fill="none" stroke="#6D28D9" stroke-width="2.2"/>`;
+
+  // (b) r² > 20: P interior (azul, punteada)
+  sv += `<circle cx="${cP.x}" cy="${cP.y}" r="${rOut*sc}"
+          fill="none" stroke="#1D4ED8" stroke-width="2.2" stroke-dasharray="6,3"/>`;
+
+  // Radio punteado centro → P
+  sv += `<line x1="${cP.x}" y1="${cP.y}" x2="${pP.x}" y2="${pP.y}"
+          stroke="#7C3AED" stroke-width="1.6" stroke-dasharray="5,3.5"/>`;
+  const rmx=(cP.x+pP.x)/2, rmy=(cP.y+pP.y)/2;
+  sv += `<text x="${rmx+8}" y="${rmy-4}" font-size="10" fill="#7C3AED" font-weight="700">√20</text>`;
+
+  // Centro
+  sv += `<circle cx="${cP.x}" cy="${cP.y}" r="5.5" fill="#DC2626" stroke="white" stroke-width="1.8"/>`;
+  sv += `<text x="${cP.x+9}" y="${cP.y-6}" font-size="10" fill="#DC2626" font-weight="700">(−1, 2)</text>`;
+
+  // Punto P
+  sv += `<circle cx="${pP.x}" cy="${pP.y}" r="5.5" fill="#DC2626" stroke="white" stroke-width="1.8"/>`;
+  sv += `<text x="${pP.x+9}" y="${pP.y-7}" font-size="10" fill="#DC2626" font-weight="700">P(−5, 4)</text>`;
+
+  eSvg2.innerHTML = sv;
+}
+buildEx2Svg();
+
+/* ── Init ─────────────────────────────────────────── */
+// Re-run MathJax on full document after page loads
+window.addEventListener('load', () => {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise().catch(e => console.log(e));
+  }
+});
+</script>
+</body>
+</html>
