@@ -60,6 +60,22 @@
   }
   #saberes-body.no-data { color: #888; font-style: italic; }
   @media print { #saberes-panel { display: none !important; } }
+  /* ── temas-toggle ──────────────────────────────────────────── */
+  #temas-toggle {
+    font: inherit; font-weight: 600; font-size: 13px;
+    padding: 6px 16px; margin: 0 8px;
+    border-radius: 999px; cursor: pointer;
+    border: 1px solid #ccc; background: white; color: #333;
+    vertical-align: middle;
+  }
+  #temas-toggle.on {
+    background: #333; color: white; border-color: #333;
+  }
+  #temas-toggle.fallback-float {
+    position: fixed; top: 12px; right: 12px; z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  @media print { #temas-toggle { display: none !important; } }
 
 </style>
 </head><body>
@@ -866,9 +882,54 @@ function hideSaberes() {
 
 document.getElementById('saberes-close').addEventListener('click', hideSaberes);
 
-// Parcheo aditivo: showChain también abre el panel
+// ── temas-toggle: modo que gobierna si el panel se abre al hacer clic ──────
+let temasOn = true;
+
+function setTemas(on) {
+  temasOn = on;
+  const btn = document.getElementById('temas-toggle');
+  if (btn) {
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  if (!on) {
+    hideSaberes();
+  } else {
+    const sel = document.querySelector('.course-box.selected');
+    if (sel) showSaberes(sel.getAttribute('data-code'));
+  }
+}
+
+(function() {
+  const btn = document.createElement('button');
+  btn.id = 'temas-toggle';
+  btn.type = 'button';
+  btn.textContent = 'Temas';
+  btn.title = 'Mostrar u ocultar los temas del curso seleccionado';
+  btn.classList.add('on');
+  btn.setAttribute('aria-pressed', 'true');
+  btn.addEventListener('click', function() { setTemas(!temasOn); });
+  // Anclaje: inmediatamente después del elemento cuyo texto es "Mostrar todas"
+  let anchor = null;
+  const candidates = document.querySelectorAll('button, a, span, div');
+  for (const el of candidates) {
+    if (el.childElementCount === 0 && el.textContent.trim() === 'Mostrar todas') {
+      anchor = el;
+      break;
+    }
+  }
+  if (anchor) {
+    anchor.insertAdjacentElement('afterend', btn);
+  } else {
+    console.warn('temas-toggle: no se encontró el botón "Mostrar todas"; se inserta flotante.');
+    btn.classList.add('fallback-float');
+    document.body.appendChild(btn);
+  }
+})();
+
+// Parcheo aditivo: showChain también abre el panel (si el modo Temas está activo)
 const __origShowChain = showChain;
-showChain = function(code) { __origShowChain(code); showSaberes(code); };
+showChain = function(code) { __origShowChain(code); if (temasOn) showSaberes(code); };
 
 // Parcheo aditivo: clearAll también cierra el panel
 const __origClearAll = clearAll;
